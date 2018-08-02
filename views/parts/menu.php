@@ -110,6 +110,11 @@
        assessment_category($(this).attr('data-func-call'));
    });
 
+   /////////////// assessment categories ///////////////////
+   $('#list_itmes_grade_scales').click(function(){
+       grade_scales($(this).attr('data-func-call'));
+   });
+
 </script>
 
 <?php

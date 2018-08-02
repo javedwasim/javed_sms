@@ -1506,13 +1506,13 @@ $(document.body).on('click', '#save_assessment_category', function(){
 
 $(document.body).on('click', '.edit-assessment-category', function(){
     $('#assessment_category_id').val($(this).attr('data-href'));
-    $('#category_name').val($(this).attr('data-name'));
-    $('#category_abbreviation').val($(this).attr('data-abbreviation'));
+    $('#assessment_category_name').val($(this).attr('data-name'));
+    $('#assessment_category_abbreviation').val($(this).attr('data-abbreviation'));
     $('#update_assessment_category').modal('show');
     return false;
 });
 
-$(document.body).on('click', '#update_assessment_category', function(){
+$(document.body).on('click', '#update_assessment', function(){
     $.ajax({
         url: $('#update_assessment_category_form').attr('data-action'),
         type: 'post',
@@ -1641,5 +1641,219 @@ $(document.body).on('click', '.delete-trans-cat', function(){
         return false;
     }
 
+    return false;
+});
+
+function grade_scales(func_call){
+    $.ajax({
+        url: '/isms/grade_scale/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                $('#title').html('Grading Scales | ISMS');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '#save_scale', function(){
+    $.ajax({
+        url: $('#grade_scale_add_form').attr('data-action'),
+        type: 'post',
+        data: $('#grade_scale_add_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                toastr["success"](response.message);
+                $('#title').html('Grade Scales | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#add_scale').modal('hide');
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.edit_grade_scale', function(){
+    var scale_id = $(this).attr('data-href');
+    $.ajax({
+        url: '/isms/grade_scale/edit_scale/'+scale_id,
+        cache: false,
+        success: function(response) {
+            $('.edit-modal-body').empty();
+            $('.edit-modal-body').append(response.scale_html);
+            $('#edit_scale').modal('show');
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '#update_scale', function(){
+    $.ajax({
+        url: $('#grade_scale_update_form').attr('data-action'),
+        type: 'post',
+        data: $('#grade_scale_update_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                toastr["success"](response.message);
+                $('#title').html('Grade Scales | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#edit_scale').modal('hide');
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.delete-grade-scale', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.scale_html);
+                    toastr["success"](response.message);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+
+$(document.body).on('click', '.grade_scale_level', function(){
+    var scale_id = $(this).attr('data-href');
+    $.ajax({
+        url: '/isms/grade_scale/grade_scales_level/'+scale_id,
+        cache: false,
+        success: function(response) {
+            if (response.scale_html != '') {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                $('#title').html('Grade Scale Levels | ISMS');
+            } else {
+                toastr["warning"](response.message);
+            }
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '#save_scale_level', function(){
+    $.ajax({
+        url: $('#grade_scale_level_add_form').attr('data-action'),
+        type: 'post',
+        data: $('#grade_scale_level_add_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                toastr["success"](response.message);
+                $('.datatables').DataTable();
+                $('#title').html('Grade Scale Levels | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#add_scale_level').modal('hide');
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.edit_grade_scale_level', function(){
+    $('#grade_scale_level_edit_form')[0].reset();
+    $('#level_id').val($(this).attr('data-href'));
+    $('#scale_id').val($(this).attr('data-scale-id'));
+    $('#level_name').val($(this).attr('data-name'));
+    $('#min_percentage').val($(this).attr('data-percent'));
+    $('#level_remarks').val($(this).attr('data-remaks'));
+    $('#edit_scale_level').modal('show');
+});
+
+$(document.body).on('click', '#update_scale_level', function(){
+    $.ajax({
+        url: $('#grade_scale_level_edit_form').attr('data-action'),
+        type: 'post',
+        data: $('#grade_scale_level_edit_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                toastr["success"](response.message);
+                $('.datatables').DataTable();
+                $('#title').html('Grade Scales | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#edit_scale_level').modal('hide');
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.delete-grade-scale-level', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.scale_html);
+                    toastr["success"](response.message);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+$(document.body).on('click', '.retire-grade-scale', function(){
+    $.ajax({
+        url: $(this).attr('data-href'),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                toastr["success"](response.message);
+            } else {
+                toastr["warning"](response.message);
+            }
+        }
+    });
     return false;
 });
