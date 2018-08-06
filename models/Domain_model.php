@@ -1,21 +1,139 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-Class Student_model extends CI_Model {
-	public function get_all_students() {
-        $this->db->select('s.*,b.arm,b.session,c.code');
-        $this->db->from('students s');
-        $this->db->join('batches b', 'b.id=s.batch_no', 'left');
-        $this->db->join('classes c', 'c.id=b.course_id', 'left');
-        $this->db->order_by('s.student_id','desc');
-        $result = $this->db->get();
-		//$result = $this->db->select('*')->from('students')->get();
+Class Domain_model extends CI_Model {
+	public function get_domains() {
+//        $this->db->select('s.*,b.arm,b.session,c.code');
+//        $this->db->from('students s');
+//        $this->db->join('batches b', 'b.id=s.batch_no', 'left');
+//        $this->db->join('classes c', 'c.id=b.course_id', 'left');
+//        $this->db->order_by('s.student_id','desc');
+//        $result = $this->db->get();
+		$result = $this->db->select('*')->from('domain_goup')->get();
 		if($result) {
 			return $result->result_array();
 		} else {
 			return array();
 		}
 	}
+    public function save_domain_indicator($data){
+
+        if(isset($data['domain_group_id']) && ($data['domain_group_id']>0)){
+            $this->db->insert('domain_group_indicator', $data);
+        }else{
+            $maxid = 0;
+            $row = $this->db->query('SELECT MAX(id) AS `maxid` FROM `domain_goup`')->row();
+            if ($row) {
+                $maxid = $row->maxid;
+            }
+            $next_domain_group_id = $maxid+1;
+            $data['domain_group_id'] = $next_domain_group_id;
+            $this->db->insert('temp_domain_group_indicator', $data);
+        }
+
+        return $this->db->insert_id();
+    }
+
+    public function save_indicators($domain_id){
+        $indicators = $this->get_domain_indicators();
+        foreach ($indicators as $indicator){
+            $updated_fields = array('domain_group_id'=>$indicator['domain_group_id'],
+                                'name'=>$indicator['name'],'code'=>$indicator['code'],
+                                'description'=>$indicator['description']);
+            $this->db->insert('domain_group_indicator',$updated_fields);
+        }
+        $this->db->truncate('temp_domain_group_indicator');
+    }
+
+    public function save_domain_group($data){
+	    if(isset($data['domaingroup_id'])&&($data['domaingroup_id']>0)){
+	        $update_field = array(
+	                        'name'=>$data['name'],
+                            'learning_domain'=>$data['learning_domain'],
+                            'grade_scale_id'=>$data['grade_scale_id'],
+                            'description'=>$data['description'],
+                            );
+            $this->db->where('id', $data['domaingroup_id'])->update('domain_goup', $update_field);
+            return $data['domaingroup_id'];
+        }else{
+            $update_field = array(
+                'name'=>$data['name'],
+                'learning_domain'=>$data['learning_domain'],
+                'grade_scale_id'=>$data['grade_scale_id'],
+                'description'=>$data['description'],
+            );
+            $this->db->insert('domain_goup', $update_field);
+            return $this->db->insert_id();
+        }
+
+    }
+
+
+    public function get_domain_indicators(){
+        $result = $this->db->select('*')
+                    ->from('temp_domain_group_indicator')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_domain_indicators_by_id($id){
+        $result = $this->db->select('*')
+                    ->from('domain_group_indicator')
+                    ->where('domain_group_id',$id)
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_domain_group_by_id($id){
+        $result = $this->db->select('*')
+                    ->from('domain_goup')
+                    ->where('id',$id)
+                    ->limit(1)
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function update_domain_indicator($data, $where) {
+	    if(isset($where['status']) && ($where['status']=='update')){
+            $this->db->where('id', $where['id'])->update('domain_group_indicator', $data);
+        }else{
+            $this->db->where('id', $where['id'])->update('temp_domain_group_indicator', $data);
+        }
+        return $this->db->affected_rows();
+    }
+
+    public function delete_indicator($id) {
+        $this->db->where('id', $id)->delete('domain_group_indicator');
+        return $this->db->affected_rows();
+    }
+    public function delete_temp_indicator($id) {
+        $this->db->where('id', $id)->delete('temp_domain_group_indicator');
+        return $this->db->affected_rows();
+    }
+
+    public function get_grade_scales(){
+        $result = $this->db->select('*')
+                    ->from('grade_scales')
+                    ->where('type','behavioural')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
 
 	public function add_form_fields($data) {
 		$this->db->insert('profile_fields', $data);
@@ -35,11 +153,7 @@ Class Student_model extends CI_Model {
 		
 	}
 
-	public function update_form_fields($data, $where) {
-		$this->db->where('profile_field_type', $where)
-		->update('profile_fields', $data);
-		return $this->db->affected_rows();
-	}
+
 
     public function update_student_form_fields($data) {
 	    $update_data = array();
@@ -92,31 +206,8 @@ Class Student_model extends CI_Model {
 
 	public function add_new_student($student_data) {
 		$this->db->insert('students', $student_data);
-		$student_id = $this->db->insert_id();
-		//create user of student.
-        $password = password_hash('admin', PASSWORD_BCRYPT);
-		$user_data = array('user_id'=>$student_id,'name'=>'s'.$student_id,
-                        'email'=>$student_data['email'],'password'=>$password);
-        $this->db->insert('login', $user_data);
-		return $student_id;
+		return $this->db->insert_id();
 	}
-
-	public function save_student_guardian($data){
-        $student_id = $data['student_id'];
-        $guardian_id = $data['guardian_id'];
-	    $retuslt = $this->db->select('*')->from('student_guardians')
-                    ->where('student_id',$student_id)
-                    ->where('guardian_id',$guardian_id)
-                    ->limit(1)
-                    ->get();
-	    if($retuslt->num_rows()>0){
-            return false;
-        }else{
-
-            $this->db->insert('student_guardians', $data);
-            return $this->db->insert_id();
-        }
-    }
 
 	public function get_student_by_id($student_id) {
 		$result = $this->db->select('*')
@@ -136,10 +227,7 @@ Class Student_model extends CI_Model {
 		return $this->db->affected_rows();
 	}
 
-	public function delete_student($student_id) {
-		$this->db->where('student_id', $student_id)->delete('students');
-		return $this->db->affected_rows();
-	}
+
 
 	public function add_new_guardian($guardian_data) {
 		$this->db->insert('guardians', $guardian_data);
@@ -147,19 +235,14 @@ Class Student_model extends CI_Model {
 	}
 
 	public function get_all_guardians() {
-
-        $this->db->select('g.*,s.guardian_id as g_id');
-        $this->db->from('guardians g');
-        $this->db->join('student_guardians s', 's.guardian_id=g.guardian_id', 'left');
-        $this->db->order_by('g.guardian_id','desc');
-        $result = $this->db->get();
-
-        if($result) {
-           // echo "<pre>";  print_r($result->result_array()); die();
-            return $result->result_array();
-        } else {
-            return array();
-        }
+		$result = $this->db->select('*')
+						->from('guardians')
+						->get();
+		if ($result) {
+			return $result->result_array();
+		} else {
+			return array();
+		}
 	}
 
 	public function  get_students_by_filters($filters){

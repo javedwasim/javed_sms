@@ -110,9 +110,14 @@
        assessment_category($(this).attr('data-func-call'));
    });
 
-   /////////////// assessment categories ///////////////////
+   /////////////// assessment grade scales ///////////////////
    $('#list_itmes_grade_scales').click(function(){
        grade_scales($(this).attr('data-func-call'));
+   });
+
+   /////////////// assessment learning domain ///////////////////
+   $('#list_itmes_domains').click(function(){
+       domains($(this).attr('data-func-call'));
    });
 
 </script>

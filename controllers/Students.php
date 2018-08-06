@@ -91,16 +91,7 @@ class Students extends MY_Controller {
 	}
 
 	public function add_student() {
-		$data['countries'] = $this->Student_model->get_all_conutries();
-		$student_fields = $this->Student_model->get_form_fields(1);
-		$data['guardian_fields'] = $this->Student_model->get_form_fields(2);
-		$data['guardians'] = $this->Student_model->get_all_guardians();
-		$data['batches'] = $this->Student_model->get_all_batches();
-
-		$fields = array();
-		foreach ($student_fields as $field){
-            $fields[$field['field_name']] = $field['add_view'];
-        }
+		$fields = $this->get_fields_setting();
         $data['student_fields'] = $fields;
         //echo "<pre>"; print_r($data['student_fields']); die();
 		$json['student_html'] = $this->load->view('student/add_student', $data, true);
@@ -109,6 +100,27 @@ class Students extends MY_Controller {
 		}
 
 	}
+
+    public function add_student_form() {
+        $data['countries'] = $this->Student_model->get_all_conutries();
+        $student_fields = $this->Student_model->get_form_fields(1);
+        $data['guardian_fields'] = $this->Student_model->get_form_fields(2);
+        $data['guardians'] = $this->Student_model->get_all_guardians();
+        $data['batches'] = $this->Student_model->get_all_batches();
+        $data['errors']=$this->session->flashdata('errors');
+        //print_r($data['errors']); die();
+        $fields = array();
+        foreach ($student_fields as $field){
+            $fields[$field['field_name']] = $field['add_view'];
+        }
+        $data['student_fields'] = $fields;
+        //echo "<pre>"; print_r($data['student_fields']); die();
+        $this->load->view('parts/header');
+        $this->load->view('parts/topbar');
+        $this->load->view('parts/sidebar');
+        $this->load->view('student/add_student', $data);
+        $this->load->view('parts/footer');
+    }
 
 	public function add_new_student() {
 		$this->load->library('form_validation');
@@ -122,8 +134,10 @@ class Students extends MY_Controller {
 		$this->form_validation->set_rules('email', 'Email', 'required|is_unique[students.email]|xss_clean');
 		//if validation passed
 		if ($this->form_validation->run() == FALSE) {
-			$json['error'] = true;
-			$json['message'] = validation_errors();
+			$data['error'] = true;
+            $validation_errors = validation_errors();
+            $this->session->set_flashdata('errors', $validation_errors);
+            redirect('students/add_student_form');
 		} else {
 			$student_data = $this->input->post();
 			if (!empty($_FILES['photo']['name'])) {
@@ -153,14 +167,12 @@ class Students extends MY_Controller {
 			//unset guardian _length
             unset($student_data['guardian_length']);
 			$result = $this->Student_model->add_new_student($student_data);
+
 			if ($result) {
-                $record['students'] = $this->Student_model->get_all_students();
-                $json['student_html'] = $this->load->view('parts/student_listing', $record, true);
-                $json['success'] = true;
-                $json['message'] = "Student added successfully.";
+                redirect('students/student_guardian_list/'.$result);
 			} else {
-				$json['error'] = true;
-				$json['message'] = "Seems to an error in image uploading.";
+                $this->session->set_flashdata('error', 'Seem to be an error while saving student!');
+                redirect('students/add_new_student/');
 			}
 		}
 
@@ -170,6 +182,34 @@ class Students extends MY_Controller {
         }
 
 	}
+
+	public function get_fields_setting(){
+        $data['countries'] = $this->Student_model->get_all_conutries();
+        $student_fields = $this->Student_model->get_form_fields(1);
+        $data['guardian_fields'] = $this->Student_model->get_form_fields(2);
+        $data['guardians'] = $this->Student_model->get_all_guardians();
+        $data['batches'] = $this->Student_model->get_all_batches();
+
+        $fields = array();
+        foreach ($student_fields as $field){
+            $fields[$field['field_name']] = $field['add_view'];
+        }
+        return $fields;
+    }
+
+	public function student_guardian_list($student_id){
+        $fields = $this->get_fields_setting();
+        $data['student_fields'] = $fields;
+	    $data['student_id'] = $student_id;
+        $data['guardians'] = $this->Student_model->get_all_guardians();
+
+        $this->load->view('parts/header');
+        $this->load->view('parts/topbar');
+        $this->load->view('parts/sidebar');
+        $this->load->view('student/student_guardian_listing',$data);
+        $this->load->view('parts/footer');
+
+    }
 
 	public function edit($student_id) {
 		$record['student'] = $this->Student_model->get_student_by_id($student_id);
@@ -196,6 +236,114 @@ class Students extends MY_Controller {
           set_content_type($json);
         }
 	}
+
+	public function assign_guardian(){
+        $this->load->library('form_validation');
+        $this->load->helper('security');
+        $this->form_validation->set_rules('relation', 'relation with student', 'required|xss_clean');
+
+        if ($this->form_validation->run() == FALSE) {
+            $json['error'] = true;
+            $json['message'] = validation_errors();
+        }else{
+            $guardian = $this->input->post();
+            $result = $this->Student_model->save_student_guardian($guardian);
+            if ($result) {
+                $data['student_id'] = $guardian['student_id'];
+                $data['guardians'] = $this->Student_model->get_all_guardians();
+                $json['guardian_html'] = $this->load->view('student/student_guardian_table', $data, true);
+                $json['success'] = true;
+                $json['message'] = "Guardian assigned to student successfully!";
+            } else {
+                $data['student_id'] = $guardian['student_id'];
+                $data['guardians'] = $this->Student_model->get_all_guardians();
+                $json['guardian_html'] = $this->load->view('student/student_guardian_table', $data, true);
+                $json['error'] = true;
+                $json['message'] = "Seems to an error while assigning guardian.";
+            }
+
+        }
+
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function add_new_guardian(){
+        $this->load->library('form_validation');
+        $this->load->helper('security');
+        $this->form_validation->set_rules('surname', 'Surname', 'required|xss_clean');
+        $this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
+
+        if ($this->form_validation->run() == FALSE) {
+
+            $json['error'] = true;
+            $json['message'] = validation_errors();
+        }else{
+            $guardian = $this->input->post();
+
+            if (!empty($_FILES['photo']['name'])) {
+                $upload_path = 'assets/uploads/guardian_images';
+                $config = array(
+                    'upload_path' => $upload_path,
+                    'allowed_types' => "gif|jpg|png|jpeg",
+                    'overwrite' => TRUE,
+                    'file_name' => strtolower(str_replace(' ', '-', $this->input->post('surname') . '-' . $this->input->post('first_name'))) . '-' . uniqid()
+                );
+                $this->load->library('upload', $config);
+
+                if (!$this->upload->do_upload('photo')) {
+                    $json['error'] = true;
+                    $json['message'] = $this->upload->display_errors();
+                } else {
+                    $imageDetailArray = $this->upload->data();
+                    $photo = $imageDetailArray['file_name'];
+                }
+                if ($photo) {
+                    $guardian['photo'] = $imageDetailArray['file_name'];
+                } else {
+                    $json['error'] = true;
+                    $json['message'] = "Seems to an error in image uploading.";
+                }
+            }
+            $guardian_fields = array('surname'=>$guardian['surname'],
+                                    'first_name'=>$guardian['first_name'],
+                                    'middle_name'=>$guardian['middle_name'],
+                                    'photo'=>$guardian['photo'],
+                                    'title'=>$guardian['title'],
+                                    'email'=>$guardian['email'],
+                                    'gender'=>$guardian['gender'],
+                                    'phone'=>$guardian['phone'],
+                                    'mobile_phone'=>$guardian['mobile_phone'],
+                                    'address_line'=>$guardian['address_line'],
+                                    'country'=>$guardian['country'],
+                                    'state'=>$guardian['state'],
+                                    'city'=>$guardian['city'],
+                                    'lga'=>$guardian['lga'],
+                            );
+
+            $guardian_id = $this->Student_model->add_new_guardian($guardian_fields);
+            $student_guardian_fields = array(
+                                            'student_id'=>$guardian['student_id'],
+                                            'guardian_id'=>$guardian_id,
+                                            'relation'=>$guardian['relation_with_student'],
+                                            'emergency_contact'=>isset($guardian['emergency_contact'])?$guardian['emergency_contact']:0,
+                                            'is_authorized'=>isset($guardian['is_authorized'])?$guardian['is_authorized']:0,
+                                        );
+            $result = $this->Student_model->save_student_guardian($student_guardian_fields);
+            if ($result) {
+                $data['student_id'] = $guardian['student_id'];
+                redirect('students/student_guardian_list/'.$data['student_id']);
+            } else {
+                redirect('students/student_guardian_list/'.$data['student_id']);
+            }
+
+        }
+
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
 
 	public function update_student($student_id) {
 		$this->load->library('form_validation');

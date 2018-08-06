@@ -86,8 +86,7 @@ function get_students(func_call) {
 		url: '/isms/students/'+func_call,
 		cache: false,
 		success: function(response) {
-			console.log(response.student_html);
-			if(response.student_html != ''){
+		    if(response.student_html != ''){
 				$('.content-wrapper').remove();
 				$('#content-wrapper').append(response.student_html);
 				$('#mobile_phone').intlTelInput({
@@ -282,7 +281,6 @@ function profile_fields(func_call) {
 		url: '/isms/students/'+func_call,
 		cache: false,
 		success: function(response) {
-			console.log(response.student_html);
 			if(response.student_html != ''){
 				$('.content-wrapper').remove();
 				$('#content-wrapper').append(response.student_html);
@@ -299,15 +297,11 @@ $(document.body).on('click', '#save_student', function(){
         data: $('#student_form').serialize(),
         cache: false,
         success: function(response) {
-            $('#student_error').hide();
-            $('#student_success').hide();
             if (response.success) {
-                $('#student_success').show().html(response.message);
-                $('#student_form')[0].reset();
+                toastr["success"](response.message);
             } else {
-                $('#student_error').show().html(response.message);
+                toastr["success"](response.message);
             }
-
         }
     });
 
@@ -360,7 +354,6 @@ function students_listing(func_call) {
 		url: '/isms/students/'+func_call,
 		cache: false,
 		success: function(response) {
-			console.log(response);
 			if(response.student_html != ''){
 				$('.content-wrapper').remove();
 				$('#content-wrapper').append(response.student_html);
@@ -389,13 +382,11 @@ function students_listing(func_call) {
 }
 
 function loadEditForm(url){
-	console.log(url);
     $.ajax({
         url: url,
         cache: false,
         success: function(response) {
             if(response.student_html != ''){
-                console.log(response);
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.student_html);
                 $('#guardian').DataTable({
@@ -415,7 +406,6 @@ $(document.body).on('click', '.edit-student', function(){
 		url: $('.edit-student').attr('data-href'),
 		cache: false,
 		success: function(response) {
-			console.log(response);
 			if(response.student_html != ''){
 				$('.content-wrapper').remove();
 				$('#content-wrapper').append(response.student_html);
@@ -662,7 +652,6 @@ $(document.body).on('click', '#update_employee_category', function(){
                 $( ".modal-backdrop" ).remove();
                 $('#employee_category_update').modal('hide');
             } else {
-            	console.log(response);
                 $('#employee_error').show().html(response.message);
             }
 
@@ -745,7 +734,6 @@ $(document.body).on('click', '#update_employee_department', function(){
                 $( ".modal-backdrop" ).remove();
                 $('#employee_department_update').modal('hide');
             } else {
-                console.log(response);
                 $('#employee_error').show().html(response.message);
             }
 
@@ -831,7 +819,6 @@ $(document.body).on('click', '#update_employee_position', function(){
                 $( ".modal-backdrop" ).remove();
                 $('#employee_position_update').modal('hide');
             } else {
-                console.log(response);
                 $('#employee_error').show().html(response.message);
             }
 
@@ -1048,7 +1035,6 @@ $(document.body).on('click', '.delete-subject', function(){
                 $('#subject_error').hide();
                 $('#subject_success').hide();
                 if (response.success) {
-                	console.log(response.setting_html);
                     $('.content-wrapper').remove();
                     $('#content-wrapper').append(response.setting_html);
                     $('#class_success').show().html(response.message);
@@ -1163,7 +1149,6 @@ $(document.body).on('click', '.delete-session', function(){
                 $('#session_error').hide();
                 $('#session_success').hide();
                 if (response.success) {
-                    console.log(response.session_html);
                     $('.content-wrapper').remove();
                     $('#content-wrapper').append(response.session_html);
                     $('#session_success').show().html(response.message);
@@ -1669,6 +1654,7 @@ $(document.body).on('click', '#save_scale', function(){
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.scale_html);
                 toastr["success"](response.message);
+                $('.datatables').DataTable();
                 $('#title').html('Grade Scales | ISMS');
                 $( ".modal-backdrop" ).remove();
                 $('#add_scale').modal('hide');
@@ -1855,5 +1841,149 @@ $(document.body).on('click', '.retire-grade-scale', function(){
             }
         }
     });
+    return false;
+});
+
+function domains(func_call){
+    $.ajax({
+        url: '/isms/domains/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.domain_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.domain_html);
+                $('#title').html('Grading Scales | ISMS');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '#save_domain_indicator', function(){
+    $.ajax({
+        url: $('#add_domain_indicator_form').attr('data-action'),
+        type: 'post',
+        data: $('#add_domain_indicator_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.indicator_html != ''){
+                $('.domain_indicator_table').empty();
+                $('.domain_indicator_table').append(response.indicator_html);
+                $('#add_domain_group_indicator').modal('hide');
+                toastr["success"](response.message);
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.edit-domain-group-indicator', function(){
+     $('#edit_domain_indicator_form')[0].reset();
+     $('#indicator_id').val($(this).attr('data-href'));
+     $('#indicator_name').val($(this).attr('data-name'));
+     $('#indicator_code').val($(this).attr('data-code'));
+     $('#indicator_description').val($(this).attr('data-description'));
+     $('#domain_id').val($(this).attr('data-domain-id'));
+    $('#edit_domain_group_indicator').modal('show');
+});
+
+$(document.body).on('click', '#update_domain_indicator', function(){
+    $.ajax({
+        url: $('#edit_domain_indicator_form').attr('data-action'),
+        type: 'post',
+        data: $('#edit_domain_indicator_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.indicator_html != ''){
+                $('.domain_indicator_table').empty();
+                $('.domain_indicator_table').append(response.indicator_html);
+                $('#edit_domain_group_indicator').modal('hide');
+                toastr["success"](response.message);
+            } else {
+                toastr["warning"](response.message);
+            }
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.delete-domain-group-indicator', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            type: 'post',
+            data : { delete_id : $(this).attr('data-delete-id'), domain_id : $(this).attr('data-domain-id') },
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.domain_indicator_table').empty();
+                    $('.domain_indicator_table').append(response.indicator_html);
+                    toastr["success"](response.message);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+$(document.body).on('click', '.assign-guardian', function(){
+    $('#assign_guardian_form')[0].reset();
+    $('#student_id').val($(this).attr('data-student-id'));
+    $('#guardian_id').val($(this).attr('data-guardian-id'));
+    $('#assign_guardian').modal('show');
+    return false;
+
+});
+
+$(document.body).on('click', '#assign_student_guardian', function(){
+    $.ajax({
+        url: $('#assign_guardian_form').attr('data-action'),
+        type: 'post',
+        data: $('#assign_guardian_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.guardian_html != ''){
+                $('#guardian_table').empty();
+                $('#guardian_table').append(response.guardian_html);
+                $('#assign_guardian').modal('hide');
+                toastr["success"](response.message);
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '#save_student_guardian', function(){
+    $.ajax({
+        url: $('#create_guardian_form').attr('data-action'),
+        type: 'post',
+        data: $('#create_guardian_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if(response.guardian_html != ''){
+                $('#guardian_table').empty();
+                $('#guardian_table').append(response.guardian_html);
+                $('#myModal').modal('hide');
+                toastr["success"](response.message);
+            } else {
+                toastr["warning"](response.message);
+            }
+
+        }
+    });
+
     return false;
 });
