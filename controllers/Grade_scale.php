@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
 
         public function institution_details(){
-            $data['countries'] = $this->Employee_model->get_all_conutries();
+            $data['countries'] = $this->Employee_model->get_all_countries();
             $json['settings_html'] = $this->load->view('settings/institution_details', $data, true);
             if($this->input->is_ajax_request()) {
               set_content_type($json);
@@ -405,7 +405,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         public function institutions(){
 		    $data['institution_detail'] = $this->General_model->get_institution_detail();
-            $data['countries'] = $this->Employee_model->get_all_conutries();
+            $data['countries'] = $this->Employee_model->get_all_countries();
             $this->load->view('parts/header');
             $this->load->view('parts/topbar');
             $this->load->view('parts/sidebar');

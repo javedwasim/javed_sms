@@ -16,7 +16,7 @@
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-    <?php if($errors): ?>
+    <?php if(isset($errors)): ?>
         <div class="alert alert-danger">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             <strong><?php echo $errors; ?></strong>
@@ -90,9 +90,9 @@
                                                 <label>Date of Birth</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                  <i class="fa fa-calendar"></i>
-                                </span>
+                                                    <span class="input-group-text">
+                                                      <i class="fa fa-calendar"></i>
+                                                    </span>
                                                     </div>
                                                     <input type="text" class="form-control datepicker"
                                                            data-date-format="yyyy-mm-dd" name="date_of_birth"
@@ -179,10 +179,10 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Nationality</label>
-                                                <select class="form-control" name="nationality">
+                                                <select class="form-control" id="nationality" name="nationality">
                                                     <option value="">Select Nationality</option>
                                                     <?php foreach ($countries as $country) { ?>
-                                                        <option value="<?php echo $country['country_code'] ?>"><?php echo $country['country_name'] ?></option>
+                                                        <option value="<?php echo $country['id'] ?>"><?php echo $country['country_name'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -192,8 +192,9 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>State of Origin</label>
-                                                <input type="text" class="form-control" name="state_of_origin"
-                                                       maxlength="10" placeholder="State of Origin">
+                                                <select class="form-control" id="country_states" name="state_of_origin">
+
+                                                </select>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -201,8 +202,9 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>L.G.A of Origin</label>
-                                                <input type="text" class="form-control" name="lga_of_origin"
-                                                       maxlength="20" placeholder="L.G.A of Origin">
+                                                <select class="form-control" id="lga_of_origin" name="lga_of_origin">
+
+                                                </select>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -214,14 +216,12 @@
                                                     name="batch_no">
                                                 <option value=""></option>
                                                 <?php $priorGroup = "";
-                                                foreach ($batches
-
-                                                as $batch){ ?>
+                                                foreach ($batches as $batch){ ?>
                                                 <?php if ($batch["session"] != $priorGroup){ ?>
                                                 <optgroup label="<?php echo $batch['session']; ?>">
                                                     <?php } ?>
-                                                    <option value="<?php echo $batch['id']; ?>">NCSS - MNIS
-                                                        (2018/2019)
+                                                    <option value="<?php echo $batch['id']; ?>">
+                                                        <?php echo $batch['code'] . '-' . $batch['arm'] . '(' . $batch['session'] . ')' ?>
                                                     </option>
                                                     <?php $priorGroup = $batch["session"];
                                                     }
@@ -286,10 +286,10 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Country</label>
-                                                <select class="form-control" name="country">
+                                                <select class="form-control select2" name="country">
                                                     <option value="">Select Country</option>
                                                     <?php foreach ($countries as $country) { ?>
-                                                        <option value="<?php echo $country['country_code'] ?>"><?php echo $country['country_name'] ?></option>
+                                                        <option value="<?php echo $country['id'] ?>"><?php echo $country['country_name'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -297,8 +297,12 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>State</label>
-                                                <input type="text" class="form-control" name="state" maxlength="20"
-                                                       placeholder="State">
+                                                <select class="form-control select2" name="state">
+                                                    <option value="">Please select a state</option>
+                                                    <?php foreach ($states as $state): ?>
+                                                        <option value="<?php echo $state['id']; ?>"><?php echo $state['name']; ?></option>
+                                                    <?php  endforeach; ?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -335,3 +339,37 @@
 
 </div>
 
+<script>
+    $("#nationality").change(function () {
+        var country = $('#nationality').val();
+        $.ajax({
+            url: '/isms/students/get_state/'+country,
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#country_states').empty();
+                    $('#country_states').append(response.states_html);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+
+    $("#country_states").change(function () {
+        var state = $('#country_states').val();
+        $.ajax({
+            url: '/isms/students/get_origin/'+state,
+            cache: false,
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    $('#lga_of_origin').empty();
+                    $('#lga_of_origin').append(response.origin_html);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+</script>

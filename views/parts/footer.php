@@ -92,6 +92,41 @@
 <!-- custom scripts -->
 <script src="<?php echo base_url(); ?>assets/dist/js/script.js"></script>
 <script src="<?php echo base_url(); ?>assets/dist/js/custom.js"></script>
+<script>
+    $("#nationality").change(function () {
+        var country = $('#nationality').val();
+        $.ajax({
+            url: '/isms/students/get_state/'+country,
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#country_states').empty();
+                    $('#country_states').append(response.states_html);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+
+    $("#country_states").change(function () {
+        var state = $('#country_states').val();
+        $.ajax({
+            url: '/isms/students/get_origin/'+state,
+            cache: false,
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    $('#lga_of_origin').empty();
+                    $('#lga_of_origin').append(response.origin_html);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+
+</script>
 
 </body>
 </html>

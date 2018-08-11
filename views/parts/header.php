@@ -62,5 +62,7 @@
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-</head>
-<?php echo '<input type="hidden" id="base" value="' .base_url(). '">'; ?>
+    <div id="spinner" class="spinner" style="display:none;">
+        <img id="img-spinner" src="<?php echo base_url(); ?>assets/uploads/images/spinner.gif" alt="Loading"/>
+    </div>
+    <?php echo '<input type="hidden" id="base" value="' .base_url(). '">'; ?>

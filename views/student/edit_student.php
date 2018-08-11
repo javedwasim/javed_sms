@@ -84,7 +84,7 @@
                           </div>
                         </div>
                       </div>
-                      <?php if($student_fields['date_of_birth'] || $student['date_of_birth']) { ?>
+                      <?php if($student_fields['date_of_birth']) { ?>
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>Date of Birth</label>
@@ -175,10 +175,10 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>Nationality</label>
-                          <select class="form-control" name="nationality">
+                          <select class="form-control" name="nationality" id="nationality">
                             <option value="">Select Nationality</option>
                             <?php foreach($countries as $country) { ?>
-                            <option <?php echo ($country['country_code'] == $student['nationality'])? 'selected': ''; ?> value="<?php echo $country['country_code'] ?>"><?php echo $country['country_name'] ?></option>
+                                <option <?php echo ($country['id'] == $student['nationality'])? 'selected': ''; ?> value="<?php echo $country['id'] ?>"><?php echo $country['country_name'] ?></option>
                             <?php } ?>
                           </select>
                         </div>
@@ -188,7 +188,12 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>State of Origin</label>
-                          <input type="text" class="form-control" value="<?php echo $student['state_of_origin'] ?>" name="state_of_origin" placeholder="State of Origin">
+                           <select class="form-control" id="country_states" name="state_of_origin">
+                               <?php foreach ($states as $state): ?>
+                                   <option value="<?php echo $state['id']; ?>"<?php echo ($state['id'] == $student['state_of_origin'])? 'selected': ''; ?>>
+                                       <?php echo $state['name']; ?></option>
+                               <?php  endforeach; ?>
+                           </select>
                         </div>
                       </div>
                       <?php } ?>
@@ -196,7 +201,12 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>L.G.A of Origin</label>
-                          <input type="text" class="form-control" value="<?php echo $student['lga_of_origin'] ?>" name="lga_of_origin" placeholder="L.G.A of Origin">
+                          <select class="form-control" id="lga_of_origin" name="lga_of_origin">
+                              <?php foreach ($origins as $origin): ?>
+                                  <option value="<?php echo $origin['id']; ?>"<?php echo ($origin['id'] == $student['lga_of_origin'])? 'selected': ''; ?>>
+                                      <?php echo $origin['name']; ?></option>
+                              <?php  endforeach; ?>
+                          </select>
                         </div>
                       </div>
                       <?php } ?>
@@ -267,10 +277,11 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>Country</label>
-                          <select class="form-control" name="country">
+                          <select class="form-control select2" name="country" id="country">
                             <option value="">Select Country</option>
                             <?php foreach($countries as $country) { ?>
-                            <option <?php echo ($country['country_code'] == $student['country'])? 'selected': ''; ?> value="<?php echo $country['country_code'] ?>"><?php echo $country['country_name'] ?></option>
+                                <option <?php echo ($country['country_code'] == $student['country'])? 'selected': ''; ?>
+                                    value="<?php echo $country['country_code'] ?>"><?php echo $country['country_name'] ?></option>
                             <?php } ?>
                           </select>
                         </div>
@@ -278,7 +289,13 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>State</label>
-                          <input type="text" value="<?php echo $student['state'] ?>" class="form-control" name="state" placeholder="State">
+                            <select class="form-control select2" id="state" name="state">
+                                <?php foreach ($states as $state): ?>
+                                    <option value="<?php echo $state['id']; ?>"<?php echo ($state['id'] == $student['state'])? 'selected': ''; ?>>
+                                        <?php echo $state['name']; ?></option>
+                                <?php  endforeach; ?>
+                            </select>
+
                         </div>
                       </div>
                       <div class="col-md-4">
@@ -290,39 +307,6 @@
                     </div>
                   </div>
                   <?php } ?>
-              <?php if($student_fields['guardian_info_section']) { ?>
-                <div class="card-header">
-                  <h3 class="card-title">Guardian Details</h3>
-                </div>
-                <div class="card-body guardian-card">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <div class="btn-group">
-                          <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign Guardian</a>
-                          <span class="sr-only"></span>
-                          <div class="dropdown-menu">
-                            <a href="#" class="dropdown-item" id="ex-guardian">Assign Existing Guardian</a>
-                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#myModal">Create New Guardian</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                    <?php $this->load->view('parts/guardian_list'); ?>
-                    </div>
-                    <br />
-                    <div class="row">
-                      <div class="col-md-6" style="margin-bottom: 20px;">
-
-                        <button id="save_student" type="submit" class="btn btn-primary btn-lg pull-right">Save Student</button>
-                      </div>
-                      <div class="col-sm-6">
-                        <button id="save_and_add_another" type="submit" class="btn btn-primary btn-lg pull-center">Save and add another</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>                <?php } ?>
                 <!-- /.card-body -->
               </div>
               <!-- /.card -->
@@ -508,3 +492,38 @@
     </section>
     <!-- /.content -->
   </div>
+
+<script>
+    $("#nationality").change(function () {
+        var country = $('#nationality').val();
+        $.ajax({
+            url: '/isms/students/get_state/'+country,
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#country_states').empty();
+                    $('#country_states').append(response.states_html);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+
+    $("#country_states").change(function () {
+        var state = $('#country_states').val();
+        $.ajax({
+            url: '/isms/students/get_origin/'+state,
+            cache: false,
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    $('#lga_of_origin').empty();
+                    $('#lga_of_origin').append(response.origin_html);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+</script>

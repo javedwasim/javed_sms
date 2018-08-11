@@ -107,7 +107,7 @@ Class General_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-	public function get_all_conutries() {
+	public function get_all_countries() {
 		$result = $this->db->select('*')
 						->from('countries_list')
 						->get();

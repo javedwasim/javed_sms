@@ -25,30 +25,6 @@ $(document).ready(function(){
 
 	});
 
-	$(document.body).on('click', '.delete-student', function(){
-		if (confirm('Are you sure to delete this record?')) {
-			$.ajax({
-				url: $(this).attr('data-href'),
-				cache: false,
-				success: function(response) {
-					$('#student_error').hide();
-					$('#student_success').hide();
-					if (response.success) {
-						$('.content-wrapper').remove();
-						$('#content-wrapper').append(response.student_html);
-						$('#student_success').show().html(response.message);
-				} else {
-					$('#student_error').show().html(response.message);
-				}
-			}
-			});
-		} else {
-			return false;
-		}
-
-		return false;
-	});
-
     $(document.body).on('click', '.delete-student_cat', function(){
         if (confirm('Are you sure to delete this record?')) {
             $.ajax({
@@ -112,44 +88,7 @@ function get_students(func_call) {
 }
 ///////////////// sohaib's script ////////////////
 
-function employee_listing(func_call) {
-	$.ajax({
-		url: '/isms/employee/'+func_call,
-        cache: false,
-		success: function(response) {
-			if(response.employee_html != ''){
-				$('.content-wrapper').remove();
-				$('#content-wrapper').append(response.employee_html);
-				$('#example1').DataTable();
-				  //iCheck for checkbox and radio inputs
-			    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-			      checkboxClass: 'icheckbox_minimal-blue',
-			      radioClass   : 'iradio_minimal-blue'
-			    });
-			    //Red color scheme for iCheck
-			    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-			      checkboxClass: 'icheckbox_minimal-red',
-			      radioClass   : 'iradio_minimal-red'
-			    });
-			    //Flat red color scheme for iCheck
-			    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-			      checkboxClass: 'icheckbox_flat-green',
-			      radioClass   : 'iradio_flat-green'
-			    });
-			    $('.select2').select2({
-			     	placeholder: "Show more fields"
-			     });
-			    $('.datepicker').datepicker({
-			        format: 'dd-mm-yyyy'
-			    });
-				$('.datepicker').datepicker({
-			        format: 'dd-mm-yyyy'
-			    });
-			    $('#title').html('Employee Listing | ISMS');
-			}
-		}
-	});
-}
+
 
 function employee_add(func_call) {
 	$.ajax({
@@ -426,16 +365,29 @@ $(document.body).on('click', '#update_student', function(){
 		type: 'post',
 		data: $('#student_update_form').serialize(),
 		cache: false,
+        beforeSend: function(){
+            $('#spinner').show();
+        },
+        complete: function(){
+            $('#spinner').hide();
+        },
 		success: function(response) {
-			if(response.student_html != ''){
+			if(response.success){
 				$('.content-wrapper').remove();
 				$('#content-wrapper').append(response.student_html);
-				$('#student_success').show().html(response.message);
-				$('#guardian').DataTable({
-
-    		});
+                $('#student-table').DataTable();
+                var sttable = $("#student-b-table").DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'colvis'
+                    ]
+                });
+                $(".buttons-colvis").html('Fields to Show');
+                sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                $('#title').html('Student Listing | ISMS');
+                toastr["success"](response.message);
 			} else {
-				$('#student_error').show().html(response.message);
+                toastr["error"](response.message);
 			}
 		}
 	});
@@ -614,8 +566,13 @@ $(document.body).on('click', '#save_employee_category', function(){
             $('#employee_cat_error').hide();
             $('#employee_cat_success').hide();
             if (response.success) {
-                $('#employee_cat_success').show().html(response.message);
-                $('#employee_cat_form')[0].reset();
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.employee_html);
+                $('#employee_success').show().html(response.message);
+                $('.datatables').DataTable();
+                $('#title').html('Employee Department | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#employee_category_add').modal('hide');
             } else {
                 $('#employee_cat_error').show().html(response.message);
             }
@@ -695,8 +652,13 @@ $(document.body).on('click', '#save_employee_department', function(){
             $('#employee_department_error').hide();
             $('#employee_department_success').hide();
             if (response.success) {
-                $('#employee_department_success').show().html(response.message);
-                $('#employee_department_form')[0].reset();
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.employee_html);
+                $('#employee_success').show().html(response.message);
+                $('.datatables').DataTable();
+                $('#title').html('Employee Department | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#employee_department_add').modal('hide');
             } else {
                 $('#employee_department_error').show().html(response.message);
             }
@@ -730,7 +692,7 @@ $(document.body).on('click', '#update_employee_department', function(){
                 $('#content-wrapper').append(response.employee_html);
                 $('#employee_success').show().html(response.message);
                 $('.datatables').DataTable();
-                $('#title').html('Employee Categories | ISMS');
+                $('#title').html('Employee Department | ISMS');
                 $( ".modal-backdrop" ).remove();
                 $('#employee_department_update').modal('hide');
             } else {
@@ -778,8 +740,13 @@ $(document.body).on('click', '#save_employee_position', function(){
             $('#employee_position_error').hide();
             $('#employee_position_success').hide();
             if (response.success) {
-                $('#employee_position_success').show().html(response.message);
-                $('#employee_position_form')[0].reset();
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.employee_html);
+                $('#employee_success').show().html(response.message);
+                $('.datatables').DataTable();
+                $('#title').html('Employee Department | ISMS');
+                $( ".modal-backdrop" ).remove();
+                $('#employee_position_add').modal('hide');
             } else {
                 $('#employee_position_error').show().html(response.message);
             }
@@ -1985,5 +1952,169 @@ $(document.body).on('click', '#save_student_guardian', function(){
         }
     });
 
+    return false;
+});
+
+$(document.body).on('click', '.unassign-guardian', function(){
+    if (confirm('Are you sure to unassin this guardian?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            type: 'post',
+            data : { guardian_id : $(this).attr('data-guardian-id'), student_id : $(this).attr('data-student-id') },
+            cache: false,
+            success: function(response) {
+                if(response.guardian_html != ''){
+                    $('#guardian_table').empty();
+                    $('#guardian_table').append(response.guardian_html);
+                    toastr["success"](response.message);
+                } else {
+                    toastr["warning"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+
+function employee_listing(func_call) {
+    $.ajax({
+        url: '/isms/employee/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.employee_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.employee_html);
+                $('#example1').DataTable();
+                //iCheck for checkbox and radio inputs
+                $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+                    checkboxClass: 'icheckbox_minimal-blue',
+                    radioClass   : 'iradio_minimal-blue'
+                });
+                //Red color scheme for iCheck
+                $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+                    checkboxClass: 'icheckbox_minimal-red',
+                    radioClass   : 'iradio_minimal-red'
+                });
+                //Flat red color scheme for iCheck
+                $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass   : 'iradio_flat-green'
+                });
+                $('.select2').select2({
+                    placeholder: "Show more fields"
+                });
+                $('.datepicker').datepicker({
+                    format: 'dd-mm-yyyy'
+                });
+                $('.datepicker').datepicker({
+                    format: 'dd-mm-yyyy'
+                });
+                $('#title').html('Employee Listing | ISMS');
+            }
+        }
+    });
+}
+
+
+function get_batches(func_call) {
+    $.ajax({
+        url: '/isms/batches/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.batch_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.batch_html);
+
+                $('.select2').select2({
+                    placeholder: "Show more fields"
+                });
+                $('#title').html('Batches | ISMS');
+
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '#save_batch', function(){
+    $.ajax({
+        url: $('#batch_form').attr('data-action'),
+        type: 'post',
+        data: $('#batch_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.batch_html);
+                $('#new_batch').modal('hide');
+                $( ".modal-backdrop" ).remove();
+                toastr["success"](response.message);
+            } else {
+                toastr["success"](response.message);
+            }
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.edit-batch', function(){
+
+    $.ajax({
+        url: $(this).attr('data-href'),
+        cache: false,
+        success: function(response) {
+            $('.modal-body').empty();
+            $('.modal-body').append(response.batch_html);
+            $('#new_batch').modal('show');
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.delete-batch', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            type: 'post',
+            data : { delete_id : $(this).attr('data-delete-id'), domain_id : $(this).attr('data-domain-id') },
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.batch_html);
+                    toastr["success"](response.message);
+                } else {
+                    toastr["success"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+$(document.body).on('click', '#assign_employee', function(){
+    $.ajax({
+        url: $('#batch_form').attr('data-action'),
+        type: 'post',
+        data: $('#batch_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.batch_html);
+                $('#new_batch').modal('hide');
+                $( ".modal-backdrop" ).remove();
+                toastr["success"](response.message);
+            } else {
+                toastr["success"](response.message);
+            }
+        }
+    });
     return false;
 });

@@ -64,10 +64,12 @@
                              <td><?php echo $guardian['phone']; ?></td>
                              <td><?php echo $guardian['email']; ?></td>
                              <td>
-                                 <a href="javascript:void(0)" data-guardian-id = "<?php echo $guardian['guardian_id']; ?>"
+                                 <a href="javascript:void(0)"
+                                    data-guardian-id = "<?php echo $guardian['guardian_id']; ?>"
                                     data-student-id = "<?php echo $student_id ?>"
-                                    class="<?php echo $guardian['g_id']>0?"btn btn-danger btn-xs unassign-guardian":"btn btn-primary btn-xs assign-guardian" ?>"><i class="fa fa-user-plus"></i>
-                                    <?php echo $guardian['g_id']>0?"Unassigned":"Assign Guardian" ?></a>
+                                    data-href = "<?php echo site_url('students/unassign_guardian/'); ?>"
+                                    class="<?php echo $guardian['student_id']>0?"btn btn-danger btn-xs unassign-guardian":"btn btn-primary btn-xs assign-guardian" ?>"><i class="fa fa-user-plus"></i>
+                                    <?php echo $guardian['student_id']>0?"Unassigned":"Assign Guardian" ?></a>
                              </td>
                          </tr>
                      <?php } ?>
@@ -228,10 +230,10 @@
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>Country</label>
-                                                 <select class="form-control" name="country">
-                                                     <option value="">Select Nationality</option>
+                                                 <select class="form-control" name="country" id="nationality">
+                                                     <option value="">Please Select</option>
                                                      <?php foreach ($countries as $country) { ?>
-                                                         <option value="<?php echo $country['country_code'] ?>"><?php echo $country['country_name'] ?></option>
+                                                         <option value="<?php echo $country['id'] ?>"><?php echo $country['country_name'] ?></option>
                                                      <?php } ?>
                                                  </select>
                                              </div>
@@ -239,8 +241,11 @@
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>State</label>
-                                                 <select class="form-control" name="state">
+                                                 <select class="form-control" name="state" id="country_states">
                                                      <option value="">Please Select</option>
+                                                     <?php foreach ($states as $state): ?>
+                                                         <option value="<?php echo $state['id']; ?>"><?php echo $state['name']; ?></option>
+                                                     <?php  endforeach; ?>
                                                  </select>
                                              </div>
                                          </div>
@@ -260,7 +265,7 @@
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>L.G.A</label>
-                                                 <select class="form-control" name="lga">
+                                                 <select class="form-control" name="lga" id="lga_of_origin">
                                                      <option value="">Please Select</option>
                                                  </select>
                                              </div>
@@ -329,9 +334,41 @@
      </div>
  </div>
 
-
  <script>
      $(document).ready(function() {
+         $('.select2').select2();
          $('#guardian_table').DataTable();
      } );
+     $("#nationality").change(function () {
+         var country = $('#nationality').val();
+         $.ajax({
+             url: '/isms/students/get_state/'+country,
+             cache: false,
+             success: function(response) {
+                 if (response.success) {
+                     $('#country_states').empty();
+                     $('#country_states').append(response.states_html);
+                 } else {
+                     toastr["warning"](response.message);
+                 }
+             }
+         });
+     });
+
+     $("#country_states").change(function () {
+         var state = $('#country_states').val();
+         $.ajax({
+             url: '/isms/students/get_origin/'+state,
+             cache: false,
+             success: function(response) {
+                 console.log(response);
+                 if (response.success) {
+                     $('#lga_of_origin').empty();
+                     $('#lga_of_origin').append(response.origin_html);
+                 } else {
+                     toastr["warning"](response.message);
+                 }
+             }
+         });
+     });
  </script>

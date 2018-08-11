@@ -1,84 +1,103 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Guardians extends MY_Controller
+class Batches extends MY_Controller
 {
     function __construct() {
         parent::__construct();
         $this->load->model('Student_model');
-        $this->load->model('Dashboard_model');
+        $this->load->model('Batches_model');
         $this->load->helper('content-type');
 
     }
 
     public function index(){
-        $record['guardians'] = $this->Student_model->get_all_guardians();
-
-        $this->load->view('parts/header');
-        $this->load->view('parts/topbar');
-        $this->load->view('parts/sidebar');
-        $this->load->view('student/guardian_listing', $record);
-        $this->load->view('parts/footer');
-
+        $record['batches'] = $this->Batches_model->get_all_batches();
+        $record['sessions'] = $this->Batches_model->get_all_sessions();
+        $record['classes'] = $this->Batches_model->get_all_classes();
+        $this->load->view('batches/index', $record);
     }
 
-    public function guardians()
+    public function batches()
     {
-        $record['guardians'] = $this->Student_model->get_all_guardians();
-        $json['guardian_html'] = $this->load->view('student/guardian_listing', $record, true);
+        $record['batches'] = $this->Batches_model->get_all_batches();
+        $record['sessions'] = $this->Batches_model->get_all_sessions();
+        $record['classes'] = $this->Batches_model->get_all_classes();
+        $json['batch_html'] = $this->load->view('batches/list', $record, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
     }
 
-    public function add_new_guardian() {
+    public function save() {
         $this->load->library('form_validation');
         $this->load->helper('security');
-        $this->form_validation->set_rules('surname', 'surname', 'required|xss_clean');
-        $this->form_validation->set_rules('first_name', 'first name', 'required|xss_clean');
+        $this->form_validation->set_rules('arm', 'arm', 'required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
             $json['message'] = validation_errors();
         } else {
-            $guardian_data = $this->input->post();
-            if (!empty($_FILES['photo']['name'])) {
-                $upload_path = 'assets/uploads/student_images';
-                $config = array(
-                    'upload_path' => $upload_path,
-                    'allowed_types' => "gif|jpg|png|jpeg",
-                    'overwrite' => TRUE,
-                    'file_name' => strtolower(str_replace(' ', '-', $this->input->post('surname') . '-' . $this->input->post('first_name'))) . '-' . uniqid()
-                );
-                $this->load->library('upload', $config);
-
-                if (!$this->upload->do_upload('photo')) {
-                    $json['error'] = true;
-                    $json['message'] = $this->upload->display_errors();
-                } else {
-                    $imageDetailArray = $this->upload->data();
-                    $photo = $imageDetailArray['file_name'];
-                }
-                if ($photo) {
-                    $guardian_data['photo'] = $imageDetailArray['file_name'];
-                } else {
-                    $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
-                }
+            $batch_data = $this->input->post();
+            if(isset($batch_data['id']) && ($batch_data['id']>0)){
+                $id = $batch_data['id'];
+                $data = array('arm'=>$batch_data['arm'],'course_id'=>$batch_data['course_id']
+                        ,'session'=>$batch_data['session']);
+                $result = $this->Batches_model->update_batch($data,$id);
+            }else{
+                $result = $this->Batches_model->save_batch($batch_data);
             }
-            $result = $this->Student_model->add_new_guardian($guardian_data);
+
             if ($result) {
                 $json['success'] = true;
-                $json['message'] = "Guardian successfully added.";
-                $record['guardians'] = $this->Student_model->get_all_guardians();
-                $json['guardian_html'] = $this->load->view('parts/guardian_list', $record, true);
+                $json['message'] = "Batch save successfully ";
+                $record['batches'] = $this->Batches_model->get_all_batches();
+                $json['batch_html'] = $this->load->view('batches/list', $record, true);
             } else {
                 $json['error'] = true;
                 $json['message'] = "Seems to an error. Please try again.";
+                $record['batches'] = $this->Batches_model->get_all_batches();
+                $json['batch_html'] = $this->load->view('batches/list', $record, true);
             }
         }
         if($this->input->is_ajax_request()) {
             set_content_type($json);
         }
+    }
+
+    public function edit($id){
+        $record['batch'] = $this->Batches_model->get_batch_by_id($id);
+        $record['sessions'] = $this->Batches_model->get_all_sessions();
+        $record['classes'] = $this->Batches_model->get_all_classes();
+        $json['batch_html'] = $this->load->view('batches/edit', $record, true);
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function delete($id){
+        $result = $this->Batches_model->delete_batch($id);
+        if ($result) {
+            $json['success'] = true;
+            $json['message'] = "Batch successfully deleted.";
+            $record['batches'] = $this->Batches_model->get_all_batches();
+            $json['batch_html'] = $this->load->view('batches/list', $record, true);
+
+        } else {
+            $json['error'] = true;
+            $json['message'] = "Seems to an error";
+            $record['batches'] = $this->Batches_model->get_all_batches();
+            $json['batch_html'] = $this->load->view('batches/list', $record, true);
+        }
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function demographics($id){
+        $data['students']=$this->Batches_model->get_demographics($id);
+        $data['employees']=$this->Batches_model->get_all_employees($id);
+        $data['screen'] = 'batch_students';
+        $this->load->view('batches/demographics', $data);
     }
 
     public function guardian_filters(){
@@ -145,6 +164,10 @@ class Guardians extends MY_Controller
         if($this->input->is_ajax_request()) {
             set_content_type($json);
         }
+    }
+
+    public function assign_employees(){
+
     }
 
     public function delete_user($id) {

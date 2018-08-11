@@ -73,6 +73,7 @@
   /////////////// institution details ///////////////////
    $('#list_itmes_institution_details').click(function(){
       institue_details($(this).attr('data-func-call'));
+       $( "#list_itmes_institution_details" ).addClass( "active nav-link" );
    });
 
   /////////////// subject names ///////////////////
@@ -118,6 +119,22 @@
    /////////////// assessment learning domain ///////////////////
    $('#list_itmes_domains').click(function(){
        domains($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_batches').click(function(){
+       get_batches($(this).attr('data-func-call'));
+   });
+
+   $(document).ready(function()
+   {
+       $('#expList li').click(function(e)
+       {
+           if(this.id!='list_itmes_'){
+               $( "li" ).removeClass( "active nav-link" );
+               $( "#"+this.id ).addClass( "active nav-link" );
+           }
+
+       });
    });
 
 </script>

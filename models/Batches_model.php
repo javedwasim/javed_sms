@@ -1,7 +1,106 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-Class Student_model extends CI_Model {
+Class Batches_model extends CI_Model {
+
+    public function get_all_batches(){
+
+        $query = "SELECT b.*, c.code,Count(students.student_id) as student_count 
+                    FROM batches b 
+                    LEFT JOIN classes c ON c.id=b.course_id 
+                    LEFT JOIN (
+                        select student_id,batch_no FROM students GROUP by student_id
+                    )students on students.batch_no = b.id
+                    GROUP By b.id
+                    ORDER BY b.session ASC";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+
+    public function get_all_sessions() {
+        $result = $this->db->select('*')
+                    ->from('acadamic_sessions')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_all_employees() {
+        $result = $this->db->select('*')
+                    ->from('employees')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_all_classes() {
+        $result = $this->db->select('*')
+                    ->from('classes')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_batch_by_id($id) {
+        $result = $this->db->select('*')
+                    ->from('batches')
+                    ->where('id',$id)
+                    ->limit(1)
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function update_batch($data, $id) {
+        $this->db->where('id', $id)->update('batches', $data);
+        return $this->db->affected_rows();
+    }
+
+    public function delete_batch($id) {
+        $this->db->where('id', $id)->delete('batches');
+        return $this->db->affected_rows();
+    }
+
+    public function get_demographics($id){
+        $this->db->select('d.*,s.*,b.*,c.code');
+        $this->db->from('students s');
+        $this->db->join('demographics d', 's.student_id=d.student_id', 'left');
+        $this->db->join('batches b', 'b.id=d.batch_id', 'left');
+        $this->db->join('classes c', 'c.id=b.course_id', 'left');
+        $this->db->order_by('s.student_id','desc');
+        $this->db->where('s.status',1);
+        $this->db->where('b.id',$id);
+        $result = $this->db->get();
+        //print_r($this->db->last_query()); die();
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+
 	public function get_all_students() {
         $this->db->select('s.*,b.arm,b.session,c.code');
         $this->db->from('students s');
@@ -22,6 +121,11 @@ Class Student_model extends CI_Model {
 		$this->db->insert('profile_fields', $data);
 		return $this->db->insert_id();
 	}
+
+    public function save_batch($data) {
+        $this->db->insert('batches', $data);
+        return $this->db->insert_id();
+    }
 
 	public function get_form_fields($id) {
 		$result = $this->db->select('*')
@@ -99,8 +203,6 @@ Class Student_model extends CI_Model {
 		$user_data = array('user_id'=>$student_id,'name'=>'s'.$student_id,
                         'email'=>$student_data['email'],'password'=>$password);
         $this->db->insert('login', $user_data);
-        //create student demographic
-        $this->db->insert('demographics',array('student_id'=>$student_id,'batch_id'=>$student_data['batch_no']));
 		return $student_id;
 	}
 
@@ -270,20 +372,6 @@ Class Student_model extends CI_Model {
                 where $where";
         $result = $query = $this->db->query($sql);
         if($result) {
-            return $result->result_array();
-        } else {
-            return array();
-        }
-
-    }
-
-    public function get_all_batches(){
-        $this->db->select('b.*,c.code');
-        $this->db->from('batches b');
-        $this->db->join('classes c', 'c.id=b.course_id', 'left');
-        $this->db->order_by('b.session','asc');
-        $result = $this->db->get();
-        if ($result) {
             return $result->result_array();
         } else {
             return array();

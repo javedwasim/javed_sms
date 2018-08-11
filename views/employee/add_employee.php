@@ -36,7 +36,8 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form id="employee_form" method="post" role="form" data-action="<?php echo isset($form_action)?$form_action:site_url('employee/add_new_employee') ?>" enctype="multipart/form-data">
+              <form id="employee_form" method="post" role="form" action="<?php echo isset($form_action)?$form_action:site_url('employee/add_new_employee') ?>"
+                    data-action="<?php echo isset($form_action)?$form_action:site_url('employee/add_new_employee') ?>" enctype="multipart/form-data">
                 <div class="card-body">
                 	 <!-- text input -->
                 	 <div class="row">
@@ -94,7 +95,7 @@
 			                  <div class="input-group-prepend">
 			                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
 			                  </div>
-			                  <input type="text" class="form-control datepicker" id="emp-dob" name="date_of_birth" value="<?php echo isset($employee['date_of_birth'])? $employee['date_of_birth']:''; ?>" >
+			                  <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="<?php echo isset($employee['date_of_birth'])? $employee['date_of_birth']:''; ?>" >
 			                </div>
                 	 	</div>
                    <?php }?>
@@ -121,7 +122,7 @@
 		                  <div class="input-group-prepend">
 		                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
 		                  </div>
-		                  <input type="text" class="form-control datepicker" id="emp-doj" name="date_of_join" value="<?php echo isset($employee['date_of_join'])? $employee['date_of_join']:''; ?>">
+		                  <input type="text" class="form-control" id="date_of_join" name="date_of_join" value="<?php echo isset($employee['date_of_join'])? $employee['date_of_join']:''; ?>">
 		                </div>
               	 	</div>
                  <?php }?>
@@ -160,12 +161,9 @@
                           <label>Employee Category</label>
                           <select class="form-control" name="category">
                             <option value="">Please select</option>
-                            <option value="3"<?php echo isset($employee['category'])&&$employee['category']=='3'? 'selected':''; ?>>Teaching Staff</option>
-                            <option value="1" <?php echo isset($employee['category'])&&$employee['category']=='1'? 'selected':''; ?>>System Admin Operator</option>
-                            <option value="6" <?php echo isset($employee['category'])&&$employee['category']=='6'? 'selected':''; ?>>Security Personnel</option>
-                            <option value="4" <?php echo isset($employee['category'])&&$employee['category']=='4'? 'selected':''; ?>>Non-Teaching Staff</option>
-                            <option value="5" <?php echo isset($employee['category'])&&$employee['category']=='5'? 'selected':''; ?>>Administrative Staff</option>
-                            <option value="2" <?php echo isset($employee['category'])&&$employee['category']=='2'? 'selected':''; ?>>Accounts</option>
+                            <?php foreach ( $categories as $category) : ?>
+                                <option value="<?php echo $category['id']; ?>"<?php echo isset($employee['category']) &&($employee['category']==$category['id']) ? 'selected' : ''; ?>><?php echo $category['category']; ?></option>
+                            <?php endforeach; ?>
                           </select>
                       </div>
                     </div>
@@ -176,12 +174,9 @@
                           <label>Employee Department</label>
                           <select class="form-control" name="department">
                             <option value="">Please select</option>
-                            <option value="1" <?php echo isset($employee['department'])&&$employee['department']=='1'? 'selected':''; ?>>System Admin</option>
-                            <option value="5" <?php echo isset($employee['department'])&&$employee['department']=='5'? 'selected':''; ?>>Security</option>
-                            <option value="2" <?php echo isset($employee['department'])&&$employee['department']=='2'? 'selected':''; ?>>Secondary</option>
-                            <option value="6" <?php echo isset($employee['department'])&&$employee['department']=='6'? 'selected':''; ?>>primary</option>
-                            <option value="4" <?php echo isset($employee['department'])&&$employee['department']=='4'? 'selected':''; ?>>ICT Department</option>
-                            <option value="3" <?php echo isset($employee['department'])&&$employee['department']=='3'? 'selected':''; ?>>Account Department</option>
+                            <?php foreach ( $departments as $department) : ?>
+                               <option value="<?php echo $department['id']; ?>"<?php echo isset($employee['department']) &&($employee['department']==$department['id']) ? 'selected' : ''; ?>><?php echo $department['name']; ?></option>
+                            <?php endforeach; ?>
                           </select>
                       </div>
                     </div>
@@ -192,14 +187,9 @@
                           <label>Employee Positions</label>
                           <select class="form-control" name="position">
                             <option value="">Please select</option>
-                            <option value="2"<?php echo isset($employee['position'])&&$employee['position']=='2'? 'selected':''; ?>>Teacher</option>
-                            <option value="1"<?php echo isset($employee['position'])&&$employee['position']=='1'? 'selected':''; ?>>System Admin</option>
-                            <option value="5"<?php echo isset($employee['position'])&&$employee['position']=='5'? 'selected':''; ?>>Secretary</option>
-                            <option value="3"<?php echo isset($employee['position'])&&$employee['position']=='3'? 'selected':''; ?>>Principal</option>
-                            <option value="7"<?php echo isset($employee['position'])&&$employee['position']=='7'? 'selected':''; ?>>Dean of Studies</option>
-                            <option value="4"<?php echo isset($employee['position'])&&$employee['position']=='4'? 'selected':''; ?>>Chief Security Staff</option>
-                            <option value="8"<?php echo isset($employee['position'])&&$employee['position']=='8'? 'selected':''; ?>>Bursar</option>
-                            <option value="6"<?php echo isset($employee['position'])&&$employee['position']=='6'? 'selected':''; ?>>Accountant</option>
+                            <?php foreach ( $positions as $position) : ?>
+                                <option value="<?php echo $position['id']; ?>"<?php echo isset($employee['position']) &&($employee['position']==$position['id']) ? 'selected' : ''; ?>><?php echo $position['name']; ?></option>
+                            <?php endforeach; ?>
                           </select>
                       </div>
                     </div>
@@ -251,11 +241,11 @@
                     <div class="col-md-4">
                       <div class="form-group">
                           <label>Nationality</label>
-                          <select class="form-control" name="nationality">
-                          <option>Select Nationality</option>
-                          <?php foreach($countries as $country) { ?>
-                            <option value="<?php echo $country['country_code'] ?>"<?php echo isset($employee['nationality'])&&$employee['nationality']==$country['country_code']? 'selected':''; ?>><?php echo $country['country_name'] ?></option>
-                          <?php } ?>
+                          <select class="form-control select2" name="nationality">
+                              <option>Select Nationality</option>
+                              <?php foreach($countries as $country) { ?>
+                                <option value="<?php echo $country['id'] ?>"<?php echo isset($employee['nationality'])&&$employee['nationality']==$country['id']? 'selected':''; ?>><?php echo $country['country_name'] ?></option>
+                              <?php } ?>
                         </select>
                       </div>
                     </div>
@@ -301,10 +291,10 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Country</label>
-                          <select class="form-control" name="nationality">
+                          <select class="form-control" id="nationality" name="country">
                               <option value="">Select Nationality</option>
                               <?php foreach ($countries as $country) { ?>
-                                  <option value="<?php echo $country['country_code'] ?>"<?php echo isset($employee['nationality'])&&$employee['nationality']==$country['country_code']? 'selected':''; ?>><?php echo $country['country_name'] ?></option>
+                                  <option value="<?php echo $country['id'] ?>"<?php echo isset($employee['country'])&&$employee['country']==$country['id']? 'selected':''; ?>><?php echo $country['country_name'] ?></option>
                               <?php } ?>
                           </select>
                       </div>
@@ -314,19 +304,18 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>State</label>
-                          <input type="text" class="form-control" name="state" maxlength="20" placeholder="State" value="<?php echo isset($employee['state'])? $employee['state']:''; ?>">
-<!--                          <select class="form-control">-->
-<!--                            <option value="">Please Select</option>-->
-<!--                          </select>-->
+<!--                          <input type="text" class="form-control" name="state" maxlength="20" placeholder="State" value="--><?php //echo isset($employee['state'])? $employee['state']:''; ?><!--">-->
+                          <select class="form-control" id="country_states" name="state">
+                              <?php foreach ($states as $state): ?>
+                                  <option value="<?php echo $state['id']; ?>"<?php echo isset($employee['state'])&&$employee['state']==$state['id']? 'selected':''; ?>><?php echo $state['name']; ?></option>
+                              <?php  endforeach; ?>
+                          </select>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>City</label>
                           <input type="text" class="form-control" name="lga_of_origin" maxlength="20" placeholder="LGA of origin" value="<?php echo isset($employee['lga_of_origin'])? $employee['lga_of_origin']:''; ?>">
-<!--                          <select class="form-control">-->
-<!--                            <option value="">Please Select</option>-->
-<!--                          </select>-->
                       </div>
                     </div>
                   </div>
@@ -433,7 +422,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button id="<?php echo isset($update_employee_button)&&(!empty($update_employee_button))?$update_employee_button:'save_employee'; ?>" type="submit" class="btn btn-primary btn-lg pull-right">Save Employee</button>
+                  <button id="<?php echo isset($update_employee_button)&&(!empty($update_employee_button))?'save_employees':'save_employees'; ?>" type="submit" class="btn btn-primary btn-lg pull-right">Save Employee</button>
                 </div>
               </form>
             </div>
@@ -445,3 +434,29 @@
     <!-- /.content -->
   </div>
     <!-- /.content -->
+  <script>
+      $(document).ready(function(){
+          $('#date_of_join').datepicker({
+              format: 'yyyy-mm-dd'
+          });
+          $('#date_of_birth').datepicker({
+              format: 'yyyy-mm-dd'
+          });
+
+          $("#nationality").change(function () {
+              var country = $('#nationality').val();
+              $.ajax({
+                  url: '/isms/students/get_state/'+country,
+                  cache: false,
+                  success: function(response) {
+                      if (response.success) {
+                          $('#country_states').empty();
+                          $('#country_states').append(response.states_html);
+                      } else {
+                          toastr["warning"](response.message);
+                      }
+                  }
+              });
+          });
+      });
+  </script>

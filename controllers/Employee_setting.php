@@ -50,9 +50,13 @@ class Employee_setting extends MY_Controller
             $category = $this->input->post();
             $result = $this->Employee_model->add_employee_category($category);
             if ($result) {
+                $data['categories'] = $this->Employee_model->get_employee_categories();
+                $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Student successfully added.";
             } else {
+                $data['categories'] = $this->Employee_model->get_employee_categories();
+                $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
                 $json['error'] = true;
                 $json['message'] = "Seems to an error in image uploading.";
             }
@@ -117,9 +121,15 @@ class Employee_setting extends MY_Controller
             $department = $this->input->post();
             $result = $this->Employee_model->add_employee_department($department);
             if ($result) {
+                $data['departments'] = $this->Employee_model->get_employee_departments();
+                //print_r($data['categories']); die();
+                $json['employee_html'] = $this->load->view('employee/employee_departments', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Department successfully added.";
             } else {
+                $data['departments'] = $this->Employee_model->get_employee_departments();
+                //print_r($data['categories']); die();
+                $json['employee_html'] = $this->load->view('employee/employee_departments', $data, true);
                 $json['error'] = true;
                 $json['message'] = "Seems to an error in image uploading.";
             }
@@ -189,9 +199,15 @@ class Employee_setting extends MY_Controller
             $department = $this->input->post();
             $result = $this->Employee_model->add_employee_position($department);
             if ($result) {
+                $data['positions'] = $this->Employee_model->get_employee_positions();
+                //print_r($data['categories']); die();
+                $json['employee_html'] = $this->load->view('employee/employee_positions', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Position successfully added.";
             } else {
+                $data['positions'] = $this->Employee_model->get_employee_positions();
+                //print_r($data['categories']); die();
+                $json['employee_html'] = $this->load->view('employee/employee_positions', $data, true);
                 $json['error'] = true;
                 $json['message'] = "Seems to an error in image uploading.";
             }

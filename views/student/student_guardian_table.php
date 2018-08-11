@@ -18,10 +18,12 @@
             <td><?php echo $guardian['phone']; ?></td>
             <td><?php echo $guardian['email']; ?></td>
             <td>
-                <a href="javascript:void(0)" data-guardian-id = "<?php echo $guardian['guardian_id']; ?>"
+                <a href="javascript:void(0)"
+                   data-guardian-id = "<?php echo $guardian['guardian_id']; ?>"
                    data-student-id = "<?php echo $student_id ?>"
-                   class="<?php echo $guardian['g_id']>0?"btn btn-danger btn-xs unassign-guardian":"btn btn-primary btn-xs assign-guardian" ?>"><i class="fa fa-user-plus"></i>
-                    <?php echo $guardian['g_id']>0?"Unassigned":"Assign Guardian" ?></a>
+                   data-href = "<?php echo site_url('students/unassign_guardian/'); ?>"
+                   class="<?php echo $guardian['student_id']>0?"btn btn-danger btn-xs unassign-guardian":"btn btn-primary btn-xs assign-guardian" ?>"><i class="fa fa-user-plus"></i>
+                   <?php echo $guardian['student_id']>0?"Unassigned":"Assign Guardian" ?></a>
             </td>
         </tr>
     <?php } ?>
