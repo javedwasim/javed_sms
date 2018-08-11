@@ -139,11 +139,10 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="assign_employee" method="post" role="form"
+                <form id="assign_employee_form" method="post" role="form"
                       data-action="<?php echo site_url('batches/assign_employees') ?>"
                       enctype="multipart/form-data">
-                    <input type="hidden" name="student_id" value="<?php echo $student['student_id']; ?>">
-                    <input type="hidden" name="email" value="<?php echo $student['email']; ?>">
+                    <input type="hidden" name="batch_id" value="<?php echo $batch_id; ?>">
                     <div class="assign_employee">
                         <div class="form-row">
                             <div class="form-group col-md-4">
@@ -176,7 +175,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="change_password" class="btn btn-primary btn-sm">
+                        <button type="submit" id="assign_employee" class="btn btn-primary btn-sm">
                             <i class="fa fa-plus fa-floppy-o"></i>Save</button>
 
                     </div>
@@ -201,7 +200,7 @@
                                 '</select>' +
                              '</div>' +
                              '<div class="form-group col-md-4">' +
-                                '<select id="employee" name="employee[]" class="form-control">' +
+                                '<select id="employee" name="role[]" class="form-control">' +
                                 '<option selected="">Please Select</option>' +
                                 '<option value="1">Class Teacher</option>' +
                                 '<option value="2">Guidance Counsellor</option>' +

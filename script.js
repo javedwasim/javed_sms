@@ -2100,9 +2100,9 @@ $(document.body).on('click', '.delete-batch', function(){
 
 $(document.body).on('click', '#assign_employee', function(){
     $.ajax({
-        url: $('#batch_form').attr('data-action'),
+        url: $('#assign_employee_form').attr('data-action'),
         type: 'post',
-        data: $('#batch_form').serialize(),
+        data: $('#assign_employee_form').serialize(),
         cache: false,
         success: function(response) {
             if (response.success) {

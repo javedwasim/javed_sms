@@ -96,6 +96,7 @@ class Batches extends MY_Controller
     public function demographics($id){
         $data['students']=$this->Batches_model->get_demographics($id);
         $data['employees']=$this->Batches_model->get_all_employees($id);
+        $data['batch_id']=$id;;
         $data['screen'] = 'batch_students';
         $this->load->view('batches/demographics', $data);
     }
@@ -167,7 +168,14 @@ class Batches extends MY_Controller
     }
 
     public function assign_employees(){
-
+        $data = $this->input->post();
+        $employees = $data['employee'];
+        $role = $data['role'];
+        $assign_data = array();
+        for($i=0;$i<count($employees);$i++){
+            $assign_data[$employees[$i]] = $role[$i];
+        }
+       echo "<pre>"; print_r($assign_data); die();
     }
 
     public function delete_user($id) {
