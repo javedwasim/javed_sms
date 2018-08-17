@@ -457,7 +457,6 @@ function student_filters(){
     });
 }
 
-
 $(document.body).on('click', '#save_cat', function(){
     $.ajax({
         url: $('#category_form').attr('data-action'),
@@ -1075,6 +1074,7 @@ $(document.body).on('click', '.edit-session', function(){
     $('#second_term_end').val($(this).attr('data-second-term-end'));
     $('#third_term_start').val($(this).attr('data-third-term-start'));
     $('#third_term_end').val($(this).attr('data-third-term-end'));
+    $('#name').val($(this).attr('data-value'));
     $('#session_edit').modal('show');
     return false;
 
@@ -2053,7 +2053,7 @@ $(document.body).on('click', '#save_batch', function(){
                 $( ".modal-backdrop" ).remove();
                 toastr["success"](response.message);
             } else {
-                toastr["success"](response.message);
+                toastr["error"](response.message);
             }
         }
     });
@@ -2108,7 +2108,7 @@ $(document.body).on('click', '#assign_employee', function(){
             if (response.success) {
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.batch_html);
-                $('#new_batch').modal('hide');
+                $('#myModal').modal('hide');
                 $( ".modal-backdrop" ).remove();
                 toastr["success"](response.message);
             } else {
@@ -2117,4 +2117,84 @@ $(document.body).on('click', '#assign_employee', function(){
         }
     });
     return false;
+});
+
+
+function get_subjects(func_call) {
+    $.ajax({
+        url: '/isms/subjects/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.subject_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.subject_html);
+                $('#title').html('Subjects | ISMS');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '#save_subject', function(){
+    $.ajax({
+        url: $('#batch_form').attr('data-action'),
+        type: 'post',
+        data: $('#batch_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.subject_html);
+                $('#new_subject').modal('hide');
+                $( ".modal-backdrop" ).remove();
+                toastr["success"](response.message);
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+    return false;
+});
+
+
+$(document.body).on('click', '.delete_subject_detail', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            type: 'post',
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.subject_html);
+                    toastr["success"](response.message);
+                } else {
+                    toastr["success"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+
+$(".update_check").change(function() {
+    var subject_id = $(this).attr('data-subject-id');
+    var data_update = $(this).attr('data-update');
+    $.ajax({
+        url: '/isms/subjects/update_publish_grade',
+    	type: 'post',
+        data : { subject_detail_id : subject_id, data_update:data_update },
+    	cache: false,
+        success: function(response) {
+        if (response.success) {
+            toastr["success"](response.message);
+        } else {
+            toastr["error"](response.message);
+        }
+    }
+	});
+
 });

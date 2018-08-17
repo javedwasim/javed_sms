@@ -73,10 +73,14 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <select class="form-control">
+                                            <select class="form-control" name="status" onchange="student_filters()">
                                                 <option value="">Please select</option>
-                                                <option>Active</option>
-                                                <option>Left institution</option>
+                                                <option value="1"
+                                                    <?php echo isset($filters['status'])&&($filters['status']==1)?'selected':'';?>>Active</option>
+                                                <option value="2"
+                                                    <?php echo isset($filters['status'])&&($filters['status']==2)?'selected':'';?>>Graduated</option>
+                                                <option value="3"
+                                                    <?php echo isset($filters['status'])&&($filters['status']==3)?'selected':'';?>>Dropped</option>
                                             </select>
                                         </div>
                                     </div>

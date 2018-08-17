@@ -27,7 +27,7 @@
                                 <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Behavioural Scoresheet</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#demographic" data-toggle="tab">Demographics</a></li>
                                 <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Assign Employee</a></li>
-                                <li class="nav-item"><a class="nav-link" href="" data-href="<?php echo site_url('students/edit/')?>">Edit</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#transfer" data-toggle="tab">Student Transfer</a></li>
 
                             </ul>
                         </div><!-- /.card-header -->
@@ -73,11 +73,10 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- /.tab-pane -->
                                 <div class="tab-pane" id="demographic">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-9">
                                             <table id="example1" class="table table-bordered table-striped">
                                                 <thead>
                                                 <tr>
@@ -100,6 +99,118 @@
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <ul class="list-group">
+                                                <?php foreach ($assigned_employee as $employee): $path = base_url().'assets/uploads/employee_images/'; ?>
+                                                    <li class="list-group-item">
+                                                        <img class="form-control"
+                                                             src="<?php echo !empty($employee['photo'])?$path.$employee['photo']:$path.'user.png'; ?>" />
+                                                        <?php echo $employee['first_name']." ".$employee['middle_name']."<br>".$employee['role_name'].'<br>'.$employee['gender']; ?>
+
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="transfer">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Student Transfer</h3>
+                                            </div>
+                                            <br>
+                                            <form id="transfer_batch_form" method="post" role="form"
+                                                data-action="<?php echo site_url('batches/transfer_batch') ?>" >
+                                                <input type="hidden" name="ids" id="ids"  >
+                                                <div class="form-group row">
+                                                    <label for="inter_batch" class="col-sm-2 col-form-label">Transfer type:</label>
+                                                    <div class="col-sm-10">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" id="inter_batch" value="inter_batch" name="transfer_type" >
+                                                            <label class="form-check-label" for="inter_batch">Inter Batch</label>
+                                                            &nbsp;
+                                                            <input class="form-check-input" type="radio" id="graduation" value="graduation" name="transfer_type" >
+                                                            <label class="form-check-label" for="graduation">Graduation</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" id="transfer_batch_no">
+                                                    <label for="batch_no" class="col-sm-2 col-form-label">Transfer to batch<span style="color: red">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <select prompt="Select Batch" class="form-control" required="required"
+                                                                name="batch_no" id="batch_no">
+                                                            <option value=""></option>
+                                                            <?php $priorGroup = "";
+                                                            foreach ($batches as $batch){ ?>
+                                                            <?php if ($batch["session"] != $priorGroup){ ?>
+                                                            <optgroup label="<?php echo $batch['session']; ?>">
+                                                                <?php } ?>
+                                                                <option value="<?php echo $batch['id']; ?>">
+                                                                    <?php echo $batch['code'] . '-' . $batch['arm'] . '(' . $batch['session'] . ')' ?>
+                                                                </option>
+                                                                <?php $priorGroup = $batch["session"];
+                                                                }
+                                                                if ($batch["session"] != $priorGroup) {
+                                                                    echo '</optgroup>';
+                                                                } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Last day in batch<span style="color: red">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" name="last_day_in_batch" id="last_day_in_batch"
+                                                               placeholder="Last day in batch" required>
+                                                        <div class="alert alert-warning">
+                                                            <i class="fa-fw fa fa-warning"></i>
+                                                            <strong>Warning</strong> Be sure to enter the last date the selected students spent in this batch. This has effects across the application ( e.g attendance calculation) and is not reversible.
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label for="batch_no" class="col-sm-2 col-form-label">Reason<span style="color: red">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="form-control" id="reason_to_leave_batch" name="reason_to_leave_batch" required></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <div class="col-sm-10" style="text-align: center">
+                                                        <button type="submit" id="transfer_batch_btn" class="btn btn-primary">Transfer</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <table id="example1" class="table table-bordered table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" id="9999" >&nbsp;Name
+                                                    </th>
+                                                    <th>Admission No</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php foreach ($students as $student): ?>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox" class="getAll" name="student_id" onclick="$(this).attr('value', this.checked ? 1 : '')"
+                                                                   id="<?php echo $student['student_id']; ?>" value="" />
+                                                            <?php echo $student['first_name'].' '.$student['last_name']; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo $student['admission_no'] ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -184,41 +295,91 @@
         </div>
     </div>
 </div>
-    <script>
-        $(document).ready(function() {
-            $("#example1").DataTable();
+<script>
+    $(document).ready(function() {
+        $("#example1").DataTable();
+        $('#last_day_in_batch').datepicker({
+            format: 'yyyy-mm-dd'
         });
 
-        $('#add_role').click(function () {
-            var fieldHTML = '<div class="form-row"><div class="form-group col-md-4">' +
-                                '<select id="employee" name="employee[]" class="form-control">' +
-                                    '<option selected="">Please Select</option>' +
-                                     <?php foreach ($employees as $employee): $id = $employee['employee_id'];
-                                        $name = $employee['first_name'].' '.$employee['surname']; ?>
-                                        '<option value="<?php echo $id; ?>"><?php echo $name; ?></option>' +
-                                     <?php endforeach; ?>
-                                '</select>' +
-                             '</div>' +
-                             '<div class="form-group col-md-4">' +
-                                '<select id="employee" name="role[]" class="form-control">' +
+    });
+    $('#add_role').click(function () {
+        var fieldHTML = '<div class="form-row"><div class="form-group col-md-4">' +
+                            '<select id="employee" name="employee[]" class="form-control">' +
                                 '<option selected="">Please Select</option>' +
-                                '<option value="1">Class Teacher</option>' +
-                                '<option value="2">Guidance Counsellor</option>' +
-                                '</select>' +
-                              '</div>' +
-                              '<div class="form-group col-md-4">' +
-                                    '<a class="btn btn-danger btn-sm remove_button" href="#"><i class="fa fa-trash"></i></a>' +
-                              '</div></div>';
+                                 <?php foreach ($employees as $employee): $id = $employee['employee_id'];
+                                    $name = $employee['first_name'].' '.$employee['surname']; ?>
+                                    '<option value="<?php echo $id; ?>"><?php echo $name; ?></option>' +
+                                 <?php endforeach; ?>
+                            '</select>' +
+                         '</div>' +
+                         '<div class="form-group col-md-4">' +
+                            '<select id="employee" name="role[]" class="form-control">' +
+                            '<option selected="">Please Select</option>' +
+                            '<option value="1">Class Teacher</option>' +
+                            '<option value="2">Guidance Counsellor</option>' +
+                            '</select>' +
+                          '</div>' +
+                          '<div class="form-group col-md-4">' +
+                                '<a class="btn btn-danger btn-sm remove_button" href="#"><i class="fa fa-trash"></i></a>' +
+                          '</div></div>';
 
-            $('.assign_employee').append(fieldHTML); //Add field html
+        $('.assign_employee').append(fieldHTML); //Add field html
 
+    });
+
+    //Once remove button is clicked
+    $('.assign_employee').on('click', '.remove_button', function(e){
+        e.preventDefault();
+        $(this).closest(".form-row").remove();
+    });
+
+    $("#9999").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        if($('#9999').is(":checked")){
+            $('.getAll').attr('value', 1);
+        }else{
+            $('.getAll').attr('value', 0);
+        }
+        var ids = $('input:checkbox:checked').map( function() {
+            return this.id;
+        }).get().join(",");
+        $('#ids').val(ids);
+    });
+
+    $(".getAll").click(function () {
+        var ids = $("[type=checkbox][value=1]:checked").map(function () {
+            return this.id;}).get().join(",");
+        $('#ids').val(ids);
+
+    });
+
+    $("#graduation").click(function () {
+        if($('#graduation').is(":checked")){
+            $("#transfer_batch_no").hide();
+        }
+    });
+    $("#inter_batch").click(function () {
+        if($('#inter_batch').is(":checked")){
+            $("#transfer_batch_no").show();
+        }
+    });
+
+    $(document.body).on('click', '#transfer_batch_btn', function(){
+        $.ajax({
+            url: $('#transfer_batch_form').attr('data-action'),
+            type: 'post',
+            data: $('#transfer_batch_form').serialize(),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    toastr["success"](response.message);
+                } else {
+                    toastr["error"](response.message);
+                }
+            }
         });
 
-        //Once remove button is clicked
-        $('.assign_employee').on('click', '.remove_button', function(e){
-            e.preventDefault();
-            $(this).closest(".form-row").remove();
-        });
-
-
-    </script>
+        return false;
+    });
+</script>

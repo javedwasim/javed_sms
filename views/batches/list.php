@@ -101,7 +101,7 @@
                                     <?php foreach ($batches as $batch): $session = $batch['session']; ?>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo site_url('batches/demographics/').$batch['id']; ?>" class="link"><?php echo $batch['code'].'-'.$batch['arm']."($session)"; ?></a>
+                                                <a href="<?php echo site_url('batches/demographics/').$batch['id']; ?>" class="link prof-link"><?php echo $batch['code'].'-'.$batch['arm']."($session)"; ?></a>
                                             </td>
                                             <td><?php echo $batch['student_count']; ?></td>
                                             <td>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2018 at 02:10 PM
+-- Generation Time: Aug 17, 2018 at 02:16 PM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 5.6.36
 
@@ -46,9 +46,9 @@ CREATE TABLE `acadamic_sessions` (
 --
 
 INSERT INTO `acadamic_sessions` (`id`, `name`, `first_term_start`, `first_term_end`, `second_term_start`, `second_term_end`, `third_term_start`, `third_term_end`, `created_at`, `updated_at`) VALUES
-(2, '2016/2017', '2018-07-25', '2018-07-13', '2018-07-19', '2018-07-13', '2018-07-25', '2018-07-19', '2018-08-11 04:38:28', '0000-00-00 00:00:00'),
-(3, '2015/2016', '2018-07-03', '2018-07-09', '2018-07-11', '2018-07-17', '2018-07-28', '2018-07-20', '2018-08-11 04:38:42', '0000-00-00 00:00:00'),
-(4, '2018/2019', '2018-08-07', '2018-08-15', '2018-08-23', '2018-08-23', '2018-08-15', '2018-08-23', '2018-08-11 04:37:46', '0000-00-00 00:00:00');
+(1, '2015/2016', '2015-01-01', '2015-03-31', '2015-04-01', '2015-06-30', '2015-07-01', '2016-01-31', '2018-08-16 10:56:32', '0000-00-00 00:00:00'),
+(2, '2016/2017', '2016-08-01', '2018-09-30', '2016-10-01', '2016-11-30', '2016-12-01', '2017-01-31', '2018-08-16 11:07:54', '0000-00-00 00:00:00'),
+(3, '2017/2018', '2017-08-01', '2017-09-30', '2017-10-01', '2017-11-30', '2017-12-01', '2018-01-31', '2018-08-16 11:08:33', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -69,8 +69,8 @@ CREATE TABLE `assessment_categories` (
 --
 
 INSERT INTO `assessment_categories` (`id`, `name`, `abbreviation`, `created_at`, `updated_at`) VALUES
-(1, 'wasim', 'javed', '2018-08-02 04:57:11', '0000-00-00 00:00:00'),
-(2, 'iam', 'here', '2018-08-02 04:52:56', '0000-00-00 00:00:00');
+(1, 'CA', 'CA', '2018-08-16 10:36:27', '0000-00-00 00:00:00'),
+(2, 'Exam', 'EX', '2018-08-16 10:36:34', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -138,7 +138,7 @@ CREATE TABLE `batches` (
 --
 
 INSERT INTO `batches` (`id`, `arm`, `course_id`, `session`, `created_at`, `updated_at`) VALUES
-(1, 'MNIS', 1, '2016/2017', '2018-08-11 07:02:11', '0000-00-00 00:00:00'),
+(1, 'MNIS', 1, '2015/2016', '2018-08-15 05:05:23', '0000-00-00 00:00:00'),
 (2, 'Test', 2, '2018/2019', '2018-08-10 11:17:19', '0000-00-00 00:00:00'),
 (17, 'test', 1, '2018/2019', '2018-08-10 12:23:34', '0000-00-00 00:00:00');
 
@@ -156,6 +156,16 @@ CREATE TABLE `batch_assign_employee` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_assign_employee`
+--
+
+INSERT INTO `batch_assign_employee` (`id`, `batch_id`, `employee_id`, `role_id`, `created_at`, `updated_at`) VALUES
+(21, 2, 3, 1, '2018-08-16 06:05:48', '2018-08-16 06:05:48'),
+(22, 1, 2, 1, '2018-08-16 07:05:39', '2018-08-16 07:05:39'),
+(23, 1, 4, 1, '2018-08-16 07:05:40', '2018-08-16 07:05:40'),
+(24, 1, 0, 0, '2018-08-16 07:05:40', '2018-08-16 07:05:40');
 
 -- --------------------------------------------------------
 
@@ -553,6 +563,27 @@ INSERT INTO `domain_group_indicator` (`id`, `domain_group_id`, `name`, `code`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `elective_groups`
+--
+
+CREATE TABLE `elective_groups` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `elective_groups`
+--
+
+INSERT INTO `elective_groups` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Test', '2018-08-15 06:18:01', '0000-00-00 00:00:00'),
+(2, 'Test1', '2018-08-15 06:18:14', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `employees`
 --
 
@@ -607,8 +638,8 @@ CREATE TABLE `employees` (
 INSERT INTO `employees` (`employee_id`, `surname`, `first_name`, `middle_name`, `title`, `employee_no`, `date_of_birth`, `date_of_join`, `gender`, `religion`, `photo`, `blood_group`, `category`, `department`, `position`, `marital_status`, `qualification`, `genotype`, `nationality`, `state_of_origin`, `lga_of_origin`, `mobile_phone`, `email`, `phone`, `address_line`, `country`, `state`, `city`, `next_of_kin_name`, `next_of_kin_relation`, `next_of_kin_phone`, `next_of_kin_mobile`, `next_of_kin_address_line`, `bank_name`, `account_name`, `account_number`, `status`, `status_updated_at`, `reason`, `created`, `updated`) VALUES
 (1, 'Latif', 'Adnan', 'sdfsdf', 'MR', '123456', '0000-00-00', '0000-00-00', 'male', 'christianity', 'latif-adnan-5b6abdef9173a.jpg', 'A+', 3, 3, 4, 'married', 'DR', NULL, '3', NULL, 'bwp', '', 'admin01@example.com', '', 'test', '167', '8', NULL, 'test', 'test', '03314716888', '03314716888', 'abc', '1', 'current account', '1232323231', 1, '0000-00-00', '', '2018-07-23 10:00:49', '2018-08-08 10:13:30'),
 (2, 'new', 'employee', 'name', 'test', '6553322', '0000-00-00', '0000-00-00', 'female', 'islam', NULL, 'AB+', 1, 1, 3, 'married', 'NCE', NULL, 'Select Nationality', NULL, 'punjab', '0331 4716890', 'admin@example.com', '033322222222', 'testting', '', '1', NULL, 'test', '', 'test', 'test', 'test', '6', 'current', '123456789', 1, '0000-00-00', '', '2018-07-23 10:49:43', '2018-08-09 04:42:28'),
-(3, 'yousafrr', 'javed', 'wasim', 'test', '6553322', '0000-00-00', '0000-00-00', 'male', 'islam', NULL, 'AB-', 1, 6, 7, 'single', 'PROF', NULL, '', NULL, 'punjab', '+9203314716890', 'admin+1@example.com', '+92222222222222', 'xyz', NULL, 'punjab', NULL, 'test', 'test re', 'test mobile', 'test phone', 'test phone', '12', 'current', '11112323232323232', 1, '0000-00-00', '', '2018-07-23 11:56:24', '2018-08-08 05:57:45'),
-(4, 'now', 'check', 'this', '', '123456', '0000-00-00', '0000-00-00', '', '', NULL, '', 3, 3, 2, 'married', '', NULL, '', NULL, '', '', 'admin+2@example.com', '', '', NULL, '', NULL, '', '', '', '', '', '', '', '', 1, '0000-00-00', '', '2018-07-24 05:07:57', '2018-08-08 07:22:51'),
+(3, 'yousafrr', 'javed', 'wasim', 'test', '6553322', '0000-00-00', '0000-00-00', 'male', 'islam', 'latif-adnan-5b6abdef9173a.jpg', 'AB-', 1, 6, 7, 'single', 'PROF', NULL, '', NULL, 'punjab', '+9203314716890', 'admin+1@example.com', '+92222222222222', 'xyz', NULL, 'punjab', NULL, 'test', 'test re', 'test mobile', 'test phone', 'test phone', '12', 'current', '11112323232323232', 1, '0000-00-00', '', '2018-07-23 11:56:24', '2018-08-13 05:53:26'),
+(4, 'now', 'check', 'this', '', '123456', '0000-00-00', '0000-00-00', '', '', '', '', 3, 3, 2, 'married', '', NULL, '', NULL, '', '', 'admin+2@example.com', '', '', NULL, '', NULL, '', '', '', '', '', '', '', '', 1, '0000-00-00', '', '2018-07-24 05:07:57', '2018-08-13 06:41:45'),
 (5, 'new', 'admin', 'check', 'test', '6553322', '2000-02-16', '2000-02-16', 'male', 'islam', NULL, 'AB+', 3, 2, 2, 'single', 'PGDE', NULL, '2', NULL, 'punjab', '', 'admin+3@example.com', '', 'test', '167', '9', NULL, 'test', 'test', '03314716888', 'test', 'test', '14', 'sdfsf', '321321321321321321', 0, '2018-08-07', 'test', '2018-08-08 10:56:00', '2018-08-08 11:38:57');
 
 -- --------------------------------------------------------
@@ -896,7 +927,7 @@ INSERT INTO `menu` (`menu_id`, `parent_id`, `menu_name`, `func_called`, `class`,
 (15, 13, 'Fee Transection', '', '', 1, '2018-07-12 06:00:20', 1),
 (16, 11, 'Income/Expense', '', '', 1, '2018-07-10 09:48:27', 1),
 (17, 11, 'Wallet Transection', '', '', 1, '2018-07-10 09:48:31', 1),
-(18, NULL, 'Subjects', '', 'fa fa-book', 1, '2018-07-30 11:01:08', 1),
+(18, NULL, 'Subjects', 'subjects', 'fa fa-book', 1, '2018-08-15 04:56:10', 1),
 (19, NULL, 'Batches', 'batches', 'fa fa-users', 1, '2018-08-10 09:56:06', 1),
 (20, NULL, 'Report Cards', '', 'fa fa-chart-line', 1, '2018-07-10 09:50:00', 1),
 (21, NULL, 'SMS', '', 'fa fa-comment-alt', 1, '2018-07-10 09:50:03', 1),
@@ -1209,6 +1240,27 @@ INSERT INTO `profile_settings` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Class Teacher', '2018-08-13 05:41:39', '0000-00-00 00:00:00'),
+(2, 'Guidance Counsellor', '2018-08-13 05:41:39', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `states`
 --
 
@@ -1236,6 +1288,27 @@ INSERT INTO `states` (`id`, `name`, `code`, `country_id`, `created_at`, `updated
 (8, 'North-West Frontier', 'NW', 167, '2018-08-07 06:39:50', '0000-00-00 00:00:00'),
 (9, 'Punjab', 'PB', 167, '2018-08-07 06:39:52', '0000-00-00 00:00:00'),
 (10, 'Sind', 'SD', 167, '2018-08-07 06:39:55', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `status`
+--
+
+CREATE TABLE `status` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `status`
+--
+
+INSERT INTO `status` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'active', '2018-08-13 09:47:47', '0000-00-00 00:00:00'),
+(2, 'graduation', '2018-08-13 09:47:47', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1272,6 +1345,8 @@ CREATE TABLE `students` (
   `city` varchar(100) DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
   `status_updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_day_in_batch` date NOT NULL,
+  `reason_to_leave_batch` text NOT NULL,
   `reason` text NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -1281,11 +1356,11 @@ CREATE TABLE `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`student_id`, `guardian_id`, `relation_with_student`, `surname`, `first_name`, `last_name`, `admission_no`, `admission_date`, `date_of_birth`, `gender`, `religion`, `photo`, `blood_group`, `genotype`, `nationality`, `state_of_origin`, `lga_of_origin`, `batch_no`, `student_category`, `mobile_phone`, `email`, `phone`, `address_line`, `country`, `state`, `city`, `status`, `status_updated_at`, `reason`, `created`, `updated`) VALUES
-(1, NULL, NULL, 'anjum', 'wasim', 'javed', 'MCS-110', '0000-00-00', '0000-00-00', 'Male', 'Christianity', NULL, '', '', '161', '1', '3', '1', '', '', '', '', 'abc', 'PW', '4', 'bahawalpur', 1, '2018-08-09 06:39:39', 'test', '2018-08-06 08:07:38', '2018-08-09 06:39:39'),
-(3, NULL, NULL, 'sajid', 'afaq', 'sajid', 'MCS-110', '2018-08-27', '2018-08-06', 'Male', 'Islam', NULL, '', '', '', '1', '1', '1', '', '', 'test@example.com', '', 'abc', 'PK', '5', 'bahawalpur', 1, '2018-08-08 11:33:27', '', '2018-08-07 05:27:13', '2018-08-08 11:33:27'),
-(4, NULL, NULL, 'test', 'user', 'student', 'MCS-110', '2018-08-22', '2018-08-28', '', '', NULL, '', '', '', NULL, NULL, '1', '', '', 'admin4@example.com', '', 'test address line', '167', '5', 'bahawalpur', 1, '2018-08-09 07:11:46', '', '2018-08-09 07:11:46', '2018-08-09 07:11:46'),
-(5, NULL, NULL, 'this', 'is', 'test', 'BS-CS-110', '2018-08-21', '2018-09-05', '', '', NULL, '', '', '', NULL, NULL, '2', '', '', 'test1@gmail.com', '', '', '', '', '', 1, '2018-08-11 07:04:20', '', '2018-08-11 07:04:20', '2018-08-11 07:04:20');
+INSERT INTO `students` (`student_id`, `guardian_id`, `relation_with_student`, `surname`, `first_name`, `last_name`, `admission_no`, `admission_date`, `date_of_birth`, `gender`, `religion`, `photo`, `blood_group`, `genotype`, `nationality`, `state_of_origin`, `lga_of_origin`, `batch_no`, `student_category`, `mobile_phone`, `email`, `phone`, `address_line`, `country`, `state`, `city`, `status`, `status_updated_at`, `last_day_in_batch`, `reason_to_leave_batch`, `reason`, `created`, `updated`) VALUES
+(1, NULL, NULL, 'anjum', 'wasim', 'javed', 'MCS-110', '0000-00-00', '0000-00-00', 'Male', 'Christianity', NULL, '', '', '161', '1', '3', '2', '', '', '', '', 'abc', 'PW', '4', 'bahawalpur', 1, '2018-08-17 09:43:36', '2018-08-15', 'test', 'test', '2018-08-06 08:07:38', '2018-08-17 09:43:36'),
+(3, NULL, NULL, 'sajid', 'afaq', 'sajid', 'MCS-110', '2018-08-27', '2018-08-06', 'Male', 'Islam', NULL, '', '', '', '1', '1', '2', '', '', 'test@example.com', '', 'abc', 'PK', '5', 'bahawalpur', 1, '2018-08-17 11:42:51', '0000-00-00', '', '', '2018-08-07 05:27:13', '2018-08-17 11:42:51'),
+(4, NULL, NULL, 'test', 'user', 'student', 'MCS-110', '2018-08-22', '2018-08-28', '', '', NULL, '', '', '', NULL, NULL, '1', '', '', 'admin4@example.com', '', 'test address line', '167', '5', 'bahawalpur', 1, '2018-08-09 07:11:46', '0000-00-00', '', '', '2018-08-09 07:11:46', '2018-08-09 07:11:46'),
+(5, NULL, NULL, 'this', 'is', 'test', 'BS-CS-110', '2018-08-21', '2018-09-05', '', '', NULL, '', '', '', NULL, NULL, '1', '', '', 'test1@gmail.com', '', '', '', '', '', 1, '2018-08-13 10:58:25', '2018-08-15', 'test', '', '2018-08-11 07:04:20', '2018-08-13 10:58:25');
 
 -- --------------------------------------------------------
 
@@ -1350,7 +1425,6 @@ INSERT INTO `student_guardians` (`id`, `student_id`, `guardian_id`, `relation`, 
 CREATE TABLE `subjects` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `code` varchar(100) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1359,8 +1433,102 @@ CREATE TABLE `subjects` (
 -- Dumping data for table `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `name`, `code`, `created_at`, `updated_at`) VALUES
-(9, 'fgdfg', 'dfgdfg', '2018-07-30 12:23:08', '0000-00-00 00:00:00');
+INSERT INTO `subjects` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'AGRICULTURAL SCIENCE', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(2, 'ALGEBRA', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(3, 'ANIMAL', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(4, 'ARABIC', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(5, 'AZKAR', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(6, 'BASIC SCIENCE', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(7, 'BIOLOGY', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(8, 'BUSINESS STUDIES', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(9, 'CATERING CRAFT', '2018-08-15 07:32:00', '0000-00-00 00:00:00'),
+(10, 'GENERAL KNOWLEDGE', '2018-08-15 07:32:00', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subjects_detail`
+--
+
+CREATE TABLE `subjects_detail` (
+  `id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  `max_weekly_class` int(11) NOT NULL,
+  `elective_group_id` int(11) NOT NULL,
+  `batch_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subjects_detail`
+--
+
+INSERT INTO `subjects_detail` (`id`, `subject_id`, `max_weekly_class`, `elective_group_id`, `batch_id`, `created_at`, `updated_at`) VALUES
+(1, 4, 5, 0, 2, '2018-08-15 10:32:47', '0000-00-00 00:00:00'),
+(3, 7, 3, 1, 17, '2018-08-15 09:37:31', '0000-00-00 00:00:00'),
+(5, 5, 0, 1, 1, '2018-08-15 10:41:56', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subject_assessments`
+--
+
+CREATE TABLE `subject_assessments` (
+  `id` int(11) NOT NULL,
+  `subject_detail_id` int(11) NOT NULL,
+  `assessment_category_id` int(11) NOT NULL,
+  `assessment_name` varchar(100) NOT NULL,
+  `abbreviation` varchar(20) NOT NULL,
+  `points` varchar(10) NOT NULL,
+  `extra_points` varchar(10) NOT NULL,
+  `due_date` date NOT NULL,
+  `include_final_grade` tinyint(1) NOT NULL,
+  `publish` varchar(20) NOT NULL,
+  `score_display_as` varchar(20) NOT NULL,
+  `publish_score` tinyint(1) NOT NULL,
+  `description` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subject_assessments`
+--
+
+INSERT INTO `subject_assessments` (`id`, `subject_detail_id`, `assessment_category_id`, `assessment_name`, `abbreviation`, `points`, `extra_points`, `due_date`, `include_final_grade`, `publish`, `score_display_as`, `publish_score`, `description`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'Fist Term', '1st', '10', '10', '2018-09-30', 1, 'due_date', 'points', 1, 'tests', '2018-08-17 11:54:21', '0000-00-00 00:00:00'),
+(2, 1, 1, 'Second Term', '2nd', '20', '10', '2018-10-31', 0, 'points', '', 1, 'sdfsdf', '2018-08-17 11:57:01', '0000-00-00 00:00:00'),
+(3, 1, 2, 'Final', 'final', '60', '0', '2018-12-31', 1, 'points', '', 1, '', '2018-08-17 05:03:22', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subject_assign_employee`
+--
+
+CREATE TABLE `subject_assign_employee` (
+  `id` int(11) NOT NULL,
+  `subject_detail_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subject_assign_employee`
+--
+
+INSERT INTO `subject_assign_employee` (`id`, `subject_detail_id`, `employee_id`, `role_id`, `created_at`, `updated_at`) VALUES
+(11, 3, 2, 1, '2018-08-16 05:15:43', '0000-00-00 00:00:00'),
+(26, 5, 1, 1, '2018-08-16 06:02:20', '0000-00-00 00:00:00'),
+(27, 5, 3, 1, '2018-08-16 06:02:20', '0000-00-00 00:00:00'),
+(28, 5, 5, 1, '2018-08-16 06:02:20', '0000-00-00 00:00:00'),
+(35, 1, 2, 1, '2018-08-16 07:19:26', '0000-00-00 00:00:00'),
+(36, 1, 4, 1, '2018-08-16 07:19:26', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1481,6 +1649,12 @@ ALTER TABLE `domain_group_indicator`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `elective_groups`
+--
+ALTER TABLE `elective_groups`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `employees`
 --
 ALTER TABLE `employees`
@@ -1595,9 +1769,21 @@ ALTER TABLE `profile_settings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `states`
 --
 ALTER TABLE `states`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `status`
+--
+ALTER TABLE `status`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1625,6 +1811,24 @@ ALTER TABLE `subjects`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `subjects_detail`
+--
+ALTER TABLE `subjects_detail`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `subject_assessments`
+--
+ALTER TABLE `subject_assessments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `subject_assign_employee`
+--
+ALTER TABLE `subject_assign_employee`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `temp_domain_group_indicator`
 --
 ALTER TABLE `temp_domain_group_indicator`
@@ -1644,7 +1848,7 @@ ALTER TABLE `transaction_categories`
 -- AUTO_INCREMENT for table `acadamic_sessions`
 --
 ALTER TABLE `acadamic_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `assessment_categories`
@@ -1668,19 +1872,19 @@ ALTER TABLE `bank_accounts`
 -- AUTO_INCREMENT for table `batches`
 --
 ALTER TABLE `batches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `batch_assign_employee`
 --
 ALTER TABLE `batch_assign_employee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `countries_list`
@@ -1711,6 +1915,12 @@ ALTER TABLE `domain_goup`
 --
 ALTER TABLE `domain_group_indicator`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `elective_groups`
+--
+ALTER TABLE `elective_groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `employees`
@@ -1827,10 +2037,22 @@ ALTER TABLE `profile_settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `states`
 --
 ALTER TABLE `states`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `status`
+--
+ALTER TABLE `status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -1854,7 +2076,25 @@ ALTER TABLE `student_guardians`
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `subjects_detail`
+--
+ALTER TABLE `subjects_detail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `subject_assessments`
+--
+ALTER TABLE `subject_assessments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `subject_assign_employee`
+--
+ALTER TABLE `subject_assign_employee`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `temp_domain_group_indicator`

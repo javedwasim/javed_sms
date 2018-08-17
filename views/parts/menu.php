@@ -125,6 +125,10 @@
        get_batches($(this).attr('data-func-call'));
    });
 
+   $('#list_itmes_subjects').click(function(){
+       get_subjects($(this).attr('data-func-call'));
+   });
+
    $(document).ready(function()
    {
        $('#expList li').click(function(e)

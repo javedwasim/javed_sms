@@ -264,6 +264,11 @@ Class Student_model extends CI_Model {
             $where .=  " AND (gender = '' OR gender = '$gender')";
         }
 
+        if(isset($filters['status']) && (!empty($filters['status'])) ){
+            $status = $filters['status'];
+            $where .=  " AND (status = '' OR status = '$status')";
+        }
+
         $sql = "SELECT students.*,batches.arm,batches.session,classes.code FROM students 
                 left join batches on batches.id = students.batch_no
                 left join classes on classes.id = batches.course_id

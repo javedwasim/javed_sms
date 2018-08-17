@@ -56,13 +56,13 @@
                 <tbody>
                     <?php foreach ($sessions as $session) { ?>
                       <tr>
-                        <td>2012/2016</td>
-                        <td>July 1, 2018</td>
-                        <td>July 1, 2018</td>
-                        <td>July 1, 2018</td>
-                        <td>July 1, 2018</td>
-                        <td>July 1, 2018</td>
-                        <td>July 1, 2018</td>
+                        <td><?php echo $session['name']; ?></td>
+                        <td><?php echo date('F j, Y',strtotime($session['first_term_start'])); ?></td>
+                        <td><?php echo date('F j, Y',strtotime($session['first_term_end'])); ?></td>
+                        <td><?php echo date('F j, Y',strtotime($session['second_term_start'])); ?></td>
+                        <td><?php echo date('F j, Y',strtotime($session['second_term_end'])); ?></td>
+                        <td><?php echo date('F j, Y',strtotime($session['third_term_start'])); ?></td>
+                        <td><?php echo date('F j, Y',strtotime($session['third_term_end'])); ?></td>
                         <td>
                         <a class="edit-session btn btn-info btn-xs"
                            data-first-term-start = "<?php echo $session['first_term_start']; ?>"
@@ -181,7 +181,7 @@
                 <input type="hidden" id="session_id" name="session_id">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                        <h4 class="modal-title w-100 font-weight-bold">New Academic Session</h4>
+                        <h4 class="modal-title w-100 font-weight-bold">Update Academic Session</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
