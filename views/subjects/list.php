@@ -34,7 +34,7 @@
                 <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Subjects</h3>
+                            <h3 class="card-title">Subject Filter</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -42,33 +42,33 @@
                                 <div class="col-md-12">
                                     <form rol="form" style="width: 100%;" id="student_form_filters">
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select class="form-control">
-                                                        <option value="">Please select</option>
-                                                        <option>Active</option>
-                                                        <option>Left institution</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select class="form-control">
-                                                        <option value="">Please select</option>
-                                                        <option>Active</option>
-                                                        <option>Left institution</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group mt-3">
-                                                    <button type="button" class="btn btn-info btn-md" id="filter"><i
-                                                                class="fa fa-search"></i>Search
-                                                    </button>
-                                                </div>
-                                            </div>
+<!--                                            <div class="col-md-4">-->
+<!--                                                <div class="form-group">-->
+<!--                                                    <label>Status</label>-->
+<!--                                                    <select class="form-control">-->
+<!--                                                        <option value="">Please select</option>-->
+<!--                                                        <option>Active</option>-->
+<!--                                                        <option>Left institution</option>-->
+<!--                                                    </select>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <div class="form-group">-->
+<!--                                                    <label>Status</label>-->
+<!--                                                    <select class="form-control">-->
+<!--                                                        <option value="">Please select</option>-->
+<!--                                                        <option>Active</option>-->
+<!--                                                        <option>Left institution</option>-->
+<!--                                                    </select>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <div class="form-group mt-3">-->
+<!--                                                    <button type="button" class="btn btn-info btn-md" id="filter"><i-->
+<!--                                                                class="fa fa-search"></i>Search-->
+<!--                                                    </button>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
                                         </div>
                                     </form>
                                 </div>

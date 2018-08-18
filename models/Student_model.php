@@ -92,12 +92,13 @@ Class Student_model extends CI_Model {
 	}
 
 	public function add_new_student($student_data) {
+	    $created_by = $this->session->userdata('userdata');
 		$this->db->insert('students', $student_data);
 		$student_id = $this->db->insert_id();
 		//create user of student.
         $password = password_hash('admin', PASSWORD_BCRYPT);
-		$user_data = array('user_id'=>$student_id,'name'=>'s'.$student_id,
-                        'email'=>$student_data['email'],'password'=>$password);
+		$user_data = array('user_id'=>$student_id,'name'=>'s'.$student_id,'created_by'=>$created_by['login_id'],
+                        'email'=>$student_data['email'],'password'=>$password,'login_rights_group_id'=>1);
         $this->db->insert('login', $user_data);
         //create student demographic
         $this->db->insert('demographics',array('student_id'=>$student_id,'batch_id'=>$student_data['batch_no']));

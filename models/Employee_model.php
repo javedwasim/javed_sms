@@ -42,11 +42,13 @@ class Employee_model extends CI_Model
 
     public function add_new_employee($data)
     {
+        $created_by = $this->session->userdata('userdata');
         $this->db->insert('employees', $data);
         $employee_id = $this->db->insert_id();
         //create user of student.
         $password = password_hash('admin', PASSWORD_BCRYPT);
-        $user_data = array('user_id'=>$employee_id,'name'=>'s'.$employee_id,'email'=>$data['email'],'password'=>$password);
+        $user_data = array('user_id'=>$employee_id,'name'=>'s'.$employee_id,'created_by'=>$created_by['login_id'],
+                    'email'=>$data['email'],'password'=>$password,'login_rights_group_id'=>1);
         $this->db->insert('login', $user_data);
         return $employee_id;
     }

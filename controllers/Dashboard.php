@@ -26,7 +26,6 @@ public function dashboard(){
   $this->load->view('parts/sidebar');
   $this->load->view('dashboard/dashboard');
   $this->load->view('parts/footer');
-
 }
 
 public function login() {
@@ -37,7 +36,7 @@ public function login() {
       $result = $this->Dashboard_model->get_user_by_email($user_email);
       if($result) {
         if (password_verify ( $this->input->post('password') , $result['password'] )) {
-          $this->session->set_userdata($result);
+          $this->session->set_userdata('userdata',$result);
           $this->session->set_userdata('is_logged_in', '1');
           redirect('dashboard');
         } else {
@@ -61,6 +60,7 @@ public function get_menus() {
   $menus_array = $this->model_menu->fetch_menu();
   $this->load->helper('menu');
   $data['menu_result'] = print_menu(0, $menus_array);
+  $data['user_data']   = $this->session->userdata('userdata');
   $this->load->view('parts/menu', $data);
 }
 

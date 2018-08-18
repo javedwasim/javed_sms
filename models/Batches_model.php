@@ -4,13 +4,20 @@ if (!defined('BASEPATH'))
 Class Batches_model extends CI_Model {
 
     public function get_all_batches(){
-
-        $query = "SELECT b.*, c.code,Count(students.student_id) as student_count 
+        $where = " where 1 ";
+        $user_data = $this->session->userdata('userdata');
+        if($user_data['user_id']){
+            $employee_id = $user_data['user_id'];
+            $where = " where employee_id = $employee_id ";
+        }
+        $query = "SELECT b.*, c.code,Count(students.student_id) as student_count,bas.employee_id 
                     FROM batches b 
                     LEFT JOIN classes c ON c.id=b.course_id 
                     LEFT JOIN (
                         select student_id,batch_no FROM students GROUP by student_id
                     )students on students.batch_no = b.id
+                    LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
+                    $where
                     GROUP By b.id
                     ORDER BY b.session ASC";
         $result = $query = $this->db->query($query);
