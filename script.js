@@ -75,7 +75,7 @@ function get_students(func_call) {
 				});
 				$('#guardian').DataTable({
 
-    		});
+                                });
 				$('.datepicker').datepicker({
 					defaultDate: new Date(),
 
@@ -2197,4 +2197,127 @@ $(".update_check").change(function() {
     }
 	});
 
+});
+
+function get_calendar(func_call) {
+    $.ajax({
+        url: '/isms/calendar/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.calendar_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.calendar_html);
+                $('#title').html('Subjects | ISMS');
+            }
+        }
+    });
+}
+
+function get_events(func_call) {
+    $.ajax({
+        url: '/isms/calendar/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.calendar_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.calendar_html);
+                $('#title').html('Subjects | ISMS');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '.delete-event', function(){
+        if (confirm('Are you sure to delete this record?')) {
+            $.ajax({
+                url: $(this).attr('data-href'),
+                type: 'post',
+                data : { event_id : $(this).attr('data-event-id')},
+                cache: false,
+                success: function(response) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.calendar_html);
+                    toastr["success"](response.message);
+                }
+            });
+        } else {
+            return false;
+        }
+
+        return false;
+});
+
+function get_sms(func_call) {
+    $.ajax({
+        url: '/isms/sms/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.sms_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.sms_html);
+                $('#title').html('SMS | ISMS');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '#send_message', function(){
+    $.ajax({
+        url: $('#sms_form').attr('data-action'),
+        type: 'post',
+        data: $('#sms_form').serialize(),
+        cache: false,
+        success: function(response) {
+            console.log(response);
+            if(response.success){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.sms_html);
+                $('#title').html('SMS | ISMS');
+                toastr["success"](response.message);
+            }else{
+                toastr["warning"](response.message);
+			}
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.add-sms', function(){
+    $.ajax({
+        url: $(this).attr('data-href'),
+        type: 'post',
+        cache: false,
+        success: function(response) {
+            if (response.sms_html!=='') {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.sms_html);
+                $('#title').html('SMS | Add Message');
+            } else {
+                toastr["warning"]('Unable to load view');
+            }
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.sms_view', function(){
+    $.ajax({
+        url: $(this).attr('data-href'),
+        type: 'post',
+        data: {sms_id:$(this).attr('data-sms-id')},
+        cache: false,
+        success: function(response) {
+            if (response.sms_html!=='') {
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.sms_html);
+                $('#title').html('SMS | View Message');
+            } else {
+                toastr["warning"]('Unable to load view');
+            }
+        }
+    });
+
+    return false;
 });

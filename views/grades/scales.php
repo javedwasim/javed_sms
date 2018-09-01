@@ -72,7 +72,7 @@
                                 <tbody>
                                     <?php foreach ($scales as $scale){ ?>
                                         <tr>
-                                            <td><a class="grade_scale_levels"
+                                            <td><a class="grade_scale_levels link prof-link"
                                                    href="<?php echo site_url('grade_scale/grade_scales_level/').$scale['id']; ?>"
                                                    data-href="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></a></td>
                                             <td><?php echo $scale['type']; ?></td>

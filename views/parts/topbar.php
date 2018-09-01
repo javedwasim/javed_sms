@@ -8,14 +8,14 @@
             <ul class="navbar-nav ml-auto">
                 <li class="dropdown user user-menu pull-right">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="<?php echo base_url(); ?>assets/dist/img/avatar5.png ?>" class="user-image"
+                        <img src="<?php echo base_url(); ?>assets/dist/img/avatar5.png?>" class="user-image"
                              alt="User Image">
                         <span class="hidden-xs docName">Admin Isms</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="<?php echo base_url(); ?>assets/dist/img/avatar5.png ?>"
+                            <img src="<?php echo base_url(); ?>assets/dist/img/avatar5.png?>"
                                  class="img-circle" alt="User Image">
                             <p>
                                 Welcome! Admin

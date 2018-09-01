@@ -28,12 +28,32 @@
                                 <li class="nav-item"><a class="nav-link" href="#demographic" data-toggle="tab">Demographics</a></li>
                                 <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Assign Employee</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#transfer" data-toggle="tab">Student Transfer</a></li>
-
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
+                            <div class="card-header">
+                                <h3 class="card-title" style="text-align: center;">
+                                  <i class="fa fa-info"></i>
+                                  <?php $session = $current_batch_info['session']; echo $current_batch_info['code'].'-'.$current_batch_info['arm']."($session) behavioural scoresheet"; ?>
+                                </h3>
+                            </div>
+                            <hr>
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <label for="punctuality" class="col-sm-2 col-form-label">Select Term</label>
+                                                <div class="col-sm-4 col-sm-offset-6">
+                                                    <select name="term_filter" id="term_filter" class="form-control">
+                                                        <option value="1"<?php echo isset($_REQUEST['term_id'])&&($_REQUEST['term_id']==1)?'selected':''; ?>>First Term</option>
+                                                        <option value="2"<?php echo isset($_REQUEST['term_id'])&&($_REQUEST['term_id']==2)?'selected':''; ?>>Second Term</option>
+                                                        <option value="3"<?php echo isset($_REQUEST['term_id'])&&($_REQUEST['term_id']==3)?'selected':''; ?>>Third Term</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <!-- /.card-header -->
@@ -43,9 +63,9 @@
                                                         <h5 class="card-title">Student List</h5>
                                                         <hr>
                                                         <ul class="list-group">
-                                                            <?php foreach ($students as $student): $admission_no = $student['admission_no']; ?>
-                                                                <a href="javascript:void(0)"><li class="list-group-item list-group-item-primary">
-                                                                        <?php echo $student['first_name'].' '.$student['last_name'],"($admission_no)"; ?></li></a>
+                                                            <?php foreach ($students as $student): $admission_no = $student['admission_no']; ?> 
+                                                                <a href="javascript:void(0)" class="student_grade_link" data-href="<?php echo $student['student_id'] ?>" data-action="<?php echo base_url()."batches/get_student_grade"; ?>">
+                                                                    <li class="list-group-item list-group-item-warning"><?php echo $student['first_name'].' '.$student['last_name'],"($admission_no)"; ?></li></a>
                                                             <?php endforeach; ?>
                                                         </ul>
                                                     </div>
@@ -57,18 +77,194 @@
                                             <!-- /.card-header -->
                                             <div class="card-body p-0">
                                                 <div class="card card-primary card-outline">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">Report</h5>
-
-                                                        <p class="card-text">
-                                                            Some quick example text to build on the card title and make up the bulk of the card's
-                                                            content.
-                                                        </p>
-                                                        <a href="#" class="card-link">Card link</a>
-                                                        <a href="#" class="card-link">Another link</a>
+                                                    <div id="student_behaviour_score_model">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title"><?php $session = $current_batch_info['session'];
+                                                                echo $current_batch_info['code'].'-'.$current_batch_info['arm']."($session) behavioural scoresheet"; ?></h5>
+                                                            <hr/>
+                                                            <form id="student_behavioural_score_form" method="post" role="form"  data-action="<?php echo site_url('Batches/save_student_behavioural_score') ?>"
+                                                                  enctype="multipart/form-data">
+                                                                <input type="hidden" name="student_id" id="student_id">
+                                                                <input type="hidden" name="grade_scale_id" id="grade_scale_id" value="2">
+                                                                <input type="hidden" name="term_id" id="term_id" value="3">
+                                                                <div class="form-group row" style="background-color: lightgrey;">
+                                                                    <label for="inputEmail3" class="col-sm-6 col-form-label">Affective Domain</label>
+                                                                    <label for="inputEmail3" class="col-sm-6 col-form-label">Grade</label>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="punctuality" class="col-sm-6 col-form-label">Punctuality</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="punctuality" id="punctuality">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="assignments" class="col-sm-6 col-form-label">Assignments</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="assignments" id="assignments">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="participation" class="col-sm-6 col-form-label">Participation in Class</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="participation" id="participation">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="relationship" class="col-sm-6 col-form-label">Relationship with Others</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="relationship" id="relationship">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="neatness" class="col-sm-6 col-form-label">Neatness</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="neatness" id="neatness">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="sense_of_responsibility" class="col-sm-6 col-form-label">Sense of Responsibility</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="sense_of_responsibility" id="sense_of_responsibility">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="religious_activities" class="col-sm-6 col-form-label">Religious Activities</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="religious_activities" id="religious_activities">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="self_control" class="col-sm-6 col-form-label">Self Control</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="self_control" id="self_control">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="obedience" class="col-sm-6 col-form-label">Obedience</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="obedience" id="obedience">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="participation_in_social_activities" class="col-sm-6 col-form-label">Participation in Social Activities</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="participation_in_social_activities" id="participation_in_social_activities">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="honesty" class="col-sm-6 col-form-label">Honesty</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="honesty" id="honesty">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="politeness" class="col-sm-6 col-form-label">Politeness</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="politeness" id="politeness">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="attentiveness" class="col-sm-6 col-form-label">Attentiveness</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="attentiveness" id="attentiveness">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="community_spirit" class="col-sm-6 col-form-label">Community Spirit</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="community_spirit" id="community_spirit">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                    <label for="initiative" class="col-sm-6 col-form-label">Initiative</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="custom-select mr-sm-2" name="initiative" id="initiative">
+                                                                            <option value="">Please Select</option>
+                                                                            <?php foreach($scales as $scale): ?>
+                                                                                <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <div class="col-sm-10" style="text-align: center">
+                                                                        <button type="submit" id="save_student_grade" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Save</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
-                                                </div><!-- /.card -->
-
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -216,17 +412,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /.tab-pane -->
-
-                                <!-- /.tab-pane -->
-                                <div class="tab-pane" id="timeline">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h5>Personal Details</h5>
-
-                                        </div>
-                                    </div>
-                                </div>
 
                             </div>
                             <!-- /.tab-content -->
@@ -301,7 +486,23 @@
         $('#last_day_in_batch').datepicker({
             format: 'yyyy-mm-dd'
         });
-
+        $('.student_grade_link:first-child').click();
+    });
+    $(document.body).on('click', '#save_student_grade', function(){
+        $.ajax({
+            url: $('#student_behavioural_score_form').attr('data-action'),
+            type: 'post',
+            data: $('#student_behavioural_score_form').serialize(),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    toastr["success"](response.message);
+                } else {
+                    toastr["error"](response.message);
+                }
+            }
+        });
+        return false;
     });
     $('#add_role').click(function () {
         var fieldHTML = '<div class="form-row"><div class="form-group col-md-4">' +
@@ -382,4 +583,32 @@
 
         return false;
     });
+
+    $(document.body).on('click', '.student_grade_link', function(){
+        $('#student_id').val($(this).attr('data-href'));
+        $( ".student_grade_link>li" ).addClass( "list-group-item-warning" );
+        $( ".student_grade_link>li" ).removeClass( "active" );
+        $(this).find("li").removeClass("list-group-item-warning").addClass( "active" );
+        var term_id = $('#term_filter').val();
+        $('#term_id').val(term_id);
+        $.ajax({
+            url: $(this).attr('data-action'),
+            type: 'post',
+            data: {student_id:$(this).attr('data-href'),term_id:term_id},
+            cache: false,
+            success: function(response) {
+                $('#student_behaviour_score_model').empty();
+                $('#student_behaviour_score_model').append(response.behaviour_score_html);
+            }
+        });
+
+        return false;
+    });
+    
+    $(document.body).on('change', '#term_filter', function(){
+       var term_id = $('#term_filter').val();
+       window.location.href = "<?php echo base_url().'batches/demographics/1?term_id=' ?>"+term_id;
+       return false;
+    });
+
 </script>

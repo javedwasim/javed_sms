@@ -57,7 +57,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $json['error'] = true;
                 $json['message'] = validation_errors();
             } else {
-                $update_fields = array('name'=>$data['name'],'code'=>$data['code'],'enable'=>$data['enable']);
+                $enable = isset($data['enable'])?$data['enable']:0;
+                $update_fields = array('name'=>$data['name'],'code'=>$data['code'],'enable'=>$enable);
                 $result = $this->General_model->update_class($update_fields,$data['class_id']);
                 if ($result) {
                     $data['classes'] = $this->General_model->get_classes();

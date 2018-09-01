@@ -96,13 +96,15 @@ Class Student_model extends CI_Model {
 		$this->db->insert('students', $student_data);
 		$student_id = $this->db->insert_id();
 		//create user of student.
-        $password = password_hash('admin', PASSWORD_BCRYPT);
-		$user_data = array('user_id'=>$student_id,'name'=>'s'.$student_id,'created_by'=>$created_by['login_id'],
+        $password = password_hash('s'.$student_id, PASSWORD_BCRYPT);
+		$user_data = array('name'=>'s'.$student_id,'created_by'=>$created_by['login_id'],
                         'email'=>$student_data['email'],'password'=>$password,'login_rights_group_id'=>1);
         $this->db->insert('login', $user_data);
         //create student demographic
         $this->db->insert('demographics',array('student_id'=>$student_id,'batch_id'=>$student_data['batch_no']));
-		return $student_id;
+
+        $this->db->where('student_id', $student_id)->update('students', array('username' => 's' . $student_id));
+        return $student_id;
 	}
 
 	public function save_student_guardian($data){
@@ -125,7 +127,7 @@ Class Student_model extends CI_Model {
 	public function get_student_by_id($student_id) {
 		$result = $this->db->select('students.*,login.email')
 						->from('students')
-                        ->join('login', 'login.user_id=students.student_id', 'left')
+                        ->join('login', 'login.name=students.username', 'left')
 						->where('student_id', $student_id)
 						->limit(1)
 						->get();

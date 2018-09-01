@@ -6,15 +6,26 @@ Class Batches_model extends CI_Model {
     public function get_all_batches(){
         $where = " where 1 ";
         $user_data = $this->session->userdata('userdata');
-        if($user_data['user_id']){
-            $employee_id = $user_data['user_id'];
-            $where = " where employee_id = $employee_id ";
+        if($user_data['name']!='admin' ){
+            $this->load->model('Dashboard_model');
+            $other_rights = $this->Dashboard_model->get_other_rights_detail();
+            $query = $this->db->select('employee_id')->from('employees')
+                            ->where('username',$user_data['name'])->limit(1)->get();
+            $result = $query->row_array();
+            $employee_id = $result['employee_id'];
+            if($other_rights[0]['status']){
+                $where = " where 1 ";
+            }else{
+                $where = " where employee_id = $employee_id ";
+            }
         }
-        $query = "SELECT b.*, c.code,Count(students.student_id) as student_count,bas.employee_id 
+         $query = "SELECT b.*, c.code,student_count,bas.employee_id
                     FROM batches b 
                     LEFT JOIN classes c ON c.id=b.course_id 
                     LEFT JOIN (
-                        select student_id,batch_no FROM students GROUP by student_id
+                        select student_id,batch_no,Count(students.student_id) as student_count
+                        FROM students 
+                        GROUP by batch_no
                     )students on students.batch_no = b.id
                     LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
                     $where
@@ -27,6 +38,30 @@ Class Batches_model extends CI_Model {
             return array();
         }
 
+    }
+
+    public function get_all_batches_by_id($id){
+
+        $query = "SELECT b.*, c.code,student_count,bas.employee_id
+                    FROM batches b 
+                    LEFT JOIN classes c ON c.id=b.course_id 
+                    LEFT JOIN (
+                        select student_id,batch_no,Count(students.student_id) as student_count,
+                        students.last_name,students.first_name
+                        FROM students 
+                        GROUP by batch_no
+                    )students on students.batch_no = b.id
+                    LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
+                    WHERE b.id = $id                
+                    GROUP By b.id
+                    ORDER BY b.session ASC
+                    Limit 1";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
     }
 
 
@@ -191,4 +226,52 @@ Class Batches_model extends CI_Model {
         }
 
     }
+
+    public function get_grade_scale_level($id)
+    {
+        $this->db->select('gsl.*,gs.name as grade_name');
+        $this->db->from('grade_scales gs');
+        $this->db->join('grade_scale_level gsl', 'gsl.grade_scale_id=gs.id', 'left');
+        $this->db->order_by('gsl.id', 'asc');
+        $this->db->where('gsl.grade_scale_id', $id);
+        $result = $this->db->get();
+
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function save_student_behavioural_score($data){
+        $query = $this->db->select('*')->from('student_grades')
+                ->where('student_id',$data['student_id'])
+                ->where('term_id',$data['term_id'])
+                ->limit(1)->get();
+        $result = $query->row_array();
+        if($query->num_rows()>0){
+            $id = $result['id'];
+            //echo "<pre>";print_r($data); die();
+            $this->db->where('id', $id)->update('student_grades', $data);
+            return $this->db->affected_rows();
+        }else{
+            $this->db->insert('student_grades', $data);
+            return $this->db->insert_id();
+        }
+    }
+    
+    public function get_student_behaviour_score($id,$term_id){        
+       $result =  $this->db->select('student_grades.*,students.*')
+                    ->from('student_grades')
+                    ->join('students','students.student_id=student_grades.student_id')
+                    ->where('student_grades.student_id',$id)
+                    ->where('term_id',$term_id)
+                    ->limit(1)->get();
+       if($result){
+           return $result->row_array();
+       } else {
+           return array();
+       }
+    }
+           
 }

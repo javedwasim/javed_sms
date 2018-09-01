@@ -128,6 +128,18 @@
    $('#list_itmes_subjects').click(function(){
        get_subjects($(this).attr('data-func-call'));
    });
+   
+   $('#list_itmes_Calendar').click(function(){
+       get_calendar($(this).attr('data-func-call'));
+   });
+   
+   $('#list_itmes_events').click(function(){
+       get_events($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_sms').click(function(){
+       get_sms($(this).attr('data-func-call'));
+   });
 
    $(document).ready(function()
    {

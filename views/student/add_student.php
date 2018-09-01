@@ -16,7 +16,7 @@
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-    <?php if(isset($errors)): ?>
+    <?php if (isset($errors)): ?>
         <div class="alert alert-danger">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             <strong><?php echo $errors; ?></strong>
@@ -26,7 +26,8 @@
         <div class="container-fluid">
             <div class="row student_info">
                 <div class="col-md-12">
-                    <form id="student_form" method="post" role="form" action="<?php echo site_url('students/add_new_student') ?>"
+                    <form id="student_form" method="post" role="form"
+                          action="<?php echo site_url('students/add_new_student') ?>"
                           data-action="<?php echo site_url('students/add_new_student') ?>"
                           enctype="multipart/form-data">
                         <div class="card card-primary">
@@ -74,9 +75,9 @@
                                             <label><code>*</code>Admission Date</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                              <span class="input-group-text">
-                                <i class="fa fa-calendar"></i>
-                              </span>
+                                                  <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                  </span>
                                                 </div>
                                                 <input type="text" class="form-control datepicker"
                                                        data-date-format="yyyy-mm-dd" name="admission_date"
@@ -252,9 +253,9 @@
                                     <?php if ($student_fields['email']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Email</label>
+                                                <label>Email<span style="color: red">*</span></label>
                                                 <input type="text" class="form-control" name="email" maxlength="50"
-                                                       placeholder="Email">
+                                                       placeholder="Email" required>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -301,7 +302,7 @@
                                                     <option value="">Please select a state</option>
                                                     <?php foreach ($states as $state): ?>
                                                         <option value="<?php echo $state['id']; ?>"><?php echo $state['name']; ?></option>
-                                                    <?php  endforeach; ?>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -343,9 +344,9 @@
     $("#nationality").change(function () {
         var country = $('#nationality').val();
         $.ajax({
-            url: '/isms/students/get_state/'+country,
+            url: '/isms/students/get_state/' + country,
             cache: false,
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     $('#country_states').empty();
                     $('#country_states').append(response.states_html);
@@ -359,9 +360,9 @@
     $("#country_states").change(function () {
         var state = $('#country_states').val();
         $.ajax({
-            url: '/isms/students/get_origin/'+state,
+            url: '/isms/students/get_origin/' + state,
             cache: false,
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 if (response.success) {
                     $('#lga_of_origin').empty();

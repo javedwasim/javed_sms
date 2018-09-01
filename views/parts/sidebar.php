@@ -2,7 +2,7 @@
     <!-- sidebar: style can be found in sidebar.less -->
     <!-- Brand Logo -->
         <a href="<?php echo base_url('students'); ?>" class="brand-link">
-          <img src="<?php echo base_url(); ?>assets/dist/img/school-logo.jpg ?>" alt="EILIT Logo" class="brand-image img-circle elevation-3"
+          <img src="<?php echo base_url(); ?>assets/dist/img/school-logo.jpg?>" alt="EILIT Logo" class="brand-image img-circle elevation-3"
           style="opacity: .8">
           <span class="brand-text font-weight-light">EILIT Tech</span>
         </a>

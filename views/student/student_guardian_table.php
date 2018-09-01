@@ -12,7 +12,7 @@
     <?php foreach($guardians as $guardian){ ?>
         <tr>
             <td>
-                <p><?php echo $guardian['surname'].', '.$guardian['first_name'].'('.$guardian['guardian_id'].')' ?></p>
+                <?php echo $guardian['surname'].', '.$guardian['first_name'].'('.$guardian['guardian_id'].')' ?>
             </td>
             <td><?php echo $guardian['mobile_phone']; ?></td>
             <td><?php echo $guardian['phone']; ?></td>

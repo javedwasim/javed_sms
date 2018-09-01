@@ -159,10 +159,10 @@
                                         <div class="contact-info">
                                             <ul class="list-group list-group-unbordered mb-3">
                                                 <li class="list-group-item">
-                                                    <b>Phone :</b> <a class="float-right">NONE</a>
+                                                    <b>Phone :</b> <a class="float-right"><?php echo $student['phone']; ?></a>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <b>Mobile No:</b> <a class="float-right">+2348099000000</a>
+                                                    <b>Mobile No:</b> <a class="float-right"><?php echo $student['mobile_phone']; ?></a>
                                                 </li>
                                                 <li class="list-group-item">
                                                     <b>Email:</b> <a class="float-right"><?php echo $student['email']; ?></a>

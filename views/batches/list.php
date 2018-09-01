@@ -40,13 +40,20 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <button type="button" class="btn btn-primary"
-                                            data-toggle="modal" data-target="#new_batch" id="batch_list">
-                                        <i class="fa fa-plus"></i>New Batch
-                                    </button>
+                                    <?php if (!empty($rights[0]['other_rights']) || ($userdata['name'] == 'admin')) { ?>
+                                        <button type="button" class="btn btn-primary"
+                                                data-toggle="modal" data-target="#new_batch" id="batch_list">
+                                            <i class="fa fa-plus"></i>New Batch 
+                                        </button>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="notification();">
+                                            <i class="fa fa-plus"></i>New Batch
+                                        </button>
+                                    <?php } ?>
                                 </div>
                                 <div class="col-md-9">
-                                    <form rol="form" style="width: 100%;" id="student_form_filters">
+<!--                                    <form rol="form" style="width: 100%;" id="student_form_filters">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
@@ -71,12 +78,12 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mt-3">
                                                     <button type="button" class="btn btn-info btn-md" id="filter"><i
-                                                                class="fa fa-search"></i>Search
+                                                            class="fa fa-search"></i>Search
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                    </form>-->
                                 </div>
                             </div>
                         </div>
@@ -91,29 +98,50 @@
                         <div class="card-body">
                             <table id="batch" class="table table-bordered table-striped">
                                 <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Students</th>
-                                    <th>Actions</th>
-                                </tr>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Students</th>
+                                        <th>Actions</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($batches as $batch): $session = $batch['session']; ?>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo site_url('batches/demographics/').$batch['id']; ?>" class="link prof-link"><?php echo $batch['code'].'-'.$batch['arm']."($session)"; ?></a>
+                                                <?php if ($userdata['name'] == 'admin') { ?>
+                                                    <a href="<?php echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                        <?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></a>
+                                                <?php } elseif(($userdata['name'] != 'admin') && !empty($rights[0]['other_rights'])) { ?>
+                                                    <?php if($batch['employee_id']>0){ ?>
+                                                        <a href="<?php  echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                            <?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></a>
+                                                    <?php } else { ?>
+                                                        <a href="<?php  echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                            <?php echo $batch['arm']; ?></a>
+                                                    <?php } ?>
+                                                <?php } else{ ?>
+                                                    <a href="<?php echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                        <?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></a>
+                                                <?php } ?>
                                             </td>
                                             <td><?php echo $batch['student_count']; ?></td>
                                             <td>
-                                                <a class="edit-batch btn btn-info btn-xs"
-                                                   data-session = "<?php echo $session; ?>"
-                                                   data-class= "<?php echo $batch['course_id']; ?>"
-                                                   href="javascript:void(0)"
-                                                   data-batch-id="<?php echo $batch['id']; ?> ?>"
-                                                   data-href="<?php echo site_url('batches/edit/').$batch['id']; ?>">
-                                                   Edit<i class="fa fa-edit" title="Edit"></i></a>
-                                                <a href="javascript:void(0)" data-href="<?php echo site_url('batches/delete/').$batch['id']; ?>" class="btn btn-danger btn-xs waves-effect waves-light delete-batch">
-                                                    <i class="fa fa-remove"></i>Delete</a>
+                                                <?php if (!empty($rights[0]['other_rights']) || ($userdata['name'] == 'admin')) { ?>
+                                                    <a class="edit-batch btn btn-info btn-xs"
+                                                       data-session = "<?php echo $session; ?>"
+                                                       data-class= "<?php echo $batch['course_id']; ?>"
+                                                       href="javascript:void(0)"
+                                                       data-batch-id="<?php echo $batch['id']; ?> ?>"
+                                                       data-href="<?php echo site_url('batches/edit/') . $batch['id']; ?>">
+                                                        Edit<i class="fa fa-edit" title="Edit"></i></a>
+                                                <?php } else { ?>
+                                                    <a class="btn btn-info btn-xs" onclick="notification();">
+                                                        Edit<i class="fa fa-edit" title="Edit"></i></a>
+                                                <?php } ?>
+                                                <?php if ($userdata['name'] == 'admin') { ?>   
+                                                    <a href="javascript:void(0)" data-href="<?php echo site_url('batches/delete/') . $batch['id']; ?>" class="btn btn-danger btn-xs waves-effect waves-light delete-batch">
+                                                        <i class="fa fa-remove"></i>Delete</a>
+                                                <?php } ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -150,7 +178,7 @@
                                     <select class="form-control" name="course_id">
                                         <option value="">Please Select</option>
                                         <?php foreach ($classes as $class): ?>
-                                         <option value="<?php echo $class['id'] ?>"><?php echo $class['name'] ?></option>
+                                            <option value="<?php echo $class['id'] ?>"><?php echo $class['name'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -190,6 +218,8 @@
                 "autoWidth": false
             });
         });
-
+        function notification() {
+            toastr["error"]('You are not authorized for this action!');
+        }
     </script>
 </div>

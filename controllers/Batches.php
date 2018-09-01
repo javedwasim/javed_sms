@@ -23,6 +23,8 @@ class Batches extends MY_Controller
         $record['batches'] = $this->Batches_model->get_all_batches();
         $record['sessions'] = $this->Batches_model->get_all_sessions();
         $record['classes'] = $this->Batches_model->get_all_classes();
+        $record['rights'] = $this->session->userdata('other_rights');
+        $record['userdata'] = $this->session->userdata('userdata');
         $json['batch_html'] = $this->load->view('batches/list', $record, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -97,8 +99,9 @@ class Batches extends MY_Controller
         $data['students']=$this->Batches_model->get_demographics($id);
         $data['employees']=$this->Batches_model->get_all_employees($id);
         $data['assigned_employee']=$this->Batches_model->get_assigned_employees($id);
-        $data['batches']=$this->Batches_model->get_all_batches();
-        $data['batch_id']=$id;;
+        $data['current_batch_info']=$this->Batches_model->get_all_batches_by_id($id);
+        $data['scales']=$this->Batches_model->get_grade_scale_level(2);
+        $data['batch_id']=$id;
         $data['screen'] = 'batch_students';
         $this->load->view('batches/demographics', $data);
     }
@@ -169,6 +172,68 @@ class Batches extends MY_Controller
         }
     }
 
+    public function save_student_behavioural_score(){
+        $this->load->library('form_validation');
+        $this->load->helper('security');
+
+        $this->form_validation->set_rules('punctuality', 'Punctuality', 'required|xss_clean');
+        $this->form_validation->set_rules('student_id', 'Please click student', 'required|xss_clean');
+        $this->form_validation->set_rules('assignments', 'Assignments', 'required|xss_clean');
+        $this->form_validation->set_rules('participation', 'Participation in Class', 'required|xss_clean');
+        $this->form_validation->set_rules('honesty', 'Honesty', 'required|xss_clean');
+        $this->form_validation->set_rules('politeness', 'Politeness', 'required|xss_clean');
+        $this->form_validation->set_rules('attentiveness', 'Attentiveness', 'required|xss_clean');
+        $this->form_validation->set_rules('community_spirit', 'Community Spirit', 'required|xss_clean');
+        $this->form_validation->set_rules('initiative', 'Initiative', 'required|xss_clean');
+        $this->form_validation->set_rules('obedience', 'Obedience', 'required|xss_clean');
+        $this->form_validation->set_rules('self_control', 'Self Control', 'required|xss_clean');
+        $this->form_validation->set_rules('religious_activities', 'Religious Activities', 'required|xss_clean');
+        $this->form_validation->set_rules('sense_of_responsibility', 'Sense of Responsibility', 'required|xss_clean');
+        $this->form_validation->set_rules('relationship', 'Relationship with Others', 'required|xss_clean');
+        $this->form_validation->set_rules('neatness', 'Neatness', 'required|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            $json['error'] = true;
+            $json['message'] = validation_errors();
+        }else{
+
+            $data = $this->input->post();
+            $student_data=array();
+            $student_data['student_behavioural_score'] = json_encode($data,JSON_PRETTY_PRINT);
+            $student_data['student_id'] = $data['student_id'];
+            $student_data['grade_scale_id'] = $data['grade_scale_id'];
+            $student_data['term_id'] = $data['term_id'];
+            $result = $this->Batches_model->save_student_behavioural_score($student_data);
+            if($result) {
+                $json['success'] = true;
+                $json['message'] = "Student behaviour score save successfully!";
+            } else {
+                $json['error'] = true;
+                $json['message'] = "Seems to an error while saving behaviour score";
+            }
+        }
+
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+
+    }
+
+    public function get_student_grade(){
+      $data = $this->input->post();
+      $student_id = $data['student_id'];
+      $term_id = $data['term_id'];
+      $result = $this->Batches_model->get_student_behaviour_score($student_id,$term_id); 
+      $score_info =json_decode($result['student_behavioural_score']);
+      $record['behaviour_score'] =$score_info;
+      $record['student_info'] =$result;
+      $record['s_id'] =$student_id;
+      $record['term_id'] =$term_id;
+      $record['scales']=$this->Batches_model->get_grade_scale_level(2);
+      $json['behaviour_score_html'] = $this->load->view('batches/student_score_form', $record, true);
+      if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
 
 
 }
