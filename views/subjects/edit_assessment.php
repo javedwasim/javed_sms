@@ -46,12 +46,12 @@
     <div class="form-group row">
         <label for="due_date" class="col-sm-2 col-form-label">Due date<span style="color: red">*</span></label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="due_date" name="due_date"
+            <input type="text" class="form-control" id="edit_due_date" name="due_date"
                    value="<?php echo $assessment['due_date']; ?>" required>
         </div>
     </div>
     <div class="form-group row">
-        <label for="include_final_grade" class="col-sm-2 col-form-label">Include in final grade</label>
+        <label for="include_final_grade" class="col-sm-2 col-form-label">Include in final grade?</label>
         <div class="col-sm-10">
             <input type="checkbox" class="form-check-input" id="include_final_grade"
                    name="include_final_grade" value="1" <?php echo $assessment['include_final_grade']==1?'checked':''; ?>>
@@ -81,7 +81,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="publish_score" class="col-sm-2 col-form-label">Include in final grade</label>
+        <label for="publish_score" class="col-sm-2 col-form-label">Publish score?</label>
         <div class="col-sm-10">
             <input type="checkbox" class="form-check-input" id="publish_score"
                    name="publish_score" value="1" <?php echo $assessment['publish_score']==1?'checked':''; ?>>
@@ -99,3 +99,12 @@
 
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#edit_due_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose:true
+        });
+    });
+</script>

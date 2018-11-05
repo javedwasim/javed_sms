@@ -28,7 +28,7 @@ Class Batches_model extends CI_Model {
                         GROUP by batch_no
                     )students on students.batch_no = b.id
                     LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
-                    $where
+                    where 1
                     GROUP By b.id
                     ORDER BY b.session ASC";
         $result = $query = $this->db->query($query);
@@ -272,6 +272,11 @@ Class Batches_model extends CI_Model {
        } else {
            return array();
        }
+    }
+
+    public function save_batch($data) {
+        $this->db->insert('batches', $data);
+        return $this->db->insert_id();
     }
            
 }

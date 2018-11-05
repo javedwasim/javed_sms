@@ -284,7 +284,18 @@ Class General_model extends CI_Model {
     }
 
     public function add_new_session($data) {
-        $this->db->insert('acadamic_sessions', $data);
+
+        $insert_data = array(
+            'name'=>$data['name'],
+            'first_term_start'=>date('Y-m-d',strtotime($data['first_term_start'])),
+            'first_term_end'=>date('Y-m-d',strtotime($data['first_term_end'])),
+            'second_term_start'=>date('Y-m-d',strtotime($data['second_term_start'])),
+            'second_term_end'=>date('Y-m-d',strtotime($data['second_term_end'])),
+            'third_term_start'=>date('Y-m-d',strtotime($data['third_term_start'])),
+            'third_term_end'=>date('Y-m-d',strtotime($data['third_term_end'])),
+        );
+
+        $this->db->insert('acadamic_sessions', $insert_data);
         return $this->db->insert_id();
     }
 
@@ -313,6 +324,19 @@ Class General_model extends CI_Model {
     public function get_institution_detail(){
         $result = $this->db->select('*')
                     ->from('institutions')
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_institution(){
+        $result = $this->db->select('*')
+                    ->from('institutions')
+                    ->limit(1)
                     ->get();
         if ($result) {
             return $result->row_array();

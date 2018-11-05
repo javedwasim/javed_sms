@@ -38,6 +38,10 @@ class Employee_model extends CI_Model {
 
     public function add_new_employee($data) {
         $created_by = $this->session->userdata('userdata');
+        $employee_category_id = $data['category'];
+        $emp_role = $this->get_employee_role($employee_category_id);
+        $emp_role_id = $emp_role['role_id'];
+
         $this->db->insert('employees', $data);
         $employee_id = $this->db->insert_id();
         //create menu group
@@ -47,16 +51,24 @@ class Employee_model extends CI_Model {
             'status' => 1,
         ));
         $menu_group_id = $this->db->insert_id();
-        //menu group detail
-        $emp_default_menu = $this->config->item('emp_default_menu');
-        foreach ($emp_default_menu as $menu) {
-            $this->db->insert('menu_group_detail', array('menu_group_id' => $menu_group_id, 'menu_id' => $menu));
+        //menu group detail for subject  and class teachers
+
+        if($emp_role_id==4 || $emp_role_id==5){
+            $emp_default_menu = $this->config->item('emp_subject_teacher');
+            foreach ($emp_default_menu as $menu) {
+                $this->db->insert('menu_group_detail', array('menu_group_id' => $menu_group_id, 'menu_id' => $menu));
+            }
+        }elseif($emp_role_id==7){
+            $emp_default_menu = $this->config->item('emp_staff');
+            foreach ($emp_default_menu as $menu) {
+                $this->db->insert('menu_group_detail', array('menu_group_id' => $menu_group_id, 'menu_id' => $menu));
+            }
         }
         //create login right group
         $this->db->insert('login_rights_group', array('menu_group_id' => $menu_group_id, 'other_rights_group_id' => $menu_group_id));
         $login_rights_group_id = $this->db->insert_id();
-        //create user of student.
-        $password = password_hash('e' . $employee_id, PASSWORD_BCRYPT);
+        //create user of employee.
+        $password = password_hash('e' . $employee_id.'123', PASSWORD_BCRYPT);
         $user_data = array('name' => 'e' . $employee_id, 'created_by' => $created_by['login_id'],
             'email' => $data['email'], 'password' => $password, 'login_rights_group_id' => $login_rights_group_id);
         $this->db->insert('login', $user_data);
@@ -100,7 +112,7 @@ class Employee_model extends CI_Model {
         foreach ($data as $key => $value) {
             $update_data[] = $key;
         }
-
+        print_r($update_data);
         foreach ($employee_fields as $field) {
             if (array_search($field['field_name'], $update_data)) {
                 $this->db->where('field_name', $field['field_name'])->where('profile_setting_id', 3)->update('profile_group_detail', array('add_view' => 1));
@@ -124,9 +136,10 @@ class Employee_model extends CI_Model {
     }
 
     public function get_employee_categories() {
-        $result = $this->db->select('*')
-                ->from('employee_categories')
-                ->get();
+        $result = $this->db->select('ec.*,roles.name as role_name')
+                    ->from('employee_categories ec')
+                    ->join('roles','roles.id = ec.role_id','left')
+                    ->get();
         if ($result) {
             return $result->result_array();
         } else {
@@ -140,7 +153,8 @@ class Employee_model extends CI_Model {
     }
 
     public function update_category($data, $id) {
-        $this->db->where('id', $id)->update('employee_categories', array('category' => $data));
+        $this->db->where('id', $id)->update('employee_categories',
+            array('category' => $data['category'],'role_id'=>$data['role_id']));
         return $this->db->affected_rows();
     }
 
@@ -228,15 +242,19 @@ class Employee_model extends CI_Model {
         }
 
         if (isset($filters['date_of_birth']) && (!empty($filters['date_of_birth']))) {
-            $dob = $filters['date_of_birth'];
-            $where .= " AND (date_of_birth = '' OR date_of_birth = '$dob')";
+            $dob = date('Y-m-d',strtotime($filters['date_of_birth']));
+            $where .= " AND date_of_birth = '$dob'";
         }
 
         if (isset($filters['date_of_join']) && (!empty($filters['date_of_join']))) {
-            $date_of_join = $filters['date_of_join'];
-            $where .= " AND (date_of_join = '' OR date_of_join = '$date_of_join')";
+            $date_of_join = date('Y-m-d',strtotime($filters['date_of_join']));
+            $where .= " AND date_of_join = '$date_of_join'";
         }
-        $sql = "SELECT * FROM employees  where $where";
+        $sql = "SELECT employees.*, d.name as dept_name, c.category, p.name as position
+                FROM employees
+                LEFT JOIN departments d ON d.id=employees.department
+                LEFT JOIN employee_categories c ON c.id=employees.category
+                LEFT JOIN positions p ON p.id=employees.position where $where";
         $result = $query = $this->db->query($sql);
         if ($result) {
             return $result->result_array();
@@ -270,31 +288,38 @@ class Employee_model extends CI_Model {
     }
 
     public function delete_employee($id) {
+        $emp_id = "e".$id;
+        $login = $this->db->query("select * from login where name = '$emp_id' limit 1 ");
+        $login_result = $login->row_array();
+        $login_rights_group_id = $login_result['login_rights_group_id'];
+        $login_right_group = $this->db->query("select * from login_rights_group where login_rights_group_id = $login_rights_group_id limit 1 ");
+        $login_right_group_result = $login_right_group->row_array();
+        $menu_group_id = $login_right_group_result['menu_group_id'];
+        //delete employee record
         $this->db->where('employee_id', $id)->delete('employees');
         //delete user
-        $login = $this->db->query("select login_id from login where user_id = $id ");
         if ($login->num_rows() > 0) {
-            $this->db->where('user_id', $id)->delete('login');
+            $this->db->where('menu_group_id', $menu_group_id)->delete('menu_group');
+            $this->db->where('menu_group_id', $menu_group_id)->delete('menu_group_detail');
+            $this->db->where('login_rights_group_id', $login_rights_group_id)->delete('login_rights_group');
+            $this->db->where('name', $emp_id)->delete('login');
+
         }
         return $this->db->affected_rows();
     }
 
     public function update_priviliges($data) {
-        
         $this->remove_previous_rights($data);
         $menu_group_id = $data['menu_group_id'];
         $other_rights_group_id = $data['other_rights_group_id'];
-        
         if (isset($data['batch_control'])) {
             $batch_control_rights = $this->config->item('batch_control_rights');
             $loggedin_user = $this->session->userdata('userdata');
             $created_by = $loggedin_user['login_id'];
-            
             //assign other right
             $this->db->where('other_rights_name', 'batch')->update('other_rights', array('status' => 1));
             $result = $this->db->select('other_rights_id')->from('other_rights')->where('other_rights_name', 'batch')->get();
             $other_rights_id = $result->result_array();
-            
             //other rights group
             $query = $this->db->select('other_rights_group_id')->from('other_rights_group')->where('other_rights_group_id', $other_rights_group_id)->limit(1)->get();
             //print_r($other_rights_group_id); die();
@@ -311,7 +336,6 @@ class Employee_model extends CI_Model {
                 ));
                 $other_rights_group_id = $this->db->insert_id();
             }
-            
             //other right group detail
             foreach ($other_rights_id as $id){
                 $this->db->insert('other_rights_group_detail',array(
@@ -326,23 +350,18 @@ class Employee_model extends CI_Model {
         $this->create_menu_list($data);
     }
     
-    public function remove_previous_rights($data){   
-        
+    public function remove_previous_rights($data){
         $other_rights_group_id = $data['other_rights_group_id'];
         $login_rights_group_id = $data['login_rights_group_id'];
-        
         $this->db->where('other_rights_name', 'batch')->update('other_rights', array('status' => 0));
-        
         //remove other right group
         $result = $this->db->select('other_rights_group_id')->from('other_rights_group')->where('other_rights_group_id', $other_rights_group_id)->limit(1)->get();
         if($result->num_rows()){
             $other_rights_group = $result->row_array();
             $this->db->where('other_rights_group_id', $other_rights_group['other_rights_group_id'])->update('other_rights_group', array('status' => 0));
         }
-        
         //remove other right group detail
         $this->db->where('other_rights_group_id',$other_rights_group_id)->delete('other_rights_group_detail');
-        
         // remove other right from loign right group
         //$this->db->where('login_rights_group_id', $login_rights_group_id)->update('login_rights_group', array('other_rights_group_id' => 0));
     }
@@ -399,6 +418,104 @@ class Employee_model extends CI_Model {
 
             // echo "<pre>"; print_r($menu_list); die();
             return explode(',', $menu_list);
+        } else {
+            return array();
+        }
+    }
+
+    public function get_roles() {
+        $result = $this->db->select('*')
+                    ->from('roles')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_employee_category_by_id($id) {
+        $result = $this->db->select('*')
+                    ->from('employee_categories')
+                    ->where('id',$id)
+                    ->limit(1)
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_role_by_id($id) {
+        $result = $this->db->select('*')
+                    ->from('roles')
+                    ->where('id',$id)
+                    ->limit(1)
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_employee_role($id){
+        $result = $this->db->select('ec.*, roles.id as role_id')
+                    ->from('employee_categories ec')
+                    ->join('roles','roles.id = ec.role_id','left')
+                    ->where('ec.id',$id)
+                    ->limit(1)
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_all_origins(){
+        $result = $this->db->select('*')
+            ->from('cities')
+            ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_state_origins($state_id){
+        $result = $this->db->select('*')
+                    ->from('cities')
+                    ->where('state_id',$state_id)
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_country_states($country_id){
+        $result = $this->db->select('*')
+            ->from('states')
+            ->where('country_id',$country_id)
+            ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_origin_by_id($city_id){
+        $result = $this->db->select('*')
+                    ->from('cities')
+                    ->where('id',$city_id)
+                    ->get();
+        if ($result) {
+            return $result->result_array();
         } else {
             return array();
         }

@@ -19,10 +19,13 @@ class Dashboard_model extends CI_Model
 
     public function get_user_by_email($email)
     {
-        $result = $this->db->select("*")
-                ->from("login")
-                ->where("email", $email)
-                ->get();
+        $result = $this->db->select("login.*,e.category,roles.name as role")
+                    ->from("login")
+                    ->join('employees e','e.username=login.name','left')
+                    ->join('employee_categories ec','ec.id=e.category','left')
+                    ->join('roles','roles.id=ec.role_id','left')
+                    ->where("login.email", $email)
+                    ->get();
         if($result) {
             return $result->row_array();
         }else{

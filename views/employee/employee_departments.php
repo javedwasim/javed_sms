@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listing Employee Departments</h1>
+                    <h1 class="m-0 text-dark">Employee Departments</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#employee_department_add"><i class="fa fa-plus"></i>New Employee Department</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#employee_department_add"><i class="fa fa-plus"></i>New Employee Department</a>
                                 </div>
                             </div>
                             <table id="employee-table" class="table table-bordered table-striped">
@@ -46,7 +46,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Abbrevation</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 9%">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -56,8 +56,8 @@
                                         <td><?php echo $department['abbrevation']; ?></td>
                                         <td>
                                             <a class="edit-employee-department btn btn-info btn-xs"
-                                               href="#" data-abbreviation="<?php echo $department['abbrevation'] ?>" data-value="<?php echo $department['name']; ?>" data-href="<?php echo $department['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
-                                            <a class="delete-employee-department btn btn-danger btn-xs" href="#" data-href="<?php echo site_url('employee_setting/delete_department/').$department['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                               href="#" data-abbreviation="<?php echo $department['abbrevation'] ?>" data-value="<?php echo $department['name']; ?>" data-href="<?php echo $department['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
+                                            <a class="delete-employee-department btn btn-danger btn-xs" href="#" data-href="<?php echo site_url('employee_setting/delete_department/').$department['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -99,13 +99,13 @@
                     <div class="md-form mb-6">
                         <input type="text" id="department_name" name="name" class="form-control validate" placeholder="Department Name">
                     </div>
-                    <hr/>
                     <div class="md-form mb-6">
                         <input type="text"  name="abbrevation" class="form-control validate" placeholder="Department Abbrevation">
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_employee_department" type="submit" class="btn btn-default">Create Employee Department</button>
+                    <button id="save_employee_department" type="submit" class="btn btn-primary">
+                        <i class="fa fa-plus"></i>Create Employee Department</button>
                 </div>
             </form>
         </div>
@@ -143,7 +143,8 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="update_employee_department" type="submit" class="btn btn-default">Update Employee Department</button>
+                    <button id="update_employee_department" type="submit" class="btn btn-primary">
+                        <i class="fa fa-floppy-o"></i>Update Employee Department</button>
                 </div>
             </form>
         </div>

@@ -31,16 +31,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $categories = $this->input->post();
                 $result = $this->Assessment_model->save_assessment_category($categories);
                 if ($result) {
-                    $data['assessments'] = $this->Assessment_model->get_assessments();
-                    $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Assessment Category successfully added.";
                 } else {
-                    $data['assessments'] = $this->Assessment_model->get_assessments();
-                    $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error while adding class.";
+                    $json['message'] = "Seems to an error.";
                 }
+                $data['assessments'] = $this->Assessment_model->get_assessments();
+                $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -62,17 +60,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $update_fields = array('name'=>$data['name'],'abbreviation'=>$data['abbreviation']);
                 $result = $this->Assessment_model->update_assessment_category($update_fields,$data['assessment_category_id']);
                 if ($result) {
-                    $data['assessments'] = $this->Assessment_model->get_assessments();
-                    $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Assessment Category successfully updated.";
                 } else {
-                    $data['assessments'] = $this->Assessment_model->get_assessments();
-                    $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
             }
+            $data['assessments'] = $this->Assessment_model->get_assessments();
+            $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
             }
@@ -90,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $data['assessments'] = $this->Assessment_model->get_assessments();
                 $json['assessment_html'] = $this->load->view('grades/categories', $data, true);
                 $json['success'] = true;
-                $json['message'] = "Seems to an error in delete category record.";
+                $json['message'] = "Seems to an error.";
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);

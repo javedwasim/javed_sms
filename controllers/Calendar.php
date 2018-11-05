@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Calendar extends CI_Controller
+class Calendar extends MY_Controller
 {
 
      public function __construct() {
@@ -98,40 +98,45 @@ class Calendar extends CI_Controller
         $this->form_validation->set_rules('end', 'Event End', 'required|xss_clean');
         //echo "<pre>"; print_r($this->input->post()); die();
         if ($this->form_validation->run() == FALSE) {
-            $validation_errors = validation_errors();
-            $data['screen'] = 'create_event';
-            $data['classes'] = $this->Batches_model->get_all_classes();
-            $data['categories'] = $this->Student_model->get_all_student_categories();
-            $data['ecategories'] = $this->Employee_model->get_employee_categories();
-            $data['departments'] = $this->Employee_model->get_employee_departments();
-            $data['positions'] = $this->Employee_model->get_employee_positions();
-            $data['message'] = $this->session->set_flashdata('errors', $validation_errors);
-            $this->load->view('calendar/index', $data);
+            $data['error'] = true;
+            $json['message'] = validation_errors();
         }else{
             $data = $this->input->post();
             $event_id=0;
+            $is_holiday = isset($data['is_holiday'])?$data['is_holiday']:'';
+            $is_common = isset($data['is_common'])?$data['is_common']:'';
             $event_data = array('title'=>$data['title'],'start'=>$data['start'],'description'=>$data['description'],
-                            'end'=>$data['end'],'is_holiday'=>$data['is_holiday'],'is_common'=>$data['is_common']);
+                            'end'=>$data['end'],'is_holiday'=>$is_holiday,'is_common'=>$is_common);
             //update event
             if($data['event_id']>0){
                 $id = $data['event_id'];
                 $result = $this->Calendar_model->update_event($id,$event_data);
+                $json['message'] = 'Event updated successfully.';
             }
             //inset new event
             else{
                 $event_id = $this->Calendar_model->save_event($event_data);
                 $this->Calendar_model->save_event_group($data,$event_id);
+                $json['message'] = 'Event save successfully.';
             }
             
             if ($event_id || $result) {
-                $this->session->set_flashdata('success', 'Event save successfully!');
-                redirect('calendar/events_list');
+                $json['success'] = true;
+
+
             } 
             else {
-                $this->session->set_flashdata('errors', 'Seem to be an error while saving event!');
-                redirect('calendar/events_list');
+                $data['error'] = true;
+                $json['message'] = 'Seem to be an error.';
             }
+
+            $data['events'] = $this->Calendar_model->get_event_list();
+            $json['calendar_html'] = $this->load->view('calendar/events_list',$data , true);
             
+        }
+
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
         }
         
     }
@@ -162,7 +167,7 @@ class Calendar extends CI_Controller
 
         } else {
             $json['error'] = true;
-            $json['message'] = "Seem to be an error while deleting event";
+            $json['message'] = "Seem to be an error.";
             $data['events'] = $this->Calendar_model->get_event_list();
             $json['calendar_html'] = $this->load->view('calendar/events_list',$data , true);
         }

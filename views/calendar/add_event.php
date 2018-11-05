@@ -4,12 +4,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Save Event</h1>
+                    <h1 class="m-0 text-dark">Add Event</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Add new Event</li>
+                        <li class="breadcrumb-item active">add new event</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -24,15 +24,13 @@
                     <div class="card card-primary">
                         <?php if ($this->session->flashdata('errors')!=='') { ?>
                            <span class="label label-danger"><?php print_r($this->session->flashdata('errors')); ?></span> 
-                           <hr>
                         <?php } ?>
                         <div class="card-header">
                             <h3 class="card-title">Event</h3>
                         </div>
                         <!-- /.card-header -->
-                        <form id="calendar_event_form" method="post" role="form" action="<?php echo site_url('calendar/save_event') ?>"
-                                                data-action="<?php echo site_url('batches/assign_employees') ?>"
-                                                enctype="multipart/form-data">
+                        <form id="calendar_event_form" method="post" role="form"
+                            data-action="<?php echo site_url('calendar/save_event') ?>" enctype="multipart/form-data">
                             <input type="hidden" name="event_id" value="<?php echo isset($event['id'])?$event['id']:''; ?>" >
                             <div class="card-body">
                                 <div class="row">
@@ -46,21 +44,21 @@
                                                 <label for="title" class="col-sm-4 col-form-label">Title<span style="color: red;">*</span></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="title" value="<?php echo isset($event['title'])?$event['title']:''; ?>"
-                                                           name="title" placeholder="Title" required="">
+                                                           name="title" placeholder="Title" required="" autocomplete="off">
                                                 </div>  
                                               </div>
                                               <div class="form-group row">
-                                                <label for="start" class="col-sm-4 col-form-label">Start time<span style="color: red;">*</span></label>
+                                                <label for="start" class="col-sm-4 col-form-label">Event Start<span style="color: red;">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" id="start" value="<?php echo isset($event['start'])?$event['start']:''; ?>"
-                                                           name="start" placeholder="Start Time" required="">
+                                                    <input type="text" class="form-control" id="start" value="<?php echo isset($event['start'])?date('Y-m-d',strtotime($event['start'])):''; ?>"
+                                                           name="start" placeholder="Start Time" required="" autocomplete="off">
                                                 </div>  
                                               </div>
                                               <div class="form-group row">
-                                                <label for="end" class="col-sm-4 col-form-label">End time<span style="color: red;">*</span></label>
+                                                <label for="end" class="col-sm-4 col-form-label">Event End<span style="color: red;">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" id="end" value="<?php echo isset($event['end'])?$event['end']:''; ?>"
-                                                           name="end" placeholder="End Time" required="">
+                                                    <input type="text" class="form-control" id="end" value="<?php echo isset($event['end'])?date('Y-m-d',strtotime($event['end'])):''; ?>"
+                                                           name="end" placeholder="End Time" autocomplete="off" required >
                                                 </div>  
                                               </div>
                                               <div class="form-group row">
@@ -180,10 +178,12 @@
     $(document).ready(function(){
           
           $('#start').datepicker({
-              format: 'yyyy-mm-dd'
+              format: 'yyyy-mm-dd',
+              autoclose:true
           });
           $('#end').datepicker({
-              format: 'yyyy-mm-dd'
+              format: 'yyyy-mm-dd',
+              autoclose:true
           });
     });      
 </script>        

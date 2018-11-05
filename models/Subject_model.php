@@ -38,9 +38,61 @@ Class Subject_model extends CI_Model {
 
     }
 
+    public function get_batch_subject($batch_no){
+        $where = "";
+        if($batch_no!=0){
+            $where .= "AND batch_id = $batch_no";
+        }
+
+        $elective = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count
+                        FROM subjects_detail sd  
+                        LEFT JOIN subjects s on s.id = sd.subject_id
+                        LEFT JOIN (
+                            select id as emp_id,subject_detail_id FROM subject_assign_employee 
+                            GROUP by id
+                        )ae on ae.subject_detail_id = sd.id
+                        WHERE elective_group_id>0 $where
+                        GROUP By sd.id";
+
+        $core = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count
+                        FROM subjects_detail sd  
+                        LEFT JOIN subjects s on s.id = sd.subject_id
+                        LEFT JOIN (
+                            select id as emp_id,subject_detail_id FROM subject_assign_employee 
+                            GROUP by id
+                        )ae on ae.subject_detail_id = sd.id
+                        WHERE elective_group_id=0 $where
+                        GROUP By sd.id";
+
+        $elective_subjects =  $this->db->query($elective);
+        $core_subjects = $this->db->query($core);
+        if($elective_subjects) {
+            $subjects=array();
+            $subjects['elective_subjects']=$elective_subjects->result_array();
+            $subjects['core_subjects']=$core_subjects->result_array();
+            return $subjects;
+        } else {
+            return array();
+        }
+
+    }
+
     public function get_all_subjects() {
         $result = $this->db->select('*')
                     ->from('subjects')
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_batch_subjects($batch_no) {
+        $result = $this->db->select('*')
+                    ->from('subjects')
+                    ->where('subjects')
                     ->get();
         if ($result) {
             return $result->result_array();
@@ -258,7 +310,10 @@ Class Subject_model extends CI_Model {
         $query = "SELECT s.student_id, batches.id as bacth_id,acs.id as session_id,
                     batches.session,sd.id as subj_detail_id,s.first_name,s.last_name,s.surname,
                     GROUP_CONCAT(sas.abbreviation ORDER BY sas.id ASC) as score_term,
-                    GROUP_CONCAT(sas.points ORDER BY sas.id ASC) as score_points
+                    GROUP_CONCAT(sas.points ORDER BY sas.id ASC) as score_points,
+                    SUBSTRING_INDEX(sc.obtain_score,',', 1) AS first_value,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 2),',','-1') as second_value,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 3),',','-1') as third_value
                     FROM students s
                     LEFT JOIN batches on batches.id  = s.batch_no
                     LEFT JOIN acadamic_sessions acs on acs.id=s.batch_no
@@ -268,8 +323,14 @@ Class Subject_model extends CI_Model {
                         GROUP BY subject_assessments.id 
                         ORDER BY subject_assessments.abbreviation DESC
                         
-                    )sas on sas.subject_detail_id=sd.id 
-                    WHERE (sd.id=1)
+                    )sas on sas.subject_detail_id=sd.id                     
+                    LEFT JOIN(
+                        SELECT ss.*,GROUP_CONCAT(ss.score ORDER BY ss.id ASC) as obtain_score
+                        FROM student_score_sheet ss
+                        WHERE ss.subject_detail_id = $id
+                        GROUP BY ss.student_id
+                    )sc on sc.student_id = s.student_id
+                    WHERE (sd.id=$id)
                     GROUP BY s.student_id";
         $result = $query = $this->db->query($query);
         if($result) {
@@ -277,6 +338,31 @@ Class Subject_model extends CI_Model {
         } else {
             return array();
         }
+    }
+
+    public function saveStudentScore($data){
+        $query = $this->db->select('*')->from('student_score_sheet')
+                ->where('student_id',$data['student_id'])
+                ->where('subject_detail_id',$data['subject_detail_id'])
+                ->where('assessment_term',$data['assessment_term'])
+                ->where('batch_id',$data['batch_id'])
+                ->limit(1)
+                ->get();
+
+        if($query->num_rows()>0){
+            //update score
+            unset($data['points']);
+            $result = $query->row_array();
+            $this->db->where('id', $result['id'])->update('student_score_sheet', $data);
+            return $this->db->affected_rows();
+        }else{
+            //insert score
+            unset($data['points']);
+            $this->db->insert('student_score_sheet', $data);
+            return $this->db->insert_id();
+        }
+
+
     }
 
 }

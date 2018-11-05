@@ -33,22 +33,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $data['scales'] = $this->Grade_model->get_scale_level($scale_id);
             $data['scale_id'] = $scale_id;
             if($data['scales']){
-                $this->load->view('parts/header');
-                $this->load->view('parts/topbar');
-                $this->load->view('parts/sidebar');
-                $json['scale_html'] = $this->load->view('grades/scale_levels', $data);
-                $this->load->view('parts/footer');
                 $json['success'] = true;
                 $json['message'] = "Scale successfully added.";
             }else{
-                $this->load->view('parts/header');
-                $this->load->view('parts/topbar');
-                $this->load->view('parts/sidebar');
-                $json['scale_html'] = $this->load->view('grades/scale_levels', $data);
-                $this->load->view('parts/footer');
                 $json['error'] = true;
                 $json['message'] = "Seems to an error while adding class.";
             }
+            $this->load->view('parts/header');
+            $this->load->view('parts/topbar');
+            $this->load->view('parts/sidebar');
+            $json['scale_html'] = $this->load->view('grades/scale_levels', $data);
+            $this->load->view('parts/footer');
 
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -68,16 +63,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $scale['status']= 'active'; //by default status
                 $result = $this->Grade_model->save_grade_scale($scale);
                 if ($result) {
-                    $data['scales'] = $this->Grade_model->get_scales();
-                    $json['scale_html'] = $this->load->view('grades/scales', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Scale successfully added.";
                 } else {
-                    $data['scales'] = $this->Grade_model->get_scales();
-                    $json['scale_html'] = $this->load->view('grades/scales', $data, true);
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error while adding class.";
+                    $json['message'] = "Seems to an error.";
                 }
+
+                $data['scales'] = $this->Grade_model->get_scales();
+                $json['scale_html'] = $this->load->view('grades/scales', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -148,16 +142,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $update_fields = array('name'=>$data['name'],'description'=>$data['description'],'type'=>$data['type']);
                 $result = $this->Grade_model->update_scale($update_fields,$data['scale_id']);
                 if ($result) {
-                    $data['scales'] = $this->Grade_model->get_scales();
-                    $json['scale_html'] = $this->load->view('grades/scales', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Scale successfully updated.";
                 } else {
-                    $data['scales'] = $this->Grade_model->get_scales();
-                    $json['scale_html'] = $this->load->view('grades/scales', $data, true);
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
+                $data['scales'] = $this->Grade_model->get_scales();
+                $json['scale_html'] = $this->load->view('grades/scales', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);

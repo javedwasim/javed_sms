@@ -1,3 +1,4 @@
+<?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
    <ul class="navbar-nav ml-auto">
@@ -5,7 +6,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <img src="<?php echo base_url(); ?>assets/dist/img/avatar5.png?>" class="user-image"
                  alt="User Image">
-            <span class="hidden-xs docName">Admin Isms</span>
+            <span class="hidden-xs docName"><?php echo $user_name; ?> Isms</span>
         </a>
         <ul class="dropdown-menu">
             <!-- User image -->

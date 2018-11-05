@@ -32,10 +32,10 @@
                 <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Listing Grade Scale</h3>
+                            <h3 class="card-title">Grade Scale</h3>
                         </div>
                         <div class="container ">
-                            <div class="row pull-right">
+                            <div class="row">
                                 <div class="col-sm-6">
                                     <label for="status">Status</label>
                                     <select name="status" id="status" class="form-control"><option value="active">Active</option>
@@ -54,19 +54,20 @@
                         <div class="card-body">  
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#add_scale"><i class="fa fa-plus"></i>New Scale</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#add_scale">
+                                        <i class="fa fa-plus"></i>New Scale</a>
 
                                 </div>
                             </div>
 
-                            <table id="account-table" class="table table-bordered table-striped datatables dataTable no-footer" width="100%">
+                            <table id="account-table" class="table table-bordered table-striped  dataTable no-footer" width="100%">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 15%">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -84,14 +85,16 @@
                                                    href="javascript:void(0)"
                                                    data-type="<?php echo $scale['type'] ?>"
                                                    data-status="<?php echo $scale['status'] ?>"
-                                                   data-href="<?php echo $scale['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                                   data-href="<?php echo $scale['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                                 <?php if($scale['status']=='active'){ ?>
                                                     <a class="retire-grade-scale btn btn-warning btn-xs" href="#"
-                                                       data-href="<?php echo site_url('grade_scale/retire_scale/').$scale['id'] ?>">Retired  <i class="fa fa-archive" title="Retire"></i></a>
+                                                       data-href="<?php echo site_url('grade_scale/retire_scale/').$scale['id'] ?>">
+                                                      <i class="fa fa-archive icon-margin" title="Retire"></i></a>
                                                 <?php } ?>
 
                                                 <a class="delete-grade-scale btn btn-danger btn-xs" href="#"
-                                                   data-href="<?php echo site_url('grade_scale/delete_scale/').$scale['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                                   data-href="<?php echo site_url('grade_scale/delete_scale/').$scale['id'] ?>">
+                                                    <i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -105,6 +108,9 @@
     </section>
     <script>
         $(document).ready(function() {
+
+            $("#account-table").DataTable({});
+
             /* Custom filtering function which will search data in column four between two values */
 
             var table =$('.datatables').DataTable({"scrollX": true});
@@ -172,7 +178,8 @@
                         <textarea class="form-control" name="description"></textarea>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="save_scale" type="submit" class="btn btn-default">Save Scale</button>
+                        <button id="save_scale" type="submit" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add Scale</button>
                     </div>
                 </form>
             </div>

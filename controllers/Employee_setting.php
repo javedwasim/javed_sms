@@ -13,10 +13,9 @@ class Employee_setting extends MY_Controller
 
   
     public function employee_cat(){
-        $data['categories'] = $this->Employee_model->get_employee_categories();
-        //print_r($data['categories']); die();
+        $data['categories']    = $this->Employee_model->get_employee_categories();
+        $data['roles']         = $this->Employee_model->get_roles();
         $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
-        $json['employee_html'] = $this->load->view('employee/employee_categories', '', true);
         if($this->input->is_ajax_request()) {
             set_content_type($json);
         }
@@ -50,16 +49,14 @@ class Employee_setting extends MY_Controller
             $category = $this->input->post();
             $result = $this->Employee_model->add_employee_category($category);
             if ($result) {
-                $data['categories'] = $this->Employee_model->get_employee_categories();
-                $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
                 $json['success'] = true;
-                $json['message'] = "Student successfully added.";
+                $json['message'] = "Employee successfully added.";
             } else {
-                $data['categories'] = $this->Employee_model->get_employee_categories();
-                $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
                 $json['error'] = true;
-                $json['message'] = "Seems to an error in image uploading.";
+                $json['message'] = "Seems to an error.";
             }
+            $data['categories'] = $this->Employee_model->get_employee_categories();
+            $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
         }
         if($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -76,19 +73,17 @@ class Employee_setting extends MY_Controller
         } else {
             $category = $this->input->post();
             //print_r($category); die();
-            $result = $this->Employee_model->update_category($category['category'],$category['category_id']);
+            $result = $this->Employee_model->update_category($category,$category['category_id']);
             if ($result) {
-                $data['categories'] = $this->Employee_model->get_employee_categories();
-                $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Category successfully updated.";
             } else {
-                $data['categories'] = $this->Employee_model->get_employee_categories();
-                $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
                 $json['error'] = true;
-                $json['message'] = "Seems to an error in image uploading.";
+                $json['message'] = "Seems to an error.";
             }
         }
+        $data['categories'] = $this->Employee_model->get_employee_categories();
+        $json['employee_html'] = $this->load->view('employee/employee_categories', $data, true);
         if($this->input->is_ajax_request()) {
             set_content_type($json);
         }
@@ -103,7 +98,7 @@ class Employee_setting extends MY_Controller
             $json['message'] = "Category successfully deleted.";
         } else {
             $json['success'] = true;
-            $json['message'] = "Seems to an error in delete student record.";
+            $json['message'] = "Seems to an error.";
         }
         if($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -231,18 +226,16 @@ class Employee_setting extends MY_Controller
             //print_r($department); die();
             $result = $this->Employee_model->update_position($data,$department['position_id']);
             if ($result) {
-                $data['positions'] = $this->Employee_model->get_employee_positions();
-                //print_r($data['categories']); die();
-                $json['employee_html'] = $this->load->view('employee/employee_positions', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Position successfully updated.";
             } else {
-                $data['positions'] = $this->Employee_model->get_employee_positions();
-                //print_r($data['categories']); die();
-                $json['employee_html'] = $this->load->view('employee/employee_positions', $data, true);
                 $json['error'] = true;
                 $json['message'] = "Seems to an error in image uploading.";
             }
+
+            $data['positions'] = $this->Employee_model->get_employee_positions();
+            //print_r($data['categories']); die();
+            $json['employee_html'] = $this->load->view('employee/employee_positions', $data, true);
         }
         if($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -302,6 +295,15 @@ class Employee_setting extends MY_Controller
             set_content_type($json);
         }
          
+    }
+
+    public function edit_view($id){
+        $data['category']    = $this->Employee_model->get_employee_category_by_id($id);
+        $data['roles']         = $this->Employee_model->get_roles();
+        $json['employee_html'] = $this->load->view('employee/employee_edit_category', $data, true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
     }
 
 

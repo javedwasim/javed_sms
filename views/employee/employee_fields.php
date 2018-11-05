@@ -75,18 +75,12 @@
                         </div>
                       </div>
                     </div>
+
                     <div class="col-md-3">
                       <div class="form-group">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="title" <?php echo isset($employee_fields['title'])&&($employee_fields['title']==1)?'checked':''; ?>   name="employee_form_fields[]">
-                          <label class="form-check-label">Title.</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="photo" <?php echo isset($employee_fields['photo'])&&($employee_fields['photo']==1)?'checked':''; ?> name="employee_form_fields[]">
+                            <input class="form-check-input" type="hidden" value="nephoto" name="employee_form_fields[]">
+                            <input class="form-check-input" type="checkbox" value="ephoto" <?php echo isset($employee_fields['ephoto'])&&($employee_fields['ephoto']==1)?'checked':''; ?> name="employee_form_fields[]">
                           <label class="form-check-label">Photo.</label>
                         </div>
                       </div>
@@ -103,7 +97,7 @@
                     <div class="col-md-3">
                       <div class="form-group">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="gender" <?php echo isset($employee_fields['gender'])&&($employee_fields['gender']==1)?'checked':''; ?>  name="employee_form_fields[]">
+                          <input class="form-check-input" type="checkbox" value="egender" <?php echo isset($employee_fields['egender'])&&($employee_fields['egender']==1)?'checked':''; ?>  name="employee_form_fields[]">
                           <label class="form-check-label">Gender.</label>
                         </div>
                       </div>

@@ -18,6 +18,14 @@
         <textarea class="form-control" name="description"><?php echo $scale['description']; ?></textarea>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-        <button id="update_scale" type="submit" class="btn btn-default">Update Scale</button>
+        <button id="update_scale" type="submit" class="btn btn-primary">
+            <?php if(isset($scale['id'])): ?>
+                <i class="fa fa-floppy-o"></i>
+                Update Scale
+            <?php else: ?>
+                <i class="fa fa-plus"></i>
+                Add Scale
+            <?php endif; ?>
+        </button>
     </div>
 </form>

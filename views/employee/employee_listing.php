@@ -36,26 +36,14 @@
                     </div>
                     <div class="card card-primary">
                         <div class="card-header">
-                            <!-- <h3 class="card-title">Data Table With Full Features</h3> -->
+                             <h3 class="card-title">Employees</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>Add Employee
-                                    </button>
-                                </div>
-                                <div class="col-md-2 offset-md-7">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6" style="padding: 0px;">
-                                                <label>Show more</label>
-                                            </div>
-                                            <div class="col-md-1" style="padding: 0px;">
-                                                <input type="checkbox" name="" class="flat-red">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <button type="button" class="btn btn-primary" id="list_itmes_employee_add">
+                                        <i class="fa fa-plus"></i>Add Employee</button>
                                 </div>
                             </div>
                             <hr/>
@@ -64,7 +52,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label> Search</label>
-                                            <input type="text" name="search-employee" class="form-control"
+                                            <input type="text" name="search-employee" class="form-control emp_filter"
                                                    value="<?php echo isset($filters['search-employee']) ? $filters['search-employee'] : ''; ?>"
                                                    onchange="employee_filters()">
                                         </div>
@@ -72,7 +60,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <select class="form-control" name="status" onchange="employee_filters()">
+                                            <select class="form-control emp_filter" name="status" onchange="employee_filters()">
                                                 <option value="">Please select</option>
                                                 <option value="1"<?php echo isset($filters['status']) &&($filters['status']==1) ? 'selected' : ''; ?>>Active</option>
                                                 <option value="0"<?php echo isset($filters['status']) &&($filters['status']==0) ? 'selected' : ''; ?>>Left institution</option>
@@ -82,7 +70,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Gender</label>
-                                            <select class="form-control" name="gender" onchange="employee_filters()">
+                                            <select class="form-control emp_filter" name="gender" onchange="employee_filters()">
                                                 <option value="">Please select</option>
                                                 <option value="male"<?php echo isset($filters['gender']) &&($filters['gender']=='male') ? 'selected' : ''; ?>>Male</option>
                                                 <option value="female"<?php echo isset($filters['gender']) &&($filters['gender']=='female') ? 'selected' : ''; ?>>Female</option>
@@ -92,10 +80,10 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Category</label>
-                                            <select class="form-control" name="category" onchange="employee_filters()">
+                                            <select class="form-control emp_filter" name="category" onchange="employee_filters()">
                                                 <option value="">All</option>
                                                 <?php foreach ( $categories as $category) : ?>
-                                                    <option value="<?php echo $category['id']; ?>"<?php echo isset($filters['category']) &&($filters['category']==$category['id']) ? 'selected' : ''; ?>><?php echo $category['name']; ?></option>
+                                                    <option value="<?php echo $category['id']; ?>"<?php echo isset($filters['category']) &&($filters['category']==$category['id']) ? 'selected' : ''; ?>><?php echo $category['category']; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -106,7 +94,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Department</label>
-                                            <select class="form-control" name="department"
+                                            <select class="form-control emp_filter" name="department"
                                                     onchange="employee_filters()">
                                                 <option value="">All</option>
                                                 <?php foreach ( $departments as $department) : ?>
@@ -118,7 +106,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Position</label>
-                                            <select class="form-control" name="position" onchange="employee_filters()">
+                                            <select class="form-control emp_filter" name="position" onchange="employee_filters()">
                                                 <option value="">All</option>
                                                 <?php foreach ( $positions as $position) : ?>
                                                     <option value="<?php echo $position['id']; ?>"<?php echo isset($filters['position']) &&($filters['position']==$position['id']) ? 'selected' : ''; ?>><?php echo $position['name']; ?></option>
@@ -132,7 +120,8 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" id="date_of_join" name="date_of_join" value="<?php echo isset($filters['date_of_join'])?$filters['date_of_join']: ''; ?>">
+                                            <input type="date" class="form-control emp_filter"  name="date_of_join"
+                                                   onchange="employee_filters()" value="<?php echo isset($filters['date_of_join'])?$filters['date_of_join']: ''; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -141,35 +130,17 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="<?php echo isset($filters['date_of_birth'])?$filters['date_of_birth']: ''; ?>">
+                                            <input type="date" class="form-control emp_filter" name="date_of_birth"
+                                                   onchange="employee_filters()" value="<?php echo isset($filters['date_of_birth'])?$filters['date_of_birth']: ''; ?>">
                                         </div>
                                     </div>
                                 </div>
                             </form>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Show more fields</label>
-                                        <select class="form-control select2" multiple="multiple"
-                                                data-placeholder="Show more fields" style="width: 100%;">
-                                            <option value="AL">Employee no</option>
-                                            <option value="WY">Department</option>
-                                            <option value="WY">Category</option>
-                                            <option value="WY">Position</option>
-                                            <option value="WY">Joining date</option>
-                                            <option value="WY">Date left</option>
-                                            <option value="WY">Date of birth</option>
-                                            <option value="WY">Blood group</option>
-                                            <option value="WY">Religion</option>
-                                            <option value="WY">Registration started</option>
-                                            <option value="WY">Last updated</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
+                                <div class="col-md-6">
                                     <div class="form-group mt-3">
-                                        <button type="submit" class="btn btn-info btn-md"><i
-                                                    class="fa fa-search"></i></button>
+                                        <button type="submit" class="btn btn-primary btn-md" onclick="return resetForm()">
+                                            <i class="fa fa-refresh"></i> Reset</button>
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +168,8 @@
                                 <?php foreach ($employees as $employee) { ?>
                                     <tr>
                                         <td>
-                                            <a href="<?php echo site_url('employee/profile/') . $employee['employee_id'] ?>" class="prof-link">
+                                            <a class="prof-link emp_profile"
+                                               data-href="<?php echo site_url('employee/profile/') . $employee['employee_id'] ?>" >
                                                 <?php echo $employee['surname'] . ', ' . $employee['first_name'] ?></a>
                                         </td>
                                         <td><?php echo $employee['employee_no']; ?></td>
@@ -212,19 +184,8 @@
                                         <td class="visibility"><?php echo $employee['created']; ?></td>
                                         <td class="visibility"><?php echo $employee['updated']; ?></td>
                                         <td class="visibility">
-                                            <a class="edit-studentsss btn btn-info btn-xs" href="javascript:void(0)"><i
-                                                        class="fa fa-user-plus"></i> Select</a>
-                                            <!-- use function to pass edit url -->
-                                            <?php /* ?>
-                                            <a class="edit-studentsss btn btn-info btn-xs"
-                                               onclick="loadEditForm('<?php echo site_url('employee/edit/') . $employee['employee_id']; ?>')"
-                                               href="javascript:void(0)"
-                                               data-href="<?php echo site_url('employees/edit/') . $employee['employee_id'] ?>">Edit
-                                                <i class="fa fa-edit" title="Edit"></i></a>
-                                            <a class="delete-student btn btn-danger btn-xs" href="#"
-                                               data-href="<?php echo site_url('employee/delete_user/') . $employee['employee_id']; ?>">Delete
-                                                <i class="fa fa-trash" title="Delete"></i></a>
-                                             <?php **/ ?>
+                                            <a class="edit-studentsss btn btn-info btn-xs" href="javascript:void(0)">
+                                                <i class="fa fa-user-plus"></i> Select</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -266,6 +227,7 @@
             ]
         });
         epmtable.columns( [ 2, 3,4, 5, 6,7,8,9,10,11] ).visible( false, false );
+        $(".buttons-colvis").html('Fields to Show');
 
         $('#date_of_join').datepicker({
             format: 'yyyy-mm-dd'
@@ -285,12 +247,15 @@
                 if (response.employee_html != '') {
                     $('.content-wrapper').remove();
                     $('#content-wrapper').append(response.employee_html);
-                    $('#employee_listing_table').DataTable();
                     $('#title').html('Employee Listing | ISMS');
                 }
             }
         });
     }
 
+    function resetForm() {
+        $('.emp_filter').val('');
+        employee_filters();
+    }
 
 </script>

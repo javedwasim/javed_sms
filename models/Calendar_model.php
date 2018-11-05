@@ -19,6 +19,7 @@ class Calendar_Model extends CI_Model
 
     public function update_event($id, $data)
     {
+        $data['end'] = date('Y-m-d H:i:s', strtotime('+12 hours', strtotime($data['end'])));
         $this->db->where("ID", $id)->update("calendar_events", $data);
         return $this->db->affected_rows();
     }
@@ -32,6 +33,7 @@ class Calendar_Model extends CI_Model
     
     public function save_event($data)
     {
+        $data['end'] = date('Y-m-d H:i:s', strtotime('+12 hours', strtotime($data['end'])));
         $this->db->insert('calendar_events', $data);
         return $this->db->insert_id();
     }

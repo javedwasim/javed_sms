@@ -40,39 +40,39 @@
                 <!-- Name -->
                 <label><code>*</code>Name</label>
                 <input type="text" id="name" value="<?php echo isset($institution_detail['name'])&&(!empty($institution_detail['name']))?$institution_detail['name']:'' ?>"
-                       name="name" class="form-control mb-4" placeholder="Example High School" required>
+                       name="name" class="form-control mb-4" placeholder="Example High School" maxlength="100" required>
                 <!-- Name abbreviation -->
                 <label><code>*</code>Name abbreviation</label>
                 <input type="text" id="code" value="<?php echo isset($institution_detail['code'])&&(!empty($institution_detail['code']))?$institution_detail['code']:'' ?>"
-                       name="code" class="form-control mb-4" placeholder="MHS" required>
+                       name="code" class="form-control mb-4" placeholder="MHS" maxlength="20" required>
                 <!-- Subdomain -->
                 <label><code>*</code>Subdomain</label>
                 <input type="text" id="subdomain" name="subdomain" value="<?php echo isset($institution_detail['subdomain'])&&(!empty($institution_detail['subdomain']))?$institution_detail['subdomain']:'' ?>"
-                       class="form-control mb-4" placeholder="demo" required>
+                       class="form-control mb-4" placeholder="demo" maxlength="100" required>
                 <!-- Slogan -->
                 <label> Slogan</label>
                 <input type="text" id="slogan" name="slogan" value="<?php echo isset($institution_detail['slogan'])&&(!empty($institution_detail['slogan']))?$institution_detail['slogan']:'' ?>"
-                       class="form-control mb-4" placeholder="Quality Education Our Priority">
+                       class="form-control mb-4" maxlength="100" placeholder="Quality Education Our Priority">
                 <!-- Email -->
                 <label>Email</label>
                 <input type="email" id="email" name="email" value="<?php echo isset($institution_detail['email'])&&(!empty($institution_detail['email']))?$institution_detail['email']:'' ?>"
-                       class="form-control mb-4" placeholder="masindihigh@gmail.com">
+                       class="form-control mb-4" maxlength="100" placeholder="masindihigh@gmail.com">
                 <!-- Website -->
                 <label> Website</label>
                 <input type="text" id="website" name="website" value="<?php echo isset($institution_detail['website'])&&(!empty($institution_detail['website']))?$institution_detail['website']:'' ?>"
                        class="form-control mb-4" placeholder="www.masindihigh.com">
                 <!-- Phone -->
                 <label>Phone</label>
-                <input type="text" id="phone" name="phone" value="<?php echo isset($institution_detail['phone'])&&(!empty($institution_detail['phone']))?$institution_detail['phone']:'' ?>"
-                       class="form-control mb-4" placeholder="+2349078347848">
+                <input type="number" id="phone" name="phone" value="<?php echo isset($institution_detail['phone'])&&(!empty($institution_detail['phone']))?$institution_detail['phone']:'' ?>"
+                       class="form-control mb-4" maxlength="15" placeholder="+2349078347848">
                 <!-- Mobile Phone -->
                 <label>Mobile Phone</label>
-                <input type="text" id="mobile" name="mobile" value="<?php echo isset($institution_detail['mobile'])&&(!empty($institution_detail['mobile']))?$institution_detail['mobile']:'' ?>"
-                       class="form-control mb-4" placeholder="+2349078347848">
+                <input type="number" id="mobile" name="mobile" value="<?php echo isset($institution_detail['mobile'])&&(!empty($institution_detail['mobile']))?$institution_detail['mobile']:'' ?>"
+                       class="form-control mb-4" maxlength="15" placeholder="+2349078347848">
                 <!-- Message -->
                 <div class="form-group">
                   <label>Address</label>
-                    <textarea class="form-control rounded-0" id="address" name="address" rows="3"><?php echo isset($institution_detail['address'])&&(!empty($institution_detail['address']))?$institution_detail['address']:'' ?></textarea>
+                    <textarea class="form-control rounded-0" id="address" name="address" rows="3" maxlength="300"><?php echo isset($institution_detail['address'])&&(!empty($institution_detail['address']))?$institution_detail['address']:'' ?></textarea>
                 </div>
                 <div class="form-group">
                   <label for="exampleInputFile">Logo</label>
@@ -287,7 +287,7 @@
                     </select>
                 </div>
                 <!-- Send button -->
-                <button id="save_institutions" class="btn btn-info btn-block" type="submit">Save</button>
+                <button id="save_institutions" class="btn btn-primary btn-block" type="submit"><i class="fa fa-floppy-o"></i>Save Institution</button>
               </form>
               <!-- Default form contact -->
             </div>

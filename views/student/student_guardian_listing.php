@@ -1,4 +1,5 @@
- <div class="content-wrapper">
+<?php $message = $this->session->flashdata('message'); ?>
+<div class="content-wrapper">
    <!-- Content Header (Page header) -->
    <div class="content-header">
      <div class="container-fluid">
@@ -15,7 +16,12 @@
        </div><!-- /.row -->
      </div><!-- /.container-fluid -->
    </div>
-
+    <?php if (!empty($message)): ?>
+     <div class="alert alert-success">
+         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+         <strong><?php echo $message; ?></strong>
+     </div>
+    <?php endif; ?>
    <!-- /.content-header -->
    <section class="content">
      <div class="container-fluid">
@@ -57,9 +63,7 @@
                      <tbody>
                      <?php foreach($guardians as $guardian){ ?>
                          <tr>
-                             <td>
-                                 <p><?php echo $guardian['surname'].', '.$guardian['first_name'].'('.$guardian['guardian_id'].')' ?></p>
-                             </td>
+                             <td><?php echo $guardian['surname'].', '.$guardian['first_name'].'('.$guardian['guardian_id'].')' ?></td>
                              <td><?php echo $guardian['mobile_phone']; ?></td>
                              <td><?php echo $guardian['phone']; ?></td>
                              <td><?php echo $guardian['email']; ?></td>
@@ -110,7 +114,7 @@
                                  <hr>
 
                                  <div class="row">
-                                     <?php if ($student_fields['title']) { ?>
+                                     <?php if ($guardian_fields['title']) { ?>
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>Title</label>
@@ -138,7 +142,7 @@
                                              <input type="text" class="form-control" maxlength="15" name="middle_name"/>
                                          </div>
                                      </div>
-                                     <?php if ($student_fields['mobile_phone']) { ?>
+                                     <?php if ($guardian_fields['mobile_phone']) { ?>
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>Mobile phone</label>
@@ -147,7 +151,7 @@
                                              </div>
                                          </div>
                                      <?php } ?>
-                                     <?php if ($student_fields['phone']) { ?>
+                                     <?php if ($guardian_fields['phone']) { ?>
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>Phone</label>
@@ -156,7 +160,7 @@
                                              </div>
                                          </div>
                                      <?php } ?>
-                                     <?php if ($student_fields['email']) { ?>
+                                     <?php if ($guardian_fields['email']) { ?>
                                          <div class="col-md-4">
                                              <label>Email</label>
                                              <div class="input-group mb-3">
@@ -167,7 +171,7 @@
                                              </div>
                                          </div>
                                      <?php } ?>
-                                     <?php if ($student_fields['gender']) { ?>
+                                     <?php if ($guardian_fields['gender']) { ?>
                                          <div class="col-md-4">
                                              <div class="form-group">
                                                  <label>Gender</label>
@@ -179,23 +183,15 @@
                                              </div>
                                          </div>
                                      <?php } ?>
-                                     <?php if ($student_fields['photo']) { ?>
+                                     <?php if ($guardian_fields['photo']) { ?>
                                          <div class="col-md-4">
                                              <div class="form-group">
-                                                 <label for="exampleInputFile">Photo</label>
-                                                 <div class="input-group">
-                                                     <div class="custom-file">
-                                                         <input type="file" class="custom-file-input" name="photo" id="exampleInputFile">
-                                                         <label class="custom-file-label" for="exampleInputFile">Choose
-                                                             file</label>
-                                                     </div>
-                                                     <div class="input-group-append">
-                                                         <span class="input-group-text" id="">Upload</span>
-                                                     </div>
-                                                 </div>
+                                                 <label for="exampleFormControlFile1">Choose File</label>
+                                                 <input type="file" style="margin-top: 10px;" name="photo" id="guardian_file">
                                              </div>
                                          </div>
                                      <?php } ?>
+
                                  </div>
                                  <h5>Wards</h5>
                                  <hr>
@@ -223,7 +219,7 @@
                                          </div>
                                      </div>
                                  </div>
-                                 <?php if ($student_fields['address']) { ?>
+                                 <?php if ($guardian_fields['address']) { ?>
                                      <h5>Contact Address</h5>
                                      <hr>
                                      <div class="row">
@@ -278,14 +274,14 @@
                      </div>
                      <div class="modal-footer">
                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                         <button type="submit" id="save_student_guardians" class="btn btn-primary" id="save-guardian">Save</button>
+                         <button type="submit" id="save_student_guardians" class="btn btn-primary" id="save-guardian">
+                             <i class="fa fa-floppy-o"></i> Save</button>
                      </div>
                  </div>
              </form>
          </div>
      </div>
  </div>
-
  <div class="modal fade" id="assign_guardian" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
      <div class="modal-dialog" role="document">
          <div class="modal-content">
@@ -310,23 +306,28 @@
                  <input type="hidden" name="student_id" id="student_id">
                  <input type="hidden" name="guardian_id" id="guardian_id">
                  <div class="modal-body mx-3">
-                     <div class="form-group">
-                         <label for="category_name" class="col-form-label">Relation</label>
-                         <input type="text" id="relation" name="relation" class="form-control validate">
-
+                     <div class="form-group row">
+                         <label for="relation" class="col-sm-2 col-form-label">Relation</label>
+                         <div class="col-sm-10">
+                             <input type="text" id="relation" name="relation" class="form-control validate">
+                         </div>
                      </div>
-                     <div class="form-group">
-                         <label for="emergency_contact" class="col-form-label">Emergency contact?</label>
-                         <input type="checkbox" value="1" id="emergency_contact" name="emergency_contact" class="form-control validate" >
-
+                     <div class="form-group row">
+                         <div class="col-sm-2">
+                             <input type="checkbox" value="1" id="emergency_contact" name="emergency_contact" />
+                         </div>
+                         <label for="emergency_contact" class="col-sm-10 col-form-label">Emergency Contact?</label>
                      </div>
-                     <div class="form-group">
-                         <label for="is_authorized" class="col-form-label">Authorized to pick up?</label>
-                         <input type="checkbox" value="1" id="is_authorized" name="is_authorized" class="form-control validate" >
 
+                     <div class="form-group row">
+                         <div class="col-sm-2">
+                             <input type="checkbox" value="1" id="is_authorized" name="is_authorized"  />
+                         </div>
+                         <label for="is_authorized" class="col-sm-10 col-form-label">Authorized to pick up?</label>
                      </div>
                      <div class="modal-footer d-flex justify-content-center">
-                         <button id="assign_student_guardian" type="submit" class="btn btn-default">Save Assessment Category</button>
+                         <button id="assign_student_guardian" type="submit" class="btn btn-primary">
+                             <i class="fa fa-user-plus"></i> Assign Guardian</button>
                      </div>
                  </div>
              </form>

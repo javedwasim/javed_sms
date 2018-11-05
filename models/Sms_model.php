@@ -58,85 +58,60 @@ class Sms_Model extends CI_Model
     }
 
     public function get_sms_detail($id){
-        $query = "SELECT sms.*, sr.recipients 
-                    FROM `sms` 
+        $query = "SELECT sms.*, 
+                    CASE 
+                        WHEN st.first_name !='' THEN CONCAT(st.first_name,\" \",st.last_name)
+                        WHEN employee.first_name !='' THEN CONCAT(employee.first_name,\" \",employee.middle_name)
+                        WHEN guardian.first_name !='' THEN CONCAT(guardian.first_name,\" \",guardian.last_name)
+                        WHEN sguardian.first_name !='' THEN CONCAT(sguardian.first_name,\" \",sguardian.last_name)
+                    ELSE '' END AS UserName,
+                    
+                    CASE 
+                        WHEN st.mobile_phone !='' THEN st.mobile_phone
+                        WHEN employee.mobile_phone !='' THEN employee.mobile_phone
+                        WHEN guardian.mobile_phone !='' THEN guardian.mobile_phone
+                        WHEN sguardian.mobile_phone !='' THEN sguardian.mobile_phone
+                    ELSE '' END AS mobile_phone
+                    
+                    
+                    FROM `sms`
+                    LEFT JOIN sms_recipients  ON sms_recipients.sms_id = sms.id 
+                    
                     LEFT JOIN (
-                        SELECT count(id) as recipients, sms_id
-                        From sms_recipients
-                        GROUP BY sms_recipients.sms_id
-                    )sr ON sr.sms_id = sms.id
-                    WHERE sms.id = $id limit 1";
+                        select * FROM students
+                    )st ON st.student_id = sms_recipients.recipient_id AND sms_recipients.recipient_group = 'selected_students'
+                    
+                    LEFT JOIN 
+                    (
+                        select * FROM employees
+                    
+                    )employee ON employee.employee_id = sms_recipients.recipient_id 
+                    AND sms_recipients.recipient_group = 'selected_employees'
+                    
+                    LEFT JOIN 
+                    (
+                        select * FROM guardians
+                    
+                    )guardian ON guardian.guardian_id = sms_recipients.recipient_id 
+                    AND sms_recipients.recipient_group = 'student_guardians'
+                    
+                    LEFT JOIN 
+                    (
+                        select * FROM guardians
+                    
+                    )sguardian ON sguardian.guardian_id = sms_recipients.recipient_id 
+                    AND sms_recipients.recipient_group = 'selected_guardians'
+                    
+                    where sms.id = $id";
         $result = $query = $this->db->query($query);
         if($result) {
-            return $result->row_array();
+            return $result->result_array();
         } else {
             return array();
         }
     }
 
-    public function get_event($id)
-    {
-        return $this->db->where("ID", $id)->get("calendar_events");
-    }
 
-    public function update_event($id, $data)
-    {
-        $this->db->where("ID", $id)->update("calendar_events", $data);
-        return $this->db->affected_rows();
-    }
-
-    public function delete_event($id)
-    {
-        $this->db->where('id', $id)->delete('calendar_events');
-        $this->db->where('event_id', $id)->delete('events_groups');
-        return $this->db->affected_rows();
-    }
-    
-    public function save_event($data)
-    {
-        $this->db->insert('calendar_events', $data);
-        return $this->db->insert_id();
-    }
-    
-    public function save_event_group($data,$event_id)
-    {
-        if(isset($data['class_group'])){
-            $class_groups = $data['class_group'];
-            foreach ($class_groups as $group){
-                $this->db->insert('events_groups', array('event_id'=>$event_id,'event_groups'=>$group));
-            }
-        }
-        
-        if(isset($data['student_category'])){
-            $groups = $data['student_category'];
-            foreach ($groups as $group){
-                $this->db->insert('events_groups', array('event_id'=>$event_id,'event_groups'=>$group));
-            }
-        }
-        
-        if(isset($data['employee_category'])){
-            $groups = $data['employee_category'];
-            foreach ($groups as $group){
-                $this->db->insert('events_groups', array('event_id'=>$event_id,'event_groups'=>$group));
-            }
-        }
-        
-        if(isset($data['employee_department'])){
-            $groups = $data['employee_department'];
-            foreach ($groups as $group){
-                $this->db->insert('events_groups', array('event_id'=>$event_id,'event_groups'=>$group));
-            }
-        }
-        
-        if(isset($data['employee_position'])){
-            $groups = $data['employee_position'];
-            foreach ($groups as $group){
-                $this->db->insert('events_groups', array('event_id'=>$event_id,'event_groups'=>$group));
-            }
-        }
-        
-        return $this->db->insert_id();
-    }
     
     public function get_sms_list()
     {

@@ -141,8 +141,53 @@
        get_sms($(this).attr('data-func-call'));
    });
 
+   $('#list_itmes_fee_management').click(function(){
+       get_fee_management($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_income_expanse').click(function(){
+       get_income_expanse($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_manage_subjects').click(function(){
+       get_manage_subjects($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_manage_exam').click(function(){
+       get_exam($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_manage_que_ans').click(function(){
+       get_question($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_student_exam').click(function(){
+       student_exam($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_exam_result').click(function(){
+       exam_result($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_stripe_payment').click(function(){
+       get_payment($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_student_profile').click(function(){
+       get_student_profile($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_student_guardian_profile').click(function(){
+       get_guardian_profile($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_student_fees').click(function(){
+       get_student_fees($(this).attr('data-func-call'));
+   });
+
    $(document).ready(function()
    {
+
        $('#expList li').click(function(e)
        {
            if(this.id!='list_itmes_'){

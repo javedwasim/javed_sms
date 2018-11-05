@@ -52,17 +52,29 @@
                     data: {
                     // our hypothetical feed requires UNIX timestamps
                     start: start.unix(),
-                    end: end.unix()
+                    end: end.unix(),
+                        allDay: true
+
                     },
                     success: function(msg) {
                         var events = msg.events;
                         callback(events);
                     }
                     });
-                }
+                },
             },
-           ]
+
+           ],
+           "color": "yellow",   // an option!
+           "textColor": "black" // an option!
+
         });
+
+        Date.prototype.addDays = function(days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
 
     });
 </script>

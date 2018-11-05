@@ -28,7 +28,7 @@
                         <div class="card-body">  
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#add_fee"><i class="fa fa-plus"></i>New Fee Types</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#add_fee"><i class="fa fa-plus"></i>New Fee Types</a>
                                 </div>
                             </div>
                             <table id="account-table" class="table table-bordered table-striped">
@@ -36,7 +36,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Description</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 9%">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -45,14 +45,14 @@
                                             <td><?php echo $fee['name']; ?></td>
                                             <td><?php echo $fee['description']; ?></td>
                                             <td>
-                                                <a class="edit-fee btn btn-info btn-xs"
+                                                <a class="edit-fee btn btn-info btn-xs""
                                                    href="javascript:void(0)"
                                                    data-href="<?php echo $fee['id']; ?>"
                                                    data-name="<?php echo $fee['name']; ?>"
                                                    data-description="<?php echo $fee['description']; ?>">
-                                                   Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                                   <i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                                 <a class="delete-fee btn btn-danger btn-xs" href="javascript:void(0)"
-                                                   data-href="<?php echo site_url('finance/delete_fee/').$fee['id'] ?>">Delete<i class="fa fa-trash" title="Delete"></i></a>
+                                                   data-href="<?php echo site_url('finance/delete_fee/').$fee['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php } ?>

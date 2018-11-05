@@ -86,7 +86,8 @@
                     <div class="col-md-3">
                       <div class="form-group">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="photo" <?php echo isset($student_fields['photo'])&&($student_fields['photo']==1)?'checked':''; ?> name="student_form_fields[]">
+                          <input class="form-check-input" type="hidden" value="nphoto" <?php echo isset($student_fields['photo'])&&($student_fields['photo']==1)?'checked':''; ?> name="student_form_fields[]">
+                          <input class="form-check-input" type="checkbox" value="sphoto" <?php echo isset($student_fields['sphoto'])&&($student_fields['sphoto']==1)?'checked':''; ?> name="student_form_fields[]">
                           <label class="form-check-label">photo.</label>
                         </div>
                       </div>
@@ -95,7 +96,7 @@
                       <div class="form-group">
                         <div class="form-check">
                             <?php //print_r($student_fields);  ?>
-                          <input class="form-check-input" type="checkbox" value="gender" <?php echo isset($student_fields['gender'])&&($student_fields['gender']==1)?'checked':''; ?>  name="student_form_fields[]" >
+                          <input class="form-check-input" type="checkbox" value="sgender" <?php echo isset($student_fields['sgender'])&&($student_fields['sgender']==1)?'checked':''; ?>  name="student_form_fields[]" >
                           <label class="form-check-label">Gender.</label>
                         </div>
                       </div>

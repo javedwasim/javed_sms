@@ -53,8 +53,8 @@ Class Assessment_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-    public function get_fees(){
-        $result = $this->db->select('*')->from('fees')->get();
+    public function get_fee_type(){
+        $result = $this->db->select('*')->from('fee_type')->get();
         if($result){
             return $result->result_array();
         }else{
@@ -63,17 +63,17 @@ Class Assessment_model extends CI_Model {
     }
 
     public function add_fee($data){
-        $this->db->insert('fees',$data);
+        $this->db->insert('fee_type',$data);
         return $this->db->insert_id();
     }
 
     public function update_fee($data,$id){
-        $this->db->where('id',$id)->update('fees',$data);
+        $this->db->where('id',$id)->update('fee_type',$data);
         return $this->db->affected_rows();
     }
 
     public function delete_fee($id) {
-        $this->db->where('id', $id)->delete('fees');
+        $this->db->where('id', $id)->delete('fee_type');
         return $this->db->affected_rows();
     }
 

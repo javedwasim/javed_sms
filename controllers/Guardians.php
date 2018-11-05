@@ -12,7 +12,13 @@ class Guardians extends MY_Controller
     }
 
     public function index(){
+
         $record['guardians'] = $this->Student_model->get_all_guardians();
+        $fields = $this->guardian_fields();
+        $record['guardian_fields'] = $fields;
+        $record['countries'] = $this->Student_model->get_all_countries();
+        $record['states'] = $this->Student_model->get_all_states();
+        $record['students'] = $this->Student_model->get_all_students();
 
         $this->load->view('parts/header');
         $this->load->view('parts/topbar');
@@ -25,6 +31,15 @@ class Guardians extends MY_Controller
     public function guardians()
     {
         $record['guardians'] = $this->Student_model->get_all_guardians();
+        $guardian_fields = $this->Student_model->get_form_fields(4);
+        $fields = array();
+        foreach ($guardian_fields as $field) {
+            $fields[$field['field_name']] = $field['add_view'];
+        }
+        $record['guardian_fields'] = $fields;
+        $record['countries'] = $this->Student_model->get_all_countries();
+        $record['states'] = $this->Student_model->get_all_states();
+        $record['students'] = $this->Student_model->get_all_students();
         $json['guardian_html'] = $this->load->view('student/guardian_listing', $record, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -36,13 +51,18 @@ class Guardians extends MY_Controller
         $this->load->helper('security');
         $this->form_validation->set_rules('surname', 'surname', 'required|xss_clean');
         $this->form_validation->set_rules('first_name', 'first name', 'required|xss_clean');
+        $this->form_validation->set_rules('student_id', 'Student Name', 'required|xss_clean');
+        $this->form_validation->set_rules('email', 'Email', 'is_unique[login.email]|xss_clean');
+
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
-            $json['message'] = validation_errors();
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('guardians/');
+            exit();
         } else {
-            $guardian_data = $this->input->post();
+            $guardian = $this->input->post();
             if (!empty($_FILES['photo']['name'])) {
-                $upload_path = 'assets/uploads/student_images';
+                $upload_path = 'assets/uploads/guardian_images';
                 $config = array(
                     'upload_path' => $upload_path,
                     'allowed_types' => "gif|jpg|png|jpeg",
@@ -62,19 +82,49 @@ class Guardians extends MY_Controller
                     $guardian_data['photo'] = $imageDetailArray['file_name'];
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
             }
-            $result = $this->Student_model->add_new_guardian($guardian_data);
+            $loggedin_user = $this->session->userdata('userdata');
+            $guardian_fields = array('surname' => $guardian['surname'],
+                'first_name' => isset($guardian['first_name'])?$guardian['first_name']:'',
+                'middle_name' => isset($guardian['middle_name'])?$guardian['middle_name']:'',
+                'photo' => isset($guardian['photo'])?$guardian['photo']:'',
+                'title' => isset($guardian['title'])?$guardian['title']:'',
+                'email' => isset($guardian['email'])?$guardian['email']:'',
+                'gender' => isset($guardian['gender'])?$guardian['gender']:'',
+                'phone' => isset($guardian['phone'])?$guardian['phone']:'',
+                'mobile_phone' => isset($guardian['mobile_phone'])?$guardian['mobile_phone']:'',
+                'address_line' => isset($guardian['address_line'])?$guardian['address_line']:'',
+                'country' => isset($guardian['country'])?$guardian['country']:'',
+                'state' => isset($guardian['state'])?$guardian['state']:'',
+                'city' => isset($guardian['city'])?$guardian['city']:'',
+                'lga' => isset($guardian['lga'])?$guardian['lga']:'',
+                'status' => 1,
+                'created_by' => $loggedin_user['login_id'],
+            );
+            $guardian_id = $this->Student_model->add_new_guardian($guardian_fields);
+
+            $student_guardian_fields = array(
+                'student_id' => $guardian['student_id'],
+                'guardian_id' => $guardian_id,
+                'relation' => $guardian['relation_with_student'],
+                'emergency_contact' => isset($guardian['emergency_contact']) ? $guardian['emergency_contact'] : 0,
+                'is_authorized' => isset($guardian['is_authorized']) ? $guardian['is_authorized'] : 0,
+            );
+            $result = $this->Student_model->save_student_guardian($student_guardian_fields);
+
             if ($result) {
                 $json['success'] = true;
                 $json['message'] = "Guardian successfully added.";
-                $record['guardians'] = $this->Student_model->get_all_guardians();
-                $json['guardian_html'] = $this->load->view('parts/guardian_list', $record, true);
             } else {
                 $json['error'] = true;
                 $json['message'] = "Seems to an error. Please try again.";
             }
+
+            redirect('guardians/');
+            exit();
+
         }
         if($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -91,18 +141,19 @@ class Guardians extends MY_Controller
         }
     }
 
-    public function guardian_profile($id){
+    public function guardian_profile($id)
+    {
         $data['guardian'] = $this->Student_model->get_guardian_by_id($id);
         $data['countries'] = $this->Student_model->get_all_countries();
         $data['states'] = $this->Student_model->get_all_states();
         $data['origins'] = $this->Student_model->get_all_origins();
         $data['wards'] = $this->Student_model->get_guardian_wards($id);
-        //print_r($data['guardian']); die();
-        $this->load->view('parts/header');
-        $this->load->view('parts/topbar');
-        $this->load->view('parts/sidebar');
-        $this->load->view('student/guardian_profile',$data);
-        $this->load->view('parts/footer');
+        $fields = $this->guardian_fields();
+        $data['guardian_fields'] = $fields;
+        $json['guardian_html'] = $this->load->view('student/guardian_profile', $data, true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
     }
 
     public function change_pwd(){
@@ -110,7 +161,7 @@ class Guardians extends MY_Controller
         $this->load->helper('security');
         $this->form_validation->set_rules('current_pwd', 'current password', 'required|xss_clean');
         $this->form_validation->set_rules('new_pwd', 'new password', 'required|xss_clean');
-        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|xss_clean');
+        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|matches[new_pwd]');
 
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
@@ -121,13 +172,13 @@ class Guardians extends MY_Controller
             $result = $this->Dashboard_model->get_user_by_email($user_email);
             if($result) {
                 if (password_verify ( $this->input->post('current_pwd') , $result['password'] )) {
-                    $result = $this->Student_model->change_pwd($guardian);
+                    $result = $this->Student_model->change_guardian_pwd($guardian);
                     if($result){
                         $json['success'] = true;
                         $json['message'] = "Password change successfully!";
                     }else{
                         $json['error'] = true;
-                        $json['message'] = "Seems to be an error while updating password.";
+                        $json['message'] = "Seems to be an error.";
                     }
 
                 } else {
@@ -152,14 +203,24 @@ class Guardians extends MY_Controller
         if ($result) {
             $json['success'] = true;
             $json['message'] = "Guardian successfully deleted.";
-            $record['guardians'] = $this->Student_model->get_all_guardians();
-            $json['guardian_html'] = $this->load->view('student/guardian_listing', $record, true);
 
         } else {
             $json['error'] = true;
             $json['message'] = "Seems to an error in delete guardian record.";
         }
-        if($this->input->is_ajax_request()) {
+
+        $record['guardians'] = $this->Student_model->get_all_guardians();
+        $guardian_fields = $this->Student_model->get_form_fields(4);
+        $fields = array();
+        foreach ($guardian_fields as $field) {
+            $fields[$field['field_name']] = $field['add_view'];
+        }
+        $record['guardian_fields'] = $fields;
+        $record['countries'] = $this->Student_model->get_all_countries();
+        $record['states'] = $this->Student_model->get_all_states();
+        $record['students'] = $this->Student_model->get_all_students();
+        $json['guardian_html'] = $this->load->view('student/guardian_listing', $record, true);
+        if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
     }
@@ -195,14 +256,14 @@ class Guardians extends MY_Controller
             //echo "<pre>"; print_r($update_guardian_data); die();
             if (!empty($_FILES['photo']['name'])) {
                 $upload_path = 'assets/uploads/guardian_images';
+                $feile_name = strtolower(str_replace(' ', '-', $this->input->post('surname') . '-' . $this->input->post('first_name'))) . '-' . uniqid();
                 $config = array(
                     'upload_path' => $upload_path,
                     'allowed_types' => "gif|jpg|png|jpeg",
                     'overwrite' => TRUE,
-                    'file_name' => strtolower(str_replace(' ', '-', $this->input->post('surname') . '-' . $this->input->post('first_name'))) . '-' . uniqid()
+                    'file_name' => $feile_name
                 );
                 $this->load->library('upload', $config);
-
                 if (!$this->upload->do_upload('photo')) {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
                     $photo = false;
@@ -211,7 +272,7 @@ class Guardians extends MY_Controller
                     $photo = $imageDetailArray['file_name'];
                 }
                 if ($photo) {
-                    $student_data['photo'] = $imageDetailArray['file_name'];
+                    $update_guardian_data['photo'] = $imageDetailArray['file_name'];
                 } else {
                     $json['error'] = true;
                     $json['message'] = "Seems to an error in image upload.";
@@ -219,8 +280,9 @@ class Guardians extends MY_Controller
             }
             $result = $this->Student_model->update_guardian($update_guardian_data, $id);
             $relation = $this->Student_model->update_student_guardian($guardian_data['relation']);
+
             if ($result || $relation ) {
-                $this->session->set_flashdata('success', 'Employee successfully updated.');
+                $this->session->set_flashdata('success', 'Guardian successfully updated.');
                 redirect('guardians/');
             } else {
                 $this->session->set_flashdata('error', 'Seems to an error in update student record.');
@@ -230,6 +292,31 @@ class Guardians extends MY_Controller
         if($this->input->is_ajax_request()) {
             set_content_type($json);
         }
+    }
+
+    public function student_guardian_profile()
+    {
+        $guardian = $this->Student_model->student_guardian_profile();
+        $id = $guardian['guardian_id'];
+        $data['guardian'] = $guardian;
+        $data['countries'] = $this->Student_model->get_all_countries();
+        $data['states'] = $this->Student_model->get_all_states();
+        $data['origins'] = $this->Student_model->get_all_origins();
+        $data['wards'] = $this->Student_model->get_guardian_wards($id);
+        $json['result_html'] = $this->load->view('student/guardian_profile', $data, true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function guardian_fields(){
+        $guardian_fields = $this->Student_model->get_form_fields(4);
+        $fields = array();
+        foreach ($guardian_fields as $field) {
+            $fields[$field['field_name']] = $field['add_view'];
+        }
+
+        return $fields;
     }
 
 }

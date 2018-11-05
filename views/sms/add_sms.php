@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="card-footer" style="text-align: center">
                                     <button type="submit" id="send_message" class="btn btn-primary">
-                                        Send Message</button>
+                                        <i class="fa fa-envelope-o"></i> Send Message</button>
                                 </div>
                             </div>
                         </form>

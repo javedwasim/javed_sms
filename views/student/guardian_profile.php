@@ -25,23 +25,30 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center mb-3">
-                                <img class="profile-user-img img-fluid img-circle"
-                                     src="<?php echo base_url(); ?>assets/dist/img/avatar.png"
-                                     alt="User profile picture">
+                                <?php if(isset($guardian['photo'])): ?>
+                                    <img class="profile-user-img img-fluid img-circle"
+                                         src="<?php echo base_url()."assets/uploads/guardian_images/".$guardian['photo']; ?>"
+                                         alt="User profile picture">
+                                <?php else: ?>
+                                    <img class="profile-user-img img-fluid img-circle"
+                                         src="<?php echo base_url(); ?>assets/dist/img/avatar.png"
+                                         alt="User profile picture">
+                                <?php endif; ?>
                             </div>
-                            <h3 class="profile-username text-center mb-3">Alh, Nura Muhammad</h3>
+                            <h3 class="profile-username text-center mb-3"><?php echo $guardian['first_name']." ".$guardian['surname']; ?></h3>
                             <!--  <p class="text-muted text-center">Software Engineer</p> -->
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Guardian Id</b> <a class="float-right">1322</a>
+                                    <b>Guardian Id</b> <a class="float-right"><?php echo $guardian['guardian_id']; ?></a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Status</b> <a
-                                            class="float-right"><?php echo isset($guardian['status']) && ($guardian['status'] == 1) ? 'Active' : 'Left'; ?></a>
+                                    <b>Status</b> <a class="float-right"><?php echo isset($guardian['status']) && ($guardian['status'] == 1) ? 'Active' : 'Left'; ?></a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Mobile Phone:</b> <a
-                                            class="float-right"><?php echo isset($guardian['mobile_phone']) ? $guardian['mobile_phone'] : ''; ?></a>
+                                    <b>Username</b> <a class="float-right"><?php echo isset($guardian['username']) ? $guardian['username'] : ''; ?></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Mobile Phone:</b> <a class="float-right"><?php echo isset($guardian['mobile_phone']) ? $guardian['mobile_phone'] : ''; ?></a>
                                 </li>
                             </ul>
                             <!--  <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a> -->
@@ -67,12 +74,12 @@
                                                     class="float-right"><?php echo isset($guardian['title']) ? $guardian['title'] : ''; ?></a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Last Name:</b> <a
-                                                    class="float-right"><?php echo isset($guardian['middle_name']) ? $guardian['middle_name'] : ''; ?></a>
-                                        </li>
-                                        <li class="list-group-item">
                                             <b>First Name:</b> <a
                                                     class="float-right"><?php echo isset($guardian['first_name']) ? $guardian['first_name'] : ''; ?></a>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Surname:</b> <a
+                                                    class="float-right"><?php echo isset($guardian['surname']) ? $guardian['surname'] : ''; ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Gender:</b> <a
@@ -80,7 +87,7 @@
                                         </li>
                                         <li class="list-group-item">
                                             <b>Activated at:</b> <a
-                                                    class="float-right"><?php echo isset($guardian['created']) ? $guardian['created'] : ''; ?></a>
+                                                    class="float-right"><?php echo isset($guardian['created']) ? date('F d, Y', strtotime($guardian['created'])) : ''; ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Mobile Phone:</b> <a
@@ -117,11 +124,7 @@
                                             <h3 class="profile-username profile-badge"><i
                                                         class="fa fa-map-marker azure"></i></h3>
                                         </div>
-                                        <div class="contact-info">
-                                            <p>
-                                                <?php echo isset($guardian['address_line']) ? $guardian['address_line'] : ''; ?>
-                                            </p>
-                                        </div>
+                                        <div class="contact-info"><?php echo isset($guardian['address_line']) ? $guardian['address_line'] : ''; ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +177,7 @@
                                                         <td><?php echo date('F d, Y', strtotime($ward['admission_date'])) ?></td>
                                                         <td>
                                                             <a class="btn btn-xs btn-info" target="_blank"
-                                                               href="<?php echo site_url('students/student_profile/').$ward['student_id'] ?>">
+                                                               href="<?php echo site_url('students/std_profile/').$ward['student_id'] ?>">
                                                                 <i class="fa fa-user"></i> View Profile
                                                             </a>
                                                         </td>
@@ -233,59 +236,59 @@
                                                                    value="<?php echo isset($guardian['middle_name']) ? $guardian['middle_name'] : ''; ?>"/>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label>Mobile phone</label>
-                                                            <input type="text" class="form-control"  name="mobile_phone"
-                                                                   value="<?php echo isset($guardian['mobile_phone']) ? $guardian['mobile_phone'] : ''; ?>"/>
+                                                    <?php if ($guardian_fields['mobile_phone']) { ?>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label>Mobile phone</label>
+                                                                <input type="text" class="form-control"  name="mobile_phone"
+                                                                       value="<?php echo isset($guardian['mobile_phone']) ? $guardian['mobile_phone'] : ''; ?>"/>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label>Phone</label>
-                                                            <input type="text" class="form-control"  name="phone"
-                                                                   value="<?php echo isset($guardian['phone']) ? $guardian['phone'] : ''; ?>"/>
+                                                    <?php } ?>
+                                                    <?php if ($guardian_fields['phone']) { ?>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label>Phone</label>
+                                                                <input type="text" class="form-control"  name="phone"
+                                                                       value="<?php echo isset($guardian['phone']) ? $guardian['phone'] : ''; ?>"/>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    <?php } ?>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <label>Email</label>
-                                                        <div class="input-group mb-3">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i
-                                                                            class="fa fa-envelope"></i></span>
-                                                            </div>
-                                                            <input type="text" class="form-control"  name="email"
-                                                                   value="<?php echo isset($guardian['email']) ? $guardian['email'] : ''; ?>"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label>Gender</label>
-                                                            <select class="form-control" name="gender">
-                                                                <option value="">Please select</option>
-                                                                <option value="male"<?php echo isset($guardian['gender']) &&($guardian['gender']=='male') ? 'selected' : ''; ?>>Male</option>
-                                                                <option value="female"<?php echo isset($guardian['gender']) &&($guardian['gender']=='female') ? 'selected' : ''; ?>>Female</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label for="exampleInputFile">File input</label>
-                                                            <div class="input-group">
-                                                                <div class="custom-file">
-                                                                    <input type="file" name="photo" class="custom-file-input"
-                                                                           id="exampleInputFile">
-                                                                    <label class="custom-file-label"
-                                                                           for="exampleInputFile">Choose file</label>
+                                                    <?php if ($guardian_fields['email']) { ?>
+                                                        <div class="col-md-4">
+                                                            <label>Email</label>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i
+                                                                                class="fa fa-envelope"></i></span>
                                                                 </div>
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text" id="">Upload</span>
-                                                                </div>
+                                                                <input type="text" class="form-control"  name="email"
+                                                                       value="<?php echo isset($guardian['email']) ? $guardian['email'] : ''; ?>"/>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    <?php } ?>
+                                                    <?php if ($guardian_fields['gender']) { ?>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label>Gender</label>
+                                                                <select class="form-control" name="gender">
+                                                                    <option value="">Please select</option>
+                                                                    <option value="male"<?php echo isset($guardian['gender']) &&($guardian['gender']=='male') ? 'selected' : ''; ?>>Male</option>
+                                                                    <option value="female"<?php echo isset($guardian['gender']) &&($guardian['gender']=='female') ? 'selected' : ''; ?>>Female</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <?php if ($guardian_fields['photo']) { ?>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="exampleFormControlFile1">Choose File</label>
+                                                                <input type="file" style="margin-top: 10px;" name="photo" id="guardian_file">
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
                                                 </div>
                                                 <h5>Wards</h5>
                                                 <hr>
@@ -294,7 +297,7 @@
                                                         <?php foreach($wards as $ward): ?>
                                                             <div class="col-sm">
                                                                 <label>Relationship with <?php echo $ward['first_name']." ".$ward['last_name']; ?></label>
-                                                                <input type="hidden" name="relation[]" id="<?php echo $ward['id']; ?>" value="">
+                                                                <input type="hidden" name="relation[]" id="<?php echo $ward['id']; ?>" value="<?php echo isset($ward['relation']) ? $ward['id']."_".$ward['relation'] : ''; ?>">
                                                                 <input type="text" class="form-control relation"  data-relation-id="<?php echo $ward['id']; ?>"
                                                                        value="<?php echo isset($ward['relation']) ? $ward['relation'] : ''; ?>"/>
                                                             </div>
@@ -358,7 +361,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-offset-2 col-sm-10">
-                                                        <button type="submit" class="btn btn-danger">Update</button>
+                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Update</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -413,7 +416,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit
-                        password: <?php echo $guardian['first_name'] . " " . $guardian['middle_name'] ?></h5>
+                        password: <?php echo $guardian['first_name'] . " " . $guardian['surname'] ?></h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -426,7 +429,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Current password</label>
-                                    <input type="text" class="form-control" name="current_pwd"/>
+                                    <input type="text" class="form-control" name="current_pwd" required maxlength="10"/>
                                 </div>
                             </div>
                         </div>
@@ -434,7 +437,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="text" class="form-control" name="new_pwd"/>
+                                    <input type="text" class="form-control" name="new_pwd" required maxlength="10"/>
                                 </div>
                             </div>
                         </div>
@@ -442,15 +445,14 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Password confirmation</label>
-                                    <input type="text" class="form-control" name="c_pwd"/>
+                                    <input type="text" class="form-control" name="c_pwd" required maxlength="10"/>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" id="change_password" class="btn btn-primary">Save</button>
-                            <button type="submit" class="btn btn-default" data-dismiss="modal">
-                                Close
-                            </button>
+                            <button type="submit" class="btn btn-default" data-dismiss="modal"><i class="fa fa-backspace"></i> Close</button>
+                            <button type="submit" id="change_password" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Update Password</button>
+
                         </div>
                     </form>
                 </div>
@@ -459,48 +461,7 @@
     </div>
     <!-- /.content -->
     <script>
-        $(document.body).on('click', '#change_password', function () {
-            $.ajax({
-                url: $('#change_pwd').attr('data-action'),
-                type: 'post',
-                data: $('#change_pwd').serialize(),
-                cache: false,
-                success: function (response) {
-                    if (response.success) {
-                        toastr["success"](response.message);
-                        $('#myModal').modal('hide');
-                    } else {
-                        toastr["error"](response.message);
-                    }
 
-                }
-            });
-            return false;
-        });
-
-        $(document.body).on('click', '.delete-guardian', function(){
-            if (confirm('Are you sure to delete this record?')) {
-                $.ajax({
-                    url: $(this).attr('data-href'),
-                    cache: false,
-                    success: function(response) {
-                        $('#student_error').hide();
-                        $('#student_success').hide();
-                        if (response.success) {
-                            $('.content-wrapper').remove();
-                            $('#content-wrapper').append(response.guardian_html);
-                            toastr["success"](response.message);
-                        } else {
-                            toastr["error"](response.message);
-                        }
-                    }
-                });
-            } else {
-                return false;
-            }
-
-            return false;
-        });
         $('.relation').change(function () {
             var relation_value = this.value;
             var relation_id = $(this).attr('data-relation-id');

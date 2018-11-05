@@ -1,16 +1,21 @@
 </div>
 <!-- /.content-wrapper -->
+
+<!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
 <footer class="main-footer">
     <!--      <div class="row">
             <div class="col-md-6">
-               Brand Logo 
+               Brand Logo
               <a href="<?php echo base_url(); ?>" class="">
                 <img src="<?php echo base_url(); ?>assets/dist/img/company-logo.png ?>" alt="EILIT Logo" class="brand-image-footer img-circle elevation-3"
                 style="opacity: .8">
-              </a>    
+              </a>
             </div>
             <div class="col-md-6">
-               Brand Logo 
+               Brand Logo
               <a href="<?php echo base_url(); ?>" class="pull-right">
                 <img src="<?php echo base_url(); ?>assets/dist/img/company-logo.png ?>" alt="EILIT Logo" class="brand-image-footer img-circle elevation-3"
                 style="opacity: .8">
@@ -22,13 +27,10 @@
         <strong>Copyright&copy;2018 <a href="<?php echo base_url(); ?>">Integrated School Managment System</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 1.0
+            <b>Version</b> 1.1
         </div>
     </div>
 </footer>
-<!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
 <!-- jQuery UI 1.11.4 -->
 <script src="<?php echo base_url(); ?>assets/plugins/jQueryUI/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->

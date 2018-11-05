@@ -10,6 +10,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $this->load->model('General_model');
             $this->load->model('Employee_model');
             $this->load->helper('content-type');
+
+            $this->load->model('General_model');
+            $institution = $this->General_model->get_institution();
+            $this->session->set_userdata('institution_detail', $institution);
 		}
 
         public function classes(){
@@ -30,15 +34,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $json['message'] = validation_errors();
             } else {
                 $class = $this->input->post();
-
                 $result = $this->General_model->add_new_class($class);
                 if ($result) {
                     $json['success'] = true;
                     $json['message'] = "Class successfully added.";
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error while adding class.";
+                    $json['message'] = "Seems to an error.";
                 }
+                $data['classes'] = $this->General_model->get_classes();
+                $json['classes_html'] = $this->load->view('settings/classes', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -96,6 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         public function institution_details(){
             $data['countries'] = $this->Employee_model->get_all_countries();
+            $data['institution_detail'] = $this->General_model->get_institution();
             $json['settings_html'] = $this->load->view('settings/institution_details', $data, true);
             if($this->input->is_ajax_request()) {
               set_content_type($json);
@@ -125,10 +131,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 if ($result) {
                     $json['success'] = true;
                     $json['message'] = "Subject successfully added.";
+                    $data['subjects'] = $this->General_model->get_all_subjects();
+                    $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
                 } else {
                     $json['error'] = true;
                     $json['message'] = "Seems to an error while adding class.";
                 }
+
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -150,16 +159,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $update_fields = array('name'=>$data['name'],'code'=>$data['code']);
                 $result = $this->General_model->update_subject($update_fields,$data['subject_id']);
                 if ($result) {
-                    $data['subjects'] = $this->General_model->get_all_subjects();
-                    $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Subject successfully added.";
+
                 } else {
-                    $data['subjects'] = $this->General_model->get_all_subjects();
-                    $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
                     $json['error'] = true;
                     $json['message'] = "Seems to an error in image uploading.";
                 }
+                $data['subjects'] = $this->General_model->get_all_subjects();
+                $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -170,23 +178,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         public function delete_subject($id) {
             $result = $this->General_model->delete_subject($id);
             if ($result) {
-                $data['subjects'] = $this->General_model->get_all_subjects();
-                $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Subject successfully deleted.";
             } else {
-                $data['subjects'] = $this->General_model->get_all_subjects();
-                $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Seems to an error in delete student record.";
             }
+            $data['subjects'] = $this->General_model->get_all_subjects();
+            $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
             }
         }
-
-
-
 
         public function add_institution(){
             $this->load->library('form_validation');
@@ -200,8 +203,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $json['message'] = validation_errors();
             } else {
                 $institution = $this->input->post();
-
-
                 if (!empty($_FILES['logo']['name'])) {
                     $upload_path = 'assets/uploads/institution';
                     $config = array(
@@ -212,7 +213,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         );
 
                     $this->load->library('upload', $config);
-
                     if (!$this->upload->do_upload('logo')) {
                         $json['error'] = true;
                         $json['message'] = $this->upload->display_errors();
@@ -266,7 +266,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         public function add_session(){
             $this->load->library('form_validation');
             $this->load->helper('security');
-            $this->form_validation->set_rules('first_term_start', 'First Term', 'required|xss_clean');
+            $this->form_validation->set_rules('name', 'Session Name', 'required|xss_clean');
+            $this->form_validation->set_rules('first_term_start', 'First term start', 'required|xss_clean');
+            $this->form_validation->set_rules('first_term_end', 'First term end', 'required|xss_clean');
+            $this->form_validation->set_rules('second_term_start', 'Second term start', 'required|xss_clean');
+            $this->form_validation->set_rules('second_term_end', 'Second term end', 'required|xss_clean');
+            $this->form_validation->set_rules('third_term_start', 'Third term start', 'required|xss_clean');
+            $this->form_validation->set_rules('third_term_end', 'Third term end', 'required|xss_clean');
 
             if ($this->form_validation->run() == FALSE) {
                 $json['error'] = true;
@@ -275,13 +281,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $session = $this->input->post();
                 $result = $this->General_model->add_new_session($session);
                 if ($result) {
+                    $json['success'] = true;
+                    $json['message'] = "Session successfully added.";
                     $data['sessions'] = $this->General_model->get_all_sessions();
                     $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
-                    $json['success'] = true;
-                    $json['message'] = "Subject successfully added.";
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error while adding class.";
+                    $json['message'] = "Seems to an error.";
                 }
             }
             if($this->input->is_ajax_request()) {
@@ -301,25 +307,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $json['message'] = validation_errors();
             } else {
                 $update_fields = array(
-                    'first_term_start'=>$data['first_term_start'],
-                    'first_term_end'=>$data['first_term_end'],
-                    'second_term_start'=>$data['second_term_start'],
-                    'second_term_end'=>$data['second_term_end'],
-                    'third_term_start'=>$data['third_term_start'],
-                    'third_term_end'=>$data['third_term_end'],
+                    'first_term_start'=>date('Y-m-d',strtotime($data['first_term_start'])),
+                    'first_term_end'=>date('Y-m-d',strtotime($data['first_term_end'])),
+                    'second_term_start'=>date('Y-m-d',strtotime($data['second_term_start'])),
+                    'second_term_end'=>date('Y-m-d',strtotime($data['second_term_end'])),
+                    'third_term_start'=>date('Y-m-d',strtotime($data['third_term_start'])),
+                    'third_term_end'=>date('Y-m-d',strtotime($data['third_term_end'])),
                 );
                 $result = $this->General_model->update_session($update_fields,$data['session_id']);
                 if ($result) {
-                    $data['sessions'] = $this->General_model->get_all_sessions();
-                    $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Session successfully updated.";
+
                 } else {
-                    $data['sessions'] = $this->General_model->get_all_sessions();
-                    $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
+
                 }
+                $data['sessions'] = $this->General_model->get_all_sessions();
+                $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -330,16 +336,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         public function delete_session($id) {
             $result = $this->General_model->delete_session($id);
             if ($result) {
-                $data['sessions'] = $this->General_model->get_all_sessions();
-                $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Session successfully deleted.";
             } else {
-                $data['sessions'] = $this->General_model->get_all_sessions();
-                $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
                 $json['success'] = true;
-                $json['message'] = "Seems to an error in delete student record.";
+                $json['message'] = "Seems to an error.";
+
             }
+            $data['sessions'] = $this->General_model->get_all_sessions();
+            $json['session_html'] = $this->load->view('settings/academic_sessions', $data, true);
+
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
             }

@@ -4,12 +4,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listing Employee Positions</h1>
+                    <h1 class="m-0 text-dark">Employee Positions</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">guardian search</li>
+                        <li class="breadcrumb-item"><a href="#">employee</a></li>
+                        <li class="breadcrumb-item active">position</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#employee_position_add"><i class="fa fa-plus"></i>New Employee position</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#employee_position_add"><i class="fa fa-plus"></i>New Employee position</a>
                                 </div>
                             </div>
                             <table id="employee-table" class="table table-bordered table-striped">
@@ -46,7 +46,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Abbrevation</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 9%">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -56,9 +56,9 @@
                                         <td><?php echo $position['abbrevation']; ?></td>
                                         <td>
                                             <a class="edit-employee-position btn btn-info btn-xs"
-                                               href="#" data-abbreviation="<?php echo $position['abbrevation'] ?>" data-value="<?php echo $position['name']; ?>" data-href="<?php echo $position['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                               href="#" data-abbreviation="<?php echo $position['abbrevation'] ?>" data-value="<?php echo $position['name']; ?>" data-href="<?php echo $position['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                             <a class="delete-employee-position btn btn-danger btn-xs" href="#"
-                                               data-href="<?php echo site_url('employee_setting/delete_position/').$position['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                               data-href="<?php echo site_url('employee_setting/delete_position/').$position['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -101,13 +101,13 @@
                     <div class="md-form mb-6">
                         <input type="text" id="position_name" name="name" class="form-control validate" placeholder="position Name">
                     </div>
-                    <hr/>
                     <div class="md-form mb-6">
                         <input type="text"  name="abbrevation" class="form-control validate" placeholder="position Abbrevation">
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_employee_position" type="submit" class="btn btn-default">Create Employee position</button>
+                    <button id="save_employee_position" type="submit" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Create Employee position</button>
                 </div>
             </form>
         </div>
@@ -145,9 +145,18 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="update_employee_position" type="submit" class="btn btn-default">Update Employee Position</button>
+                    <button id="update_employee_position" type="submit" class="btn btn-primary">
+                        <i class="fa fa-floppy-o"></i> Update Employee Position</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#employee-table").DataTable({ });
+
+    });
+</script>

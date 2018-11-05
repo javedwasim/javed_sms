@@ -43,9 +43,9 @@
               <table class="table table-bordered table-striped nowrap datatables" >
                 <thead>
                   <tr>
-                    <th>Name Abbreviation</th>
+                    <th>Abbreviation</th>
                     <th>Name</th>
-                    <th>Actions</th>
+                    <th data-orderable="false" style="width: 9%;">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -55,9 +55,9 @@
                     <td><?php echo $subject['name']; ?></td>
                     <td>
                         <a class="edit-subject btn btn-info btn-xs"
-                           href="#" data-abbreviation="<?php echo $subject['code'] ?>" data-value="<?php echo $subject['name']; ?>" data-href="<?php echo $subject['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
-                        <a class="delete-class btn btn-danger btn-xs" href="#"
-                           data-href="<?php echo site_url('general_setting/delete_subject/').$subject['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                           href="#" data-abbreviation="<?php echo $subject['code'] ?>" data-value="<?php echo $subject['name']; ?>" data-href="<?php echo $subject['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
+                        <a class="delete-setting-subject btn btn-danger btn-xs" href="#"
+                           data-href="<?php echo site_url('general_setting/delete_subject/').$subject['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                     </td>
                   </tr>
                 <?php } ?>
@@ -73,42 +73,32 @@
 </div>
 <div class="container">
     <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Add subject name</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Add subject</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="subject_form" method="post" role="form"
+                      data-action="<?php echo site_url('general_setting/add_subject') ?>" enctype="multipart/form-data">
+                    <div class="modal-body mx-3">
+                        <div class="md-form mb-3">
+                            <input type="text" id="defaultForm-name" name="name" class="form-control validate" placeholder="Subject Name" required>
+                        </div>
+                    </div>
+                    <div class="modal-body mx-3">
+                        <div class="md-form mb-5">
+                            <input type="text" id="defaultForm-abbr"  name="code" class="form-control validate" placeholder="Abbreviation" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button id="save_setting_subject" type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add Subject</button>
+                    </div>
+                </form>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="subject_form_error" style="display: none;" class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                    <div id="subject_form_success" style="display: none;" class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                </div>
-            </div>
-            <form id="subject_form" method="post" role="form"
-                  data-action="<?php echo site_url('general_setting/add_subject') ?>" enctype="multipart/form-data">
-                <div class="modal-body mx-3">
-                    <div class="md-form mb-3">
-                        <input type="text" id="defaultForm-name" name="name" class="form-control validate" placeholder="Subject Name" required>
-                    </div>
-                </div>
-                <div class="modal-body mx-3">
-                    <div class="md-form mb-5">
-                        <input type="text" id="defaultForm-abbr"  name="code" class="form-control validate" placeholder="Abbreviation" required>
-                    </div>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_subject" type="submit" class="btn btn-default">Create Subject</button>
-                </div>
-            </form>
         </div>
-    </div>
   </div>
 </div>
 
@@ -143,7 +133,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="update_subject" type="submit" class="btn btn-default">Update Subject</button>
+                    <button id="update_subject" type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Update Subject</button>
                 </div>
             </form>
         </div>

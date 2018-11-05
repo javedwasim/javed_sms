@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Sms extends CI_Controller
+class Sms extends MY_Controller
 {
 
      public function __construct() {
@@ -11,21 +11,6 @@ class Sms extends CI_Controller
          $this->load->model('Student_model');
          $this->load->model('Employee_model');
     }
-
-     public function index()
-     {
-        $data['screen'] = 'calendar';
-        $this->load->view("calendar/index", $data);
-          
-     }
-     
-     public function Calendar(){
-        $data['classes'] = $this->Batches_model->get_all_classes();
-        $json['calendar_html'] = $this->load->view('calendar/Calendar', $data, true);
-        if($this->input->is_ajax_request()) {
-          set_content_type($json);
-        }
-     } 
      
      public function sms(){
         $data['messages'] = $this->Sms_model->get_sms_list();
@@ -94,39 +79,7 @@ class Sms extends CI_Controller
         }
         
     }
-    public function edit_view($id){
-        $data['event'] = $this->Calendar_model->get_eventby_id($id);
-        $data['classes'] = $this->Batches_model->get_all_classes();
-        $data['categories'] = $this->Student_model->get_all_student_categories();
-        $data['ecategories'] = $this->Employee_model->get_employee_categories();
-        $data['departments'] = $this->Employee_model->get_employee_departments();
-        $data['positions'] = $this->Employee_model->get_employee_positions();
-        $json['add_event_html'] = $this->load->view('calendar/add_event', $data, true);
-        if($this->input->is_ajax_request()) {
-          set_content_type($json);
-        }
-    }
-     
-    public function delete(){
-        $data = $this->input->post();
-        $id = $data['event_id'];
-        $result = $this->Calendar_model->delete_event($id);
-        if ($result) {
-            $json['success'] = true;
-            $json['message'] = "Event successfully deleted.";
-            $data['events'] = $this->Calendar_model->get_event_list();
-            $json['calendar_html'] = $this->load->view('calendar/events_list',$data , true);
 
-        } else {
-            $json['error'] = true;
-            $json['message'] = "Seem to be an error while deleting event";
-            $data['events'] = $this->Calendar_model->get_event_list();
-            $json['calendar_html'] = $this->load->view('calendar/events_list',$data , true);
-        }
-        if($this->input->is_ajax_request()) {
-            set_content_type($json);
-        }
-    }
 
 }
 

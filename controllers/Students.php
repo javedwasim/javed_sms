@@ -10,7 +10,9 @@ class Students extends MY_Controller
         parent::__construct();
         $this->load->model('Student_model');
         $this->load->model('Dashboard_model');
+        $this->load->model('General_model');
         $this->load->helper('content-type');
+        $this -> load -> library('form_validation');
 
     }
 
@@ -24,6 +26,7 @@ class Students extends MY_Controller
     {
         $data['students'] = $this->Student_model->get_all_students();
         $data['batches'] = $this->Student_model->get_all_batches();
+        $data['subjects'] = $this->General_model->get_all_subjects();
         $json['student_html'] = $this->load->view('parts/student_listing', $data, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -33,8 +36,13 @@ class Students extends MY_Controller
     public function createPdf()
     {
         $this->load->library('Pdf');
-        $data['students'] = $this->Student_model->get_all_students();
-
+        $fields = $this->input->post();
+        if(!empty($fields)){
+            $data['students_fields'] = $this->Student_model->get_students($fields);
+        }else{
+            $data['students'] = $this->Student_model->get_all_students();
+        }
+        $data['fields'] = $fields;
         $this->load->view('student/pdf_view', $data);
     }
 
@@ -48,7 +56,7 @@ class Students extends MY_Controller
             $student_fields[$field['field_name']] = $field['add_view'];
         }
         $student_fields_arr = array();
-        $guardian_fields = $this->Student_model->get_form_fields(2);
+        $guardian_fields = $this->Student_model->get_form_fields(4);
         foreach ($guardian_fields as $field) {
             $student_fields_arr[$field['field_name']] = $field['add_view'];
         }
@@ -69,27 +77,26 @@ class Students extends MY_Controller
         $json = array();
         $student_fields_list = $this->input->post('student_form_fields');
         $guardian_fields_list = $this->input->post('guardian_info');
+
         $fields = $this->Student_model->get_form_fields(1);
         if ($student_fields_list) {
             foreach ($student_fields_list as $key => $student_field) {
                 $student_fields[$student_field] = 1;
             }
             $result_student = $this->Student_model->update_student_form_fields($student_fields, 'student');
-
             if (!$result_student) {
-                $json['message'] = 'Fields successfully added/updated.';
+                $json['message'] = 'Fields successfully updated.';
                 $json['success'] = true;
             }
 
         }
-
         if ($guardian_fields_list) {
             foreach ($guardian_fields_list as $key => $guardian_field) {
                 $guardian_fields[$guardian_field] = 1;
             }
             $result_guardian = $this->Student_model->update_guardian_form_fields($guardian_fields, 'guardian');
             if (!$result_guardian) {
-                $json['message'] = 'Fields successfully added/updated.';
+                $json['message'] = 'Fields successfully updated.';
                 $json['success'] = true;
             }
         }
@@ -103,6 +110,7 @@ class Students extends MY_Controller
 
         $data['batches'] = $this->Student_model->get_all_batches();
         $data['countries'] = $this->Student_model->get_all_countries();
+        $data['categories'] = $this->Student_model->get_all_student_categories();
         $data['states'] = $this->Student_model->get_all_states();
         $fields = $this->get_fields_setting();
         $data['student_fields'] = $fields;
@@ -182,6 +190,7 @@ class Students extends MY_Controller
             $result = $this->Student_model->add_new_student($student_data);
 
             if ($result) {
+                $this->session->set_flashdata('message', 'Student Successfully saved');
                 redirect('students/student_guardian_list/' . $result);
             } else {
                 $this->session->set_flashdata('error', 'Seem to be an error while saving student!');
@@ -200,7 +209,7 @@ class Students extends MY_Controller
     {
         $data['countries'] = $this->Student_model->get_all_countries();
         $student_fields = $this->Student_model->get_form_fields(1);
-        $data['guardian_fields'] = $this->Student_model->get_form_fields(2);
+        $data['guardian_fields'] = $this->Student_model->get_form_fields(4);
         $data['guardians'] = $this->Student_model->get_all_guardians();
         $data['batches'] = $this->Student_model->get_all_batches();
 
@@ -213,8 +222,12 @@ class Students extends MY_Controller
 
     public function student_guardian_list($student_id)
     {
-        $fields = $this->get_fields_setting();
-        $data['student_fields'] = $fields;
+        $guardian_fields = $this->Student_model->get_form_fields(4);
+        $fields = array();
+        foreach ($guardian_fields as $field) {
+            $fields[$field['field_name']] = $field['add_view'];
+        }
+        $data['guardian_fields'] = $fields;
         $data['student_id'] = $student_id;
         $data['countries'] = $this->Student_model->get_all_countries();
         $data['guardians'] = $this->Student_model->get_all_student_guardian($student_id);
@@ -236,7 +249,9 @@ class Students extends MY_Controller
         $record['guardians'] = $this->Student_model->get_all_guardians();
         $record['batches'] = $this->Student_model->get_all_batches();
         $record['states'] = $this->Student_model->get_all_states();
-        $record['origins'] = $this->Student_model->get_all_origins();
+        $record['origins'] = $this->Student_model->get_origin_by_id($record['student']['lga_of_origin']);
+        $record['cities'] = $this->Student_model->get_origin_by_id($record['student']['city']);
+        $record['categories'] = $this->Student_model->get_all_student_categories();
         $fields = $this->get_fields_setting();
         $record['student_fields'] = $fields;
         if ($record['student']) {
@@ -302,7 +317,6 @@ class Students extends MY_Controller
             $json['message'] = validation_errors();
         } else {
             $guardian = $this->input->post();
-
             if (!empty($_FILES['photo']['name'])) {
                 $upload_path = 'assets/uploads/guardian_images';
                 $config = array(
@@ -327,21 +341,21 @@ class Students extends MY_Controller
                     $json['message'] = "Seems to an error in image uploading.";
                 }
             }
-            $loggedin_user = $this->session->userdata();
+            $loggedin_user = $this->session->userdata('userdata');
             $guardian_fields = array('surname' => $guardian['surname'],
-                'first_name' => $guardian['first_name'],
-                'middle_name' => $guardian['middle_name'],
-                'photo' => $guardian['photo'],
-                'title' => $guardian['title'],
-                'email' => $guardian['email'],
-                'gender' => $guardian['gender'],
-                'phone' => $guardian['phone'],
-                'mobile_phone' => $guardian['mobile_phone'],
-                'address_line' => $guardian['address_line'],
-                'country' => $guardian['country'],
-                'state' => $guardian['state'],
-                'city' => $guardian['city'],
-                'lga' => $guardian['lga'],
+                'first_name' => isset($guardian['first_name'])?$guardian['first_name']:'',
+                'middle_name' => isset($guardian['middle_name'])?$guardian['middle_name']:'',
+                'photo' => isset($guardian['photo'])?$guardian['photo']:'',
+                'title' => isset($guardian['title'])?$guardian['title']:'',
+                'email' => isset($guardian['email'])?$guardian['email']:'',
+                'gender' => isset($guardian['gender'])?$guardian['gender']:'',
+                'phone' => isset($guardian['phone'])?$guardian['phone']:'',
+                'mobile_phone' => isset($guardian['mobile_phone'])?$guardian['mobile_phone']:'',
+                'address_line' => isset($guardian['address_line'])?$guardian['address_line']:'',
+                'country' => isset($guardian['country'])?$guardian['country']:'',
+                'state' => isset($guardian['state'])?$guardian['state']:'',
+                'city' => isset($guardian['city'])?$guardian['city']:'',
+                'lga' => isset($guardian['lga'])?$guardian['lga']:'',
                 'status' => 1,
                 'created_by' => $loggedin_user['login_id'],
             );
@@ -378,6 +392,7 @@ class Students extends MY_Controller
         $this->form_validation->set_rules('admission_no', 'admission number', 'required|xss_clean');
         $this->form_validation->set_rules('admission_date', 'admission date', 'required|xss_clean');
         $this->form_validation->set_rules('batch_no', 'batch number', 'required|xss_clean');
+
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
             $json['message'] = validation_errors();
@@ -410,15 +425,11 @@ class Students extends MY_Controller
             unset($student_data['guardian_length']);
             $result = $this->Student_model->update_student($student_data, $student_id);
             if ($result) {
-                $record['students'] = $this->Student_model->get_all_students();
-                $json['student_html'] = $this->load->view('parts/student_listing', $record, true);
-                $json['success'] = true;
-                $json['message'] = "Student successfully updated.";
+                $this->session->set_flashdata('message', 'Student Successfully saved');
+                redirect('students/student_guardian_list/' . $result);
             } else {
-                $record['students'] = $this->Student_model->get_all_students();
-                $json['student_html'] = $this->load->view('parts/student_listing', $record, true);
-                $json['error'] = true;
-                $json['message'] = "Seems to an error in update student record.";
+                $this->session->set_flashdata('error', 'Seem to be an error.');
+                redirect('students/add_new_student/');
             }
         }
         if ($this->input->is_ajax_request()) {
@@ -430,30 +441,61 @@ class Students extends MY_Controller
     {
         $result = $this->Student_model->delete_student($student_id);
         if ($result) {
-            $record['students'] = $this->Student_model->get_all_students();
-            $json['student_html'] = $this->load->view('parts/student_listing', $record, true);
             $json['success'] = true;
             $json['message'] = "Student successfully deleted.";
         } else {
             $json['success'] = true;
-            $json['message'] = "Seems to an error in delete student record.";
+            $json['message'] = "Seems to an error.";
         }
+
+        $data['students'] = $this->Student_model->get_all_students();
+        $data['batches'] = $this->Student_model->get_all_batches();
+        $data['subjects'] = $this->General_model->get_all_subjects();
+        $json['student_html'] = $this->load->view('parts/student_listing', $data, true);
+
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
     }
 
-    public function student_profile($id)
+    public function profile($id)
     {
         $data = $this->Student_model->get_student_by_id($id);
         $record['guardians'] = $this->Student_model->get_all_student_guardian($id);
         $record['student'] = $data;
         $record['student_id'] = $id;
-        $this->load->view('parts/header');
-        $this->load->view('parts/topbar');
-        $this->load->view('parts/sidebar');
-        $this->load->view('student/student_profile', $record);
-        $this->load->view('parts/footer');
+        $json['student_html'] = $this->load->view('student/student_profile', $record,true);
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function student_profile()
+    {
+        $user_data = $this->session->userdata('userdata');
+        $user_name = $user_data['name'];
+        $query = $this->db->select('*')->from('students')->where('username',$user_name)->limit(1)->get();
+        $result = $query->row_array();
+        $student_id = $result['student_id'];
+
+        $data = $this->Student_model->get_student_by_id($student_id);
+        $record['guardians'] = $this->Student_model->get_all_student_guardian($student_id);
+        $record['student'] = $data;
+        $record['student_id'] = $student_id;
+        $json['result_html'] = $this->load->view('student/student_profile', $record, true);
+         if ($this->input->is_ajax_request()) {
+             set_content_type($json);
+         }
+    }
+
+    public function std_profile($student_id)
+    {
+        $data = $this->Student_model->get_student_by_id($student_id);
+        $record['guardians'] = $this->Student_model->get_all_student_guardian($student_id);
+        $record['student'] = $data;
+        $record['student_id'] = $student_id;
+        $record['screen'] = 'student_profile';
+        $this->load->view('student/index', $record);
     }
 
     public function student_filters()
@@ -462,7 +504,7 @@ class Students extends MY_Controller
         $data['students'] = $this->Student_model->get_students_by_filters($filters);
         $data['filters'] = $filters;
         $data['batches'] = $this->Student_model->get_all_batches();
-        // print_r($data['batches']);
+        $data['subjects'] = $this->General_model->get_all_subjects();
         $json['student_html'] = $this->load->view('parts/student_listing', $data, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -496,7 +538,7 @@ class Students extends MY_Controller
     public function get_state($country_id)
     {
         $states = $this->Student_model->get_country_states($country_id);
-        $options = "<option value=''>Please select a state</option>";
+        $options = "";
         foreach ($states as $state) {
             $id = $state['id'];
             $name = $state['name'];
@@ -513,7 +555,7 @@ class Students extends MY_Controller
     public function get_origin($state_id)
     {
         $origins = $this->Student_model->get_state_origins($state_id);
-        $options = "<option value=''>Please select a origin</option>";
+        $options = "";
         foreach ($origins as $origin) {
             $id = $origin['id'];
             $name = $origin['name'];
@@ -595,6 +637,89 @@ class Students extends MY_Controller
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
+    }
+
+    public function select_student(){
+        $data = $this->input->post();
+        //print_r($data);
+        $this->Student_model->select_student($data);
+        if($data['flag'] == 'select'){
+            $json['success'] = true;
+            $json['message'] = "Student selected successfully!";
+        }else{
+            $json['success'] = true;
+            $json['message'] = "Student unselected successfully!";
+        }
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+
+    }
+
+    public function student_fees(){
+        $result['fees'] = $this->Student_model->get_student_fees();
+        $student = $this->Student_model->logged_user_info();
+        $result['student_id'] = $student['student_id'];
+        if ($result) {
+            $json['success'] = true;
+            $json['result_html'] = $this->load->view('student/fee', $result, true);
+        } else {
+            $json['error'] = true;
+            $json['message'] = "No Fee Found.";
+        }
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function student_paid_fees(){
+        $id = $this->input->post('id');
+        $student_id = $this->input->post('user_id');
+        $result['fee'] = $this->Student_model->get_student_fee($id);
+        $result['student_id'] = $student_id;
+        $result['fee_management_id'] = $id;
+        if ($result) {
+            $json['success'] = true;
+            $json['result_html'] = $this->load->view('student/fee_pay', $result, true);
+        } else {
+            $json['error'] = true;
+        }
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function create_payment(){
+        $data = $this->input->post();
+        $result = $this->Student_model->create_payment($data);
+
+        if ($result) {
+
+            $data['fees'] = $this->Student_model->get_student_fees();
+            $student = $this->Student_model->logged_user_info();
+            $data['student_id'] = $student['student_id'];
+
+            $json['success'] = true;
+            $json['message'] = "Fee paid successfully.";
+            $json['result_html'] = $this->load->view('student/fee', $data, true);
+        } else {
+            $json['error'] = true;
+            $json['message'] = "seem to be an error.";
+        }
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function unpaid_fee_pdf()
+    {
+        $this->load->library('Pdf');
+        $fields = $this->input->post();
+        $result['fees'] = $this->Student_model->get_student_fees();
+        $student = $this->Student_model->logged_user_info();
+        $result['student_id'] = $student['student_id'];
+
+        $this->load->view('student/unpaid_fee', $result);
     }
 
 }

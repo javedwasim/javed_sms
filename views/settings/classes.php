@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#class_add"><i class="fa fa-plus"></i>New Course</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#class_add"><i class="fa fa-plus"></i>New Course</a>
                                 </div>
                             </div>
                             <table id="class-table" class="table table-bordered table-striped datatables">
@@ -47,7 +47,7 @@
                                     <th>Code</th>
                                     <th>Name</th>
                                     <th>Enabled?</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 9%;">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -58,9 +58,9 @@
                                         <td><?php echo ($class['enable']==1)?'Yes':'No';?></td>
                                         <td>
                                             <a class="edit-class btn btn-info btn-xs" data-enale="<?php echo $class['enable']; ?>"
-                                               href="#" data-abbreviation="<?php echo $class['code'] ?>" data-value="<?php echo $class['name']; ?>" data-href="<?php echo $class['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                               href="#" data-abbreviation="<?php echo $class['code'] ?>" data-value="<?php echo $class['name']; ?>" data-href="<?php echo $class['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                             <a class="delete-class btn btn-danger btn-xs" href="#"
-                                               data-href="<?php echo site_url('general_setting/delete_class/').$class['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                               data-href="<?php echo site_url('general_setting/delete_class/').$class['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -112,7 +112,7 @@
 
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_class" type="submit" class="btn btn-default">Create Class</button>
+                    <button id="save_class" type="submit" class="btn btn-primary"><i class="fa fa-plus"></i>Add Course</button>
                 </div>
             </form>
         </div>

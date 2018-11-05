@@ -87,9 +87,15 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-
-                                    <a href="javascript:void(0)" class="btn btn-info btn-rounded mb-4" data-toggle="modal" data-target="#add_domain_group_indicator">
-                                        <i class="fa fa-plus"></i>  Add Domain Indicator</a>
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#add_domain_group_indicator">
+                                        <?php if(isset($domain_id)): ?>
+                                            <i class="fa fa-floppy-o"></i>
+                                            Update Domain Indicator
+                                        <?php else: ?>
+                                            <i class="fa fa-plus"></i>
+                                            Add Domain Indicator
+                                        <?php endif; ?>
+                                    </a>
                                 </div>
                             </div>
                             <div class="domain_indicator_table">
@@ -99,7 +105,7 @@
                                         <th>Name</th>
                                         <th>Abbreviation</th>
                                         <th>Description</th>
-                                        <th data-orderable="false">Operations</th>
+                                        <th data-orderable="false" style="width: 9%">Operations</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -115,11 +121,11 @@
                                                    data-code="<?php echo $indicator['code'] ?>"
                                                    data-description="<?php echo $indicator['description'] ?>"
                                                    data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
-                                                   data-href="<?php echo $indicator['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                                   data-href="<?php echo $indicator['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                                 <a class="delete-domain-group-indicator btn btn-danger btn-xs" href="javascript:void(0)"
                                                    data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
                                                    data-delete-id="<?php echo $indicator['id']; ?>"
-                                                   data-href="<?php echo site_url('domains/delete_domain_indicator') ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                                   data-href="<?php echo site_url('domains/delete_domain_indicator') ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -127,7 +133,17 @@
                                 </table>
                             </div>
                             <div class="modal-footer d-flex justify-content-center">
-                                <button id="save_domain_group" type="submit" class="btn btn-default">Save Assessment Category</button>
+                                <button id="save_domain_group" type="submit" class="btn btn-primary">
+                                    <?php if(isset($domain_id)): ?>
+                                        <i class="fa fa-floppy-o"></i>
+                                        Update Domain Group
+
+                                    <?php else: ?>
+                                        <i class="fa fa-plus"></i>
+                                        Add Domain Group
+
+                                    <?php endif; ?>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -177,7 +193,15 @@
                         <textarea class="form-control" name="description" rows="5"></textarea>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="save_domain_indicator" type="submit" class="btn btn-default">Save Domain Indicator</button>
+                        <button id="save_domain_indicator" type="submit" class="btn btn-primary">
+                            <?php if(isset($domain_id)): ?>
+                                <i class="fa fa-floppy-o"></i>
+                                Save Domain Indicator
+                            <?php else: ?>
+                                <i class="fa fa-plus"></i>
+                                Add Domain Indicator
+                            <?php endif; ?>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -224,10 +248,17 @@
                         <textarea class="form-control" id="indicator_description" name="description" rows="5"></textarea>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="update_domain_indicator" type="submit" class="btn btn-default">Update Domain Indicator</button>
+                        <button id="update_domain_indicator" type="submit" class="btn btn-primary">
+                            <i class="fa fa-floppy-o"></i> Update Domain Indicator</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $("#account-table").DataTable({});
+    })
+</script>

@@ -30,13 +30,13 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <a href="javascript:void(0)" data-href="<?php echo base_url()."sms/add_sms"; ?>"
-                                       class="btn btn-primary add-sms btn-sm pull-right">
+                                       class="btn btn-primary add-sms btn-sm pull-left">
                                        <i class="fa fa-bullhorn"></i>Compose new SMS
                                     </a>
                                 </div>
                             </div>
                             <hr/>
-                            <table id="events_table" class="table table-bordered table-striped nowrap"
+                            <table id="sms_table" class="table table-bordered table-striped nowrap"
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
@@ -46,7 +46,7 @@
                                     <th>Units Used</th>
                                     <th>Created by</th>
                                     <th>Status</th>
-                                    <th></th>
+                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -79,9 +79,6 @@
     </section>
 </div>
 <script>
-
-
-
     $(document).ready(function(){
         $('.select2').select2();
         $(".sms-select2").on("select2:select select2:unselect", function (e) {
@@ -96,6 +93,6 @@
             toastr["success"]('<?php echo $this->session->flashdata('success'); ?>');
         <?php } ?>
 	
-	    $("#events_table").DataTable({});
+	    $("#sms_table").DataTable({});
     });
 </script>

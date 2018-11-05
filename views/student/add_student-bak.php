@@ -367,11 +367,8 @@
                                 <br />
                                 <div class="row">
                                     <div class="col-md-6" style="margin-bottom: 20px;">
-
-                                        <button type="submit" class="btn btn-primary btn-lg pull-right">Save Student</button>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <button type="submit" class="btn btn-primary btn-lg pull-center">Save and add another</button>
+                                        <button type="submit" class="btn btn-primary btn-lg pull-right">
+                                            <i class="fa fa-plus"></i> Add Student</button>
                                     </div>
                                 </div>
                             </div>

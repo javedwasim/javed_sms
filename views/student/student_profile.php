@@ -1,3 +1,4 @@
+<?php $userdata = $this->session->userdata('userdata') ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -25,9 +26,15 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center mb-3">
-                                <img class="profile-user-img img-fluid img-circle"
-                                     src="<?php echo base_url(); ?>assets/dist/img/avatar.png"
-                                     alt="User profile picture">
+                                <?php if(isset($student['photo'])): ?>
+                                    <img class="profile-user-img img-fluid img-circle"
+                                         src="<?php echo base_url()."assets/uploads/student_images/".$student['photo']; ?>"
+                                         alt="User profile picture">
+                                <?php else: ?>
+                                    <img class="profile-user-img img-fluid img-circle"
+                                         src="<?php echo base_url(); ?>assets/dist/img/avatar.png"
+                                         alt="User profile picture">
+                                <?php endif; ?>
                             </div>
                             <h3 class="profile-username text-center mb-3"><?php echo isset($student['first_name']) && (!empty($student['first_name'])) ? $student['first_name'] . ', ' . $student['last_name'] : "" ?></h3>
                             <!--  <p class="text-muted text-center">Software Engineer</p> -->
@@ -37,33 +44,22 @@
                                             class="float-right"><?php echo isset($student['admission_no']) && (!empty($student['admission_no'])) ? $student['admission_no'] : "" ?></a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Batch No</b> <a
-                                            class="float-right"><?php echo isset($student['batch_no']) && (!empty($student['batch_no'])) ? $student['batch_no'] : "" ?></a>
+                                    <b>Batch No</b>
+                                    <a class="float-right"><?php echo $student['code'] . '-' . $student['arm'] . '(' . $student['session'] . ')' ?></a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Status</b> <a class="float-right">Registering</a>
+                                    <b>Status</b> <a class="float-right"><?php echo isset($student['status']) && ($student['status']==1) ? "Active" : "Inactive" ?></a>
                                 </li>
+                                <li class="list-group-item">
+                                    <b>Username</b> <a class="float-right"><?php echo isset($student['username'])  ? $student['username'] : "" ?></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Gender</b> <a class="float-right"><?php echo isset($student['gender'])  ? $student['gender'] : "" ?></a>
+                                </li>
+
                             </ul>
-                            <div class="row">
-                                <div class="col-md-4 text-center border-right">
-                    <span class="">
-                      <i class="fa fa-venus mt-2" style="font-size: 24px;"></i>
-                    </span>
-                                </div>
-                                <div class="col-md-4 text-center border-right">
-                    <span class="mt-3">
-                      <p>Due Fees</p>
-                      <p>0.00</p>
-                    </span>
-                                </div>
-                                <div class="col-md-4 text-center mb-3">
-                    <span class="mt-3">
-                      <p>Age</p>
-                      <p>10</p>
-                    </span>
-                                </div>
-                            </div>
-                            <a href="#" class="btn btn-primary btn-block"><i class="fa fa-print"></i><b>Print</b></a>
+                            <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="myFunction()">
+                                <i class="fa fa-print"></i><b>Print</b></a>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -175,13 +171,11 @@
                                     <div class="profile-contacts">
 
                                         <div class="">
-                                            <h3 class="profile-username profile-badge"><i
-                                                        class="fa fa-map-marker azure"></i>Address</h3>
+                                            <h3 class="profile-username profile-badge">
+                                                <i class="fa fa-map-marker azure"></i>Address</h3>
                                         </div>
                                         <div class="contact-info">
-                                            <p>
-                                                Kano, Kibiya, Kano, Nigeria
-                                            </p>
+                                            <h6><?php echo $student['address_line']; ?></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -199,14 +193,17 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Guardians</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
-                                                        href="<?php echo site_url('students/edit/') . $student['student_id']; ?>"
-                                                        data-href="<?php echo site_url('students/edit/') . $student['student_id'] ?>">Edit</a>
+                                <li class="nav-item">
+                                    <?php if($userdata['name'] == 'admin'): ?>
+                                        <a class="nav-link" href="<?php echo site_url('students/edit/') . $student['student_id']; ?>"
+                                                            data-href="<?php echo site_url('students/edit/') . $student['student_id'] ?>">Edit</a>
+                                    <?php endif; ?>
                                 </li>
                                 <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"
                                                         data-target="#myModal">Change Password</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a>
-                                </li>
+                                <?php if($userdata['name'] == 'admin'): ?>
+                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
+                                <?php endif; ?>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -389,7 +386,7 @@
                                                 <form class="form-horizontal" role="form" id="student_archive_form"
                                                       data-action="<?php echo site_url('students/archive_student') ?>"
                                                       accept-charset="UTF-8" method="post">
-                                                    <input type="hidden" name="student_id" value="<?php echo $student['student_id']; ?>">
+                                                    <input type="hidden" name="student_id" id="std_id" value="<?php echo $student['student_id']; ?>">
                                                     <div class="form-group">
                                                         <div class="form-group">
                                                             <label class="control-label"><code>*</code>Last day in batch</label>
@@ -539,23 +536,29 @@
                     <input type="hidden" name="student_id" id="student_id">
                     <input type="hidden" name="guardian_id" id="guardian_id">
                     <div class="modal-body mx-3">
-                        <div class="form-group">
-                            <label for="category_name" class="col-form-label">Relation</label>
-                            <input type="text" id="relation" name="relation" class="form-control validate">
-
+                        <div class="form-group row">
+                            <label for="relation" class="col-sm-2 col-form-label">Relation</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="relation" name="relation" class="form-control validate">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="emergency_contact" class="col-form-label">Emergency contact?</label>
-                            <input type="checkbox" value="1" id="emergency_contact" name="emergency_contact" class="form-control validate" >
-
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <input type="checkbox" value="1" id="emergency_contact" name="emergency_contact" />
+                            </div>
+                            <label for="emergency_contact" class="col-sm-10 col-form-label">Emergency Contact?</label>
                         </div>
-                        <div class="form-group">
-                            <label for="is_authorized" class="col-form-label">Authorized to pick up?</label>
-                            <input type="checkbox" value="1" id="is_authorized" name="is_authorized" class="form-control validate" >
 
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <input type="checkbox" value="1" id="is_authorized" name="is_authorized"  />
+                            </div>
+                            <label for="is_authorized" class="col-sm-10 col-form-label">Authorized to pick up?</label>
                         </div>
+
                         <div class="modal-footer d-flex justify-content-center">
-                            <button id="assign_student_guardian" type="submit" class="btn btn-default">Save Assessment Category</button>
+                            <button id="assign_student_guardian" type="submit" class="btn btn-primary">
+                                <i class="fa fa-user-plus"></i>Assign Guardian</button>
                         </div>
                     </div>
                 </form>
@@ -604,27 +607,9 @@
         return false;
     });
 
-    $(document.body).on('click', '.delete-student', function(){
-        if (confirm('Are you sure to delete this record?')) {
-            $.ajax({
-                url: $(this).attr('data-href'),
-                cache: false,
-                success: function(response) {
-                    $('#student_error').hide();
-                    $('#student_success').hide();
-                    if (response.success) {
-                        $('.content-wrapper').remove();
-                        $('#content-wrapper').append(response.student_html);
-                        $('#student_success').show().html(response.message);
-                    } else {
-                        $('#student_error').show().html(response.message);
-                    }
-                }
-            });
-        } else {
-            return false;
-        }
 
-        return false;
-    });
+
+    function myFunction() {
+        window.print();
+    }
 </script>

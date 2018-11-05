@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	}
 
     	public function fee_type(){
-    		$data['fees'] = $this->Finance_model->get_fees();
+    		$data['fees'] = $this->Finance_model->get_fee_type();
             $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
 	    	if($this->input->is_ajax_request()) {
 		      set_content_type($json);
@@ -138,12 +138,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $fee = $this->input->post();
                 $result = $this->Finance_model->add_fee($fee);
                 if ($result) {
-                    $data['fees'] = $this->Finance_model->get_fees();
+                    $data['fees'] = $this->Finance_model->get_fee_type();
                     $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Institute bank account successfully added.";
                 } else {
-                    $data['fees'] = $this->Finance_model->get_fees();
+                    $data['fees'] = $this->Finance_model->get_fee_type();
                     $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                     $json['error'] = true;
                     $json['message'] = "Seems to an error while adding class.";
@@ -168,12 +168,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $update_fields = array('name'=>$data['name'],'description'=>$data['description']);
                 $result = $this->Finance_model->update_fee($update_fields,$data['fee_id']);
                 if ($result) {
-                    $data['fees'] = $this->Finance_model->get_fees();
+                    $data['fees'] = $this->Finance_model->get_fee_type();
                     $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                     $json['success'] = true;
                     $json['message'] = "Fee successfully updated.";
                 } else {
-                    $data['fees'] = $this->Finance_model->get_fees();
+                    $data['fees'] = $this->Finance_model->get_fee_type();
                     $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                     $json['error'] = true;
                     $json['message'] = "Seems to an error in image uploading.";
@@ -188,12 +188,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         public function delete_fee($id){
             $result = $this->Finance_model->delete_fee($id);
             if ($result) {
-                $data['fees'] = $this->Finance_model->get_fees();
+                $data['fees'] = $this->Finance_model->get_fee_type();
                 $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Account successfully deleted.";
             } else {
-                $data['fees'] = $this->Finance_model->get_fees();
+                $data['fees'] = $this->Finance_model->get_fee_type();
                 $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Seems to an error in delete student record.";

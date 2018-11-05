@@ -221,5 +221,22 @@ class Domains extends MY_Controller
     }
 
 
+    public function delete_domain_group($id) {
+        $result = $this->Domain_model->delete_domain_group($id);
+        if ($result) {
+            $json['success'] = true;
+            $json['message'] = "Domain Group successfully deleted.";
+        } else {
+            $json['success'] = true;
+            $json['message'] = "Seems to an error.";
+        }
+        $data['domains'] = $this->Domain_model->get_domains();
+        $json['domain_html'] = $this->load->view('grades/domains', $data, true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+
 
 }

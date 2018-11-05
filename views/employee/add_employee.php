@@ -1,4 +1,3 @@
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -20,6 +19,13 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            <?php  if(!empty($validation_errors)): ?>
+                <div id="employee_error" class="alert alert-danger alert-dismissible"
+                     role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $validation_errors; ?>
+                </div>
+            <?php endif; ?>
             <div class="row">
                 <!-- left column -->
                 <div class="col-md-12">
@@ -43,20 +49,22 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Surname</label>
-                                            <input type="text" class="form-control" name="surname" value="<?php echo isset($employee['surname']) ? $employee['surname'] : ''; ?>"  />
+                                            <label>Surname<span style="color: red">*</span></label>
+                                            <input type="text" class="form-control" name="surname" value="<?php  if(isset($employee['surname'])) {echo $employee['surname'];}  elseif(isset($form_data['surname'])){ echo $form_data['surname']; } ?>" maxlength="100" required />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>First name</label>
-                                            <input type="text" class="form-control" name="first_name" value="<?php echo isset($employee['first_name']) ? $employee['first_name'] : ''; ?>" />
+                                            <label>First name<span style="color: red">*</span></label>
+                                            <input type="text" class="form-control" name="first_name"
+                                                   value="<?php  if(isset($employee['first_name'])) {echo $employee['first_name'];}  elseif(isset($form_data['first_name'])){ echo $form_data['first_name']; } ?>" maxlength="100" required />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Middle name</label>
-                                            <input type="text" class="form-control" name="middle_name" value="<?php echo isset($employee['middle_name']) ? $employee['middle_name'] : ''; ?>"  />
+                                            <input type="text" class="form-control" name="middle_name"
+                                                   value="<?php  if(isset($employee['middle_name'])) {echo $employee['middle_name'];}  elseif(isset($form_data['middle_name'])){ echo $form_data['middle_name']; } ?>" maxlength="100" />
                                         </div>
                                     </div>
 
@@ -64,7 +72,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Title</label>
-                                                <input type="text" class="form-control" name="title" value="<?php echo isset($employee['title']) ? $employee['title'] : ''; ?>"  />
+                                                <input type="text" class="form-control" name="title"
+                                                       value="<?php  if(isset($employee['title'])) {echo $employee['title'];}  elseif(isset($form_data['title'])){ echo $form_data['title']; } ?>" maxlength="100" />
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -72,10 +81,11 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Employee No</label>
-                                            <input type="text" class="form-control" name="employee_no" value="<?php echo isset($employee['employee_no']) ? $employee['employee_no'] : ''; ?>" />
+                                            <input type="text" class="form-control" name="employee_no"
+                                                   value="<?php  if(isset($employee['employee_no'])) {echo $employee['employee_no'];}  elseif(isset($form_data['employee_no'])){ echo $form_data['employee_no']; } ?>" maxlength="100" />
                                         </div>
                                     </div>
-                                    <?php if ($employee_fields['gender']) { ?>
+                                    <?php if ($employee_fields['egender']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Gender</label>
@@ -95,23 +105,16 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="<?php echo isset($employee['date_of_birth']) ? $employee['date_of_birth'] : ''; ?>" >
+                                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" autocomplete="off"
+                                                       value="<?php  if(isset($employee['date_of_birth'])) {echo $employee['date_of_birth'];}  elseif(isset($form_data['date_of_birth'])){ echo $form_data['date_of_birth']; } ?>" maxlength="15">
                                             </div>
                                         </div>
                                     <?php } ?>
-                                    <?php if ($employee_fields['photo']) { ?>
+                                    <?php if ($employee_fields['ephoto']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="exampleInputFile">File input</label>
-                                                <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input type="file" name="photo" class="custom-file-input" id="exampleInputFile">
-                                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                                    </div>
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="">Upload</span>
-                                                    </div>
-                                                </div>
+                                                <label for="employee_photo">Photo</label>
+                                                <input type="file" name="photo" class="form-control" id="employee_photo">
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -122,7 +125,8 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="date_of_join" name="date_of_join" value="<?php echo isset($employee['date_of_join']) ? $employee['date_of_join'] : ''; ?>">
+                                                <input type="text" class="form-control" id="date_of_join" name="date_of_join" autocomplete="off"
+                                                       value="<?php  if(isset($employee['date_of_join'])) {echo $employee['date_of_join'];}  elseif(isset($form_data['date_of_join'])){ echo $form_data['date_of_join']; } ?>" maxlength="15">
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -131,18 +135,21 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Phone</label>
-                                                <input  type="tel" class="form-control" id="emp-phone" name="phone" value="<?php echo isset($employee['phone']) ? $employee['phone'] : ''; ?>">
+                                                <input  type="tel" class="form-control" id="emp-phone" name="phone" placeholder="&nbsp;"
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                        value="<?php  if(isset($employee['phone'])) {echo $employee['phone'];}  elseif(isset($form_data['phone'])){ echo $form_data['phone']; } ?>" maxlength="15">
                                             </div>
                                         </div>
                                     <?php } ?>
                                     <?php if ($employee_fields['email']) { ?>
                                         <div class="col-md-4">
-                                            <label>Email</label>
+                                            <label>Email<span style="color: red">*</span></label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                                                 </div>
-                                                <input type="email" class="form-control" name="email" value="<?php echo isset($employee['email']) ? $employee['email'] : ''; ?>" 
+                                                <input type="email" class="form-control" name="email" maxlength="100" required
+                                                       value="<?php  if(isset($employee['email'])) {echo $employee['email'];}  elseif(isset($form_data['email'])){ echo $form_data['email']; } ?>"
                                                        <?php echo isset($employee['email']) ? 'readonly' : ''; ?> />
                                             </div>
                                         </div>
@@ -151,7 +158,9 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Mobile phone</label>
-                                                <input  type="tel" class="form-control" id="emp-mb-phone" name="mobile_phone" value="<?php echo isset($employee['mobile_phone']) ? $employee['mobile_phone'] : ''; ?>"  >
+                                                <input  type="tel" class="form-control" id="emp-mb-phone" name="mobile_phone" maxlength="15" placeholder="&nbsp;"
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                        value="<?php  if(isset($employee['mobile_phone'])) {echo $employee['mobile_phone'];}  elseif(isset($form_data['mobile_phone'])){ echo $form_data['mobile_phone']; } ?>"  >
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -159,8 +168,8 @@
                                     <?php if ($employee_fields['employee_category']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Employee Category</label>
-                                                <select class="form-control" name="category">
+                                                <label>Employee Category<span style="color: red">*</span></label>
+                                                <select class="form-control" name="category" required>
                                                     <option value="">Please select</option>
                                                     <?php foreach ($categories as $category) : ?>
                                                         <option value="<?php echo $category['id']; ?>"<?php echo isset($employee['category']) && ($employee['category'] == $category['id']) ? 'selected' : ''; ?>><?php echo $category['category']; ?></option>
@@ -285,14 +294,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Address line</label>
-                                                <textarea class="form-control" rows="3" name="address_line"><?php echo isset($employee['address_line']) ? $employee['address_line'] : ''; ?></textarea>
+                                                <textarea class="form-control" rows="3" name="address_line"><?php  if(isset($employee['address_line'])) {echo $employee['address_line'];}  elseif(isset($form_data['address_line'])){ echo $form_data['address_line']; } ?></textarea>
                                             </div>
                                         </div>
                                         <?php if ($employee_fields['nationality']) { ?>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Country</label>
-                                                    <select class="form-control" id="nationality" name="country">
+                                                    <select class="form-control select2" id="nationality" name="country">
                                                         <option value="">Select Nationality</option>
                                                         <?php foreach ($countries as $country) { ?>
                                                             <option value="<?php echo $country['id'] ?>"<?php echo isset($employee['country']) && $employee['country'] == $country['id'] ? 'selected' : ''; ?>><?php echo $country['country_name'] ?></option>
@@ -306,7 +315,8 @@
                                             <div class="form-group">
                                                 <label>State</label>
                         <!--                          <input type="text" class="form-control" name="state" maxlength="20" placeholder="State" value="--><?php //echo isset($employee['state'])? $employee['state']:'';  ?><!--">-->
-                                                <select class="form-control" id="country_states" name="state">
+                                                <select class="form-control select2" id="country_states" name="state">
+                                                    <option value=''>Please select a state</option>
                                                     <?php foreach ($states as $state): ?>
                                                         <option value="<?php echo $state['id']; ?>"<?php echo isset($employee['state']) && $employee['state'] == $state['id'] ? 'selected' : ''; ?>><?php echo $state['name']; ?></option>
                                                     <?php endforeach; ?>
@@ -316,7 +326,12 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>City</label>
-                                                <input type="text" class="form-control" name="lga_of_origin" maxlength="20" placeholder="LGA of origin" value="<?php echo isset($employee['lga_of_origin']) ? $employee['lga_of_origin'] : ''; ?>">
+                                                <select class="form-control select2" id="lga_of_origin" name="lga_of_origin">
+                                                    <?php foreach ($origins as $origin): ?>
+                                                        <option value="<?php echo $origin['id']; ?>">
+                                                            <?php echo $origin['name']; ?></option>
+                                                    <?php  endforeach; ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -331,14 +346,16 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Name</label>
-                                                <input type="text" class="form-control" name="next_of_kin_name" value="<?php echo isset($employee['next_of_kin_name']) ? $employee['next_of_kin_name'] : ''; ?>"/>
+                                                <input type="text" class="form-control" name="next_of_kin_name" maxlength="100"
+                                                       value="<?php  if(isset($employee['next_of_kin_name'])) {echo $employee['next_of_kin_name'];}  elseif(isset($form_data['next_of_kin_name'])){ echo $form_data['next_of_kin_name']; } ?>"/>
                                             </div>
                                         </div>
                                         <?php if ($employee_fields['relation_next_of_kin']) { ?>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Relationship with next of kin</label>
-                                                    <input type="text" class="form-control" name="next_of_kin_relation" value="<?php echo isset($employee['next_of_kin_relation']) ? $employee['next_of_kin_relation'] : ''; ?>"/>
+                                                    <input type="text" class="form-control" name="next_of_kin_relation" maxlength="100"
+                                                           value="<?php  if(isset($employee['next_of_kin_relation'])) {echo $employee['next_of_kin_relation'];}  elseif(isset($form_data['next_of_kin_relation'])){ echo $form_data['next_of_kin_relation']; } ?>"/>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -346,7 +363,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Next of kin phone</label>
-                                                    <input type="text" class="form-control" name="next_of_kin_phone" value="<?php echo isset($employee['next_of_kin_phone']) ? $employee['next_of_kin_phone'] : ''; ?>"/>
+                                                    <input type="text" class="form-control" name="next_of_kin_phone" maxlength="100"
+                                                           value="<?php  if(isset($employee['next_of_kin_phone'])) {echo $employee['next_of_kin_phone'];}  elseif(isset($form_data['next_of_kin_phone'])){ echo $form_data['next_of_kin_phone']; } ?>"/>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -354,7 +372,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Next of kin mobile phone</label>
-                                                    <input type="text" class="form-control" name="next_of_kin_mobile" value="<?php echo isset($employee['next_of_kin_mobile']) ? $employee['next_of_kin_mobile'] : ''; ?>"/>
+                                                    <input type="text" class="form-control" name="next_of_kin_mobile" maxlength="100"
+                                                           value="<?php  if(isset($employee['next_of_kin_mobile'])) {echo $employee['next_of_kin_mobile'];}  elseif(isset($form_data['next_of_kin_mobile'])){ echo $form_data['next_of_kin_mobile']; } ?>"/>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -363,7 +382,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Next of kin address</label>
-                                                    <textarea class="form-control" rows="3" name="next_of_kin_address_line" ><?php echo isset($employee['next_of_kin_address_line']) ? $employee['next_of_kin_address_line'] : ''; ?></textarea>
+                                                    <textarea class="form-control" rows="3" name="next_of_kin_address_line" maxlength="300"><?php  if(isset($employee['next_of_kin_address_line'])) {echo $employee['next_of_kin_address_line'];}  elseif(isset($form_data['next_of_kin_address_line'])){ echo $form_data['next_of_kin_address_line']; } ?></textarea>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -408,13 +427,15 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Account name</label>
-                                                <input type="text" class="form-control" name="account_name" value="<?php echo isset($employee['account_name']) ? $employee['account_name'] : ''; ?>" />
+                                                <input type="text" class="form-control" name="account_name" maxlength="100"
+                                                       value="<?php  if(isset($employee['account_name'])) {echo $employee['account_name'];}  elseif(isset($form_data['account_name'])){ echo $form_data['account_name']; } ?>" />
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Account number</label>
-                                                <input type="text" class="form-control" name="account_number" value="<?php echo isset($employee['account_number']) ? $employee['account_number'] : ''; ?>" />
+                                                <input type="text" class="form-control" name="account_number" maxlength="100"
+                                                       value="<?php  if(isset($employee['account_number'])) {echo $employee['account_number'];}  elseif(isset($form_data['account_number'])){ echo $form_data['account_number']; } ?>" />
                                             </div>
                                         </div>
 
@@ -423,7 +444,8 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <button id="<?php echo isset($update_employee_button) && (!empty($update_employee_button)) ? 'save_employees' : 'save_employees'; ?>" type="submit" class="btn btn-primary btn-lg pull-right">Save Employee</button>
+                                <button id="<?php echo isset($update_employee_button) && (!empty($update_employee_button)) ? 'save_employees' : 'save_employees'; ?>"
+                                        type="submit" class="btn btn-primary btn-lg pull-right"><i class="fa fa-floppy-o"></i>Save Employee</button>
                             </div>
                         </form>
                     </div>
@@ -437,22 +459,46 @@
 <!-- /.content -->
 <script>
     $(document).ready(function () {
+        $('.select2').select2({});
+    });
+    $(document).ready(function () {
         $('#date_of_join').datepicker({
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            autoclose: true
         });
         $('#date_of_birth').datepicker({
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            autoclose: true
         });
 
         $("#nationality").change(function () {
             var country = $('#nationality').val();
+            var base_url = $('#base').val();
             $.ajax({
-                url: '/isms/students/get_state/' + country,
+                url: base_url+'employee/get_state/' + country,
                 cache: false,
                 success: function (response) {
                     if (response.success) {
                         $('#country_states').empty();
                         $('#country_states').append(response.states_html);
+                    } else {
+                        toastr["warning"](response.message);
+                    }
+                }
+            });
+        });
+
+        $("#country_states").change(function () {
+            var state = $('#country_states').val();
+            var base_url = $('#base').val();
+            $.ajax({
+                url: base_url+'employee/get_origin/' + state,
+                cache: false,
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        $('#lga_of_origin').empty();
+                        $('#lga_of_origin').append(response.origin_html);
                     } else {
                         toastr["warning"](response.message);
                     }

@@ -59,6 +59,11 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/custom.css">
 
   <script src="<?php echo base_url(); ?>assets/plugins/jquery/jquery.min.js"></script>
+
+  <!-- Stripe JavaScript library -->
+  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">

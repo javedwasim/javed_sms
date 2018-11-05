@@ -3,12 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Subjects extends MY_Controller
 {
+    protected $user_name;
     function __construct() {
         parent::__construct();
+
         $this->load->model('Subject_model');
         $this->load->model('Batches_model');
         $this->load->helper('content-type');
-
+        $user_data = $this->session->userdata('userdata');
+        $this->user_name = $user_data['name'];
     }
 
     public function index(){
@@ -27,6 +30,24 @@ class Subjects extends MY_Controller
         $record['subjects'] = $this->Subject_model->get_all_subjects();
         $record['batches'] = $this->Subject_model->get_all_batches();
         $record['employees'] = $this->Subject_model->get_all_employees();
+        $json['subject_html'] = $this->load->view('subjects/list', $record, true);
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
+
+    public function batch_subject()
+    {
+        $data = $this->input->post();
+        $batch_no = $data['batch_no'];
+        $detail = $this->Subject_model->get_batch_subject($batch_no);
+        $record['elective_subjects'] = $detail['elective_subjects'];
+        $record['core_subjects'] = $detail['core_subjects'];
+        $record['groups'] = $this->Subject_model->get_elective_group();
+        $record['subjects'] = $this->Subject_model->get_all_subjects();
+        $record['batches'] = $this->Subject_model->get_all_batches();
+        $record['employees'] = $this->Subject_model->get_all_employees();
+        $record['batch_no'] = $data['batch_no'];
         $json['subject_html'] = $this->load->view('subjects/list', $record, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -156,10 +177,21 @@ class Subjects extends MY_Controller
         $data['assigned_employee']=$this->Batches_model->get_assigned_employees($id);
         $data['categories']=$this->Subject_model->get_assessment_categories();
         $result=$this->Subject_model->get_score_sheet($id);
-        //echo "<pre>"; print_r($result[0]); die();
+        //echo "<pre>"; print_r($result); die();
         $data['score_sheet']=$result;
-        $data['score_term']=$result[0]['score_term'];
-        $data['score_points']=$result[0]['score_points'];
+        if(isset($result[0]['score_term'])){
+            $data['score_term']=$result[0]['score_term'];
+        }else{
+            $data['score_term'] = '';
+        }
+
+        if(isset($result[0]['score_points'])){
+            $data['score_points'] = $result[0]['score_points'];
+        }else{
+            $data['score_points'] = '';
+        }
+
+
         $data['subject_detail_id']=$id;
         $this->load->view('subjects/detail', $data);
     }
@@ -341,6 +373,26 @@ class Subjects extends MY_Controller
 
     }
 
-
-
+    public function saveStudentScoreSheet(){
+        $data = $this->input->post();  //print_r($data);
+        $this->load->library('form_validation');
+        $this->load->helper('security');
+        $this->form_validation->set_rules('score', 'Score', 'required|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            $json['error'] = true;
+            $json['message'] = validation_errors();
+        }elseif($data['score']>$data['points']){
+            $json['error'] = true;
+            $json['message'] = "Score must be less then or equal to assessment.";
+        }else {
+           $result =  $this->Subject_model->saveStudentScore($data);
+            if($result){
+                $json['success'] = true;
+                $json['message'] = "Score save successfully!";
+            }
+        }
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
 }

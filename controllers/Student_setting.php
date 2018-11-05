@@ -33,9 +33,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 if ($result) {
                     $json['success'] = true;
                     $json['message'] = "Category successfully added.";
+                    $data['categories'] = $this->Student_model->get_all_student_categories();
+                    $json['student_html'] = $this->load->view('student/student_categories', $data, true);
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
             }
             if($this->input->is_ajax_request()) {
@@ -58,14 +60,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             } else {
                 $result = $this->Student_model->update_category($data['category'],$data['category_id']);
                 if ($result) {
-                    $data['categories'] = $this->Student_model->get_all_student_categories();
-                    $json['student_html'] = $this->load->view('student/student_categories', $data, true);
                     $json['success'] = true;
-                    $json['message'] = "Category successfully added.";
+                    $json['message'] = "Category successfully updated.";
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
+
+                $data['categories'] = $this->Student_model->get_all_student_categories();
+                $json['student_html'] = $this->load->view('student/student_categories', $data, true);
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);

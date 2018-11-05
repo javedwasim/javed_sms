@@ -32,22 +32,22 @@
                 <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Listing Assessment Categories</h3>
+                            <h3 class="card-title">Assessment Categories</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">  
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#add_assessment_category"><i class="fa fa-plus"></i>New payment method</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#add_assessment_category"><i class="fa fa-plus"></i>New assessment</a>
                                 </div>
                             </div>
                             <table id="account-table" class="table table-bordered table-striped">
                                 <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Abbreviation</th>
-                                    <th data-orderable="false">Operations</th>
-                                </tr>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Abbreviation</th>
+                                        <th data-orderable="false" style="width: 10%">Actions</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($assessments as $assessment){ ?>
@@ -58,9 +58,9 @@
                                                 <a class="edit-assessment-category btn btn-info btn-xs"
                                                    data-name="<?php echo $assessment['name']; ?>"
                                                    href="javascript:void(0)" data-abbreviation="<?php echo $assessment['abbreviation'] ?>"
-                                                   data-href="<?php echo $assessment['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                                   data-href="<?php echo $assessment['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                                 <a class="delete-assessment-category btn btn-danger btn-xs" href="#"
-                                                   data-href="<?php echo site_url('assessment/delete_assessment_category/').$assessment['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                                   data-href="<?php echo site_url('assessment/delete_assessment_category/').$assessment['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -106,7 +106,8 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_assessment_category" type="submit" class="btn btn-default">Save Assessment Category</button>
+                    <button id="save_assessment_category" type="submit" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Assessment Category</button>
                 </div>
             </form>
         </div>
@@ -147,10 +148,18 @@
 
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="update_assessment" type="submit" class="btn btn-default">Save Assessment Category</button>
+                        <button id="update_assessment" type="submit" class="btn btn-primary">
+                            <i class="fa fa-floppy-o"></i> Update Assessment Category</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#account-table").DataTable({ });
+
+    });
+</script>

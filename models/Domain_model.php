@@ -325,4 +325,9 @@ Class Domain_model extends CI_Model {
         $this->db->where('id', $id)->delete('student_categories');
         return $this->db->affected_rows();
     }
+
+    public function delete_domain_group($id) {
+        $this->db->where('id', $id)->delete('domain_goup');
+        return $this->db->affected_rows();
+    }
 }

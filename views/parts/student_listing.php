@@ -4,12 +4,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Search</h1>
+                    <h1 class="m-0 text-dark">Students</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">student search</li>
+                        <li class="breadcrumb-item active">students</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -21,18 +21,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-
                     <div id="student_error" style="display: none;" class="alert alert-danger alert-dismissible"
                          role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     </div>
-
-
                     <div id="student_success" style="display: none;" class="alert alert-success alert-dismissible"
                          role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     </div>
-
                 </div>
             </div>
             <div class="row">
@@ -45,18 +41,10 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <button type="button" class="btn btn-primary" id="list_itmes_students"><i
-                                                class="fa fa-plus"></i>Add Student
+                                    <button type="button" class="btn btn-primary"
+                                            id="list_itmes_add_student" data-func-call="add_student">
+                                        <i class="fa fa-plus"></i>Add Student
                                     </button>
-                                </div>
-                                <div class="col-md-3 offset-md-5">
-                                    <div class="form-group float-right">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="" class="show-more">
-                                                Show more</label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <hr/>
@@ -66,30 +54,36 @@
                                         <div class="form-group">
                                             <label> Search</label>
                                             <input type="text" name="search-employee" id="search-employee"
-                                                   onchange="student_filters()" class="form-control"
+                                                   onchange="student_filters()" class="form-control st_filter"
                                                    value="<?php echo isset($filters['search-employee']) ? $filters['search-employee'] : ''; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <select class="form-control" name="status" onchange="student_filters()">
-                                                <option value="">Please select</option>
+                                            <select class="form-control st_filter" name="status" onchange="student_filters()">
+                                                <option value="">All</option>
                                                 <option value="1"
-                                                    <?php echo isset($filters['status'])&&($filters['status']==1)?'selected':'';?>>Active</option>
+                                                    <?php echo isset($filters['status']) && ($filters['status'] == 1) ? 'selected' : ''; ?>>
+                                                    Active
+                                                </option>
                                                 <option value="2"
-                                                    <?php echo isset($filters['status'])&&($filters['status']==2)?'selected':'';?>>Graduated</option>
+                                                    <?php echo isset($filters['status']) && ($filters['status'] == 2) ? 'selected' : ''; ?>>
+                                                    Graduated
+                                                </option>
                                                 <option value="3"
-                                                    <?php echo isset($filters['status'])&&($filters['status']==3)?'selected':'';?>>Dropped</option>
+                                                    <?php echo isset($filters['status']) && ($filters['status'] == 3) ? 'selected' : ''; ?>>
+                                                    Dropped
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Batch</label>
-                                            <select prompt="Select Batch" class="form-control"
+                                            <select prompt="Select Batch" class="form-control st_filter"
                                                     required="required" name="batch_no" onchange="student_filters()">
-                                                <option value=""></option>
+                                                <option value="">All</option>
                                                 <?php $priorGroup = "";
                                                 foreach ($batches
 
@@ -108,20 +102,22 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 filter-toggle">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Course</label>
-                                            <select class="form-control">
-                                                <option value="">Please select</option>
-                                                <option>c1</option>
-                                                <option>c2</option>
+                                            <select class="form-control st_filter" name="course" onchange="student_filters()">
+                                                <option value="">All</option>
+                                                <?php foreach ($subjects as $subject): ?>
+                                                    <option value="<?php echo $subject['id'] ?>"
+                                                        <?php echo isset($filters['course']) && ($filters['course'] == $subject['id']) ? 'selected' : ''; ?>><?php echo $subject['name']; ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 filter-toggle">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Gender</label>
-                                            <select class="form-control" name="gender" onchange="student_filters()">
+                                            <select class="form-control st_filter" name="gender" onchange="student_filters()">
                                                 <option value="">Please select</option>
                                                 <option value="Male"<?php echo isset($filters['gender']) && ($filters['gender'] == 'Male') ? 'selected' : ''; ?>>
                                                     Male
@@ -132,96 +128,56 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 filter-toggle">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Student Category</label>
-                                            <select class="form-control">
+                                            <select class="form-control st_filter">
                                                 <option value="">All</option>
                                                 <option value="3">Islamiya</option>
                                                 <option value="1">hostal</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 filter-toggle">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Due Fee Balance</label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <select class="form-control">
-                                                        <option value="">&gt;</option>
-                                                        <option value="3">&lt;</option>
+                                                    <select class="form-control st_filter" name="fee_paid_filter" onchange="student_filters()">
+                                                        <option value="greater"<?php echo isset($filters['fee_paid_filter']) && ($filters['fee_paid_filter']=='greater') ? 'selected' : ''; ?>>&gt;</option>
+                                                        <option value="less"<?php echo isset($filters['fee_paid_filter']) && ($filters['fee_paid_filter']=='less') ? 'selected' : ''; ?>>&lt;</option>
                                                     </select>
                                                 </div>
-                                                <input type="text" class="form-control"
-                                                       aria-label="Text input with dropdown button">
+                                                <input type="text" class="form-control st_filter" value="<?php echo isset($filters['fee_paid']) ? $filters['fee_paid'] : ''; ?>"
+                                                       aria-label="Text input with dropdown button" name="fee_paid" onchange="student_filters()">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 filter-toggle">
-                                        <div class="form-group">
-                                            <label>Wallet balance</label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <select class="form-control">
-                                                        <option value="">&gt;</option>
-                                                        <option value="3">&lt;</option>
-                                                    </select>
-                                                </div>
-                                                <input type="text" class="form-control"
-                                                       aria-label="Text input with dropdown button">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 filter-toggle">
+                                    <div class="col-md-3">
                                         <label>Date Admitted</label>
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                             </div>
-                                            <input type="text" class="form-control datepicker" id="admit_date"
+                                            <input type="date" class="form-control st_filter" id="admit_date"
                                                    name="admit_date" onchange="student_filters()"
                                                    value="<?php echo isset($filters['admit_date']) ? $filters['admit_date'] : ''; ?>">
                                         </div>
                                     </div>
-                                    <div class="col-md-3 filter-toggle">
+                                    <div class="col-md-3">
                                         <label>Date of Birth</label>
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                             </div>
-                                            <input type="text" class="form-control datepicker" id="emp-li-dob"
-                                                   name="dob" onchange="student_filters()"
-                                                   value="<?php echo isset($filters['dob']) ? $filters['dob'] : ''; ?>">
+                                            <input type="date" class="form-control st_filter" id="st_dob" onchange="student_filters()"
+                                                   name="dob" value="<?php echo isset($filters['dob']) ? $filters['dob'] : ''; ?>">
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-4 filter-toggle">
-                                      <div class="form-group filter-toggle">
-                                        <label>Show more fields</label>
-                                        <select class="form-control select2" multiple="multiple" data-placeholder="Show more fields" id="st-ml" style="width: 100%;">
-                                          <option value="1">Address</option>
-                                          <option value="2">Admission date</option>
-                                          <option value="3">Batch</option>
-                                          <option value="4">Blood group</option>
-                                          <option value="5">Class set</option>
-                                          <option value="6">Date left</option>
-                                          <option value="7">Date of birth</option>
-                                          <option value="8">Due fees balance</option>
-                                          <option value="9">Email</option>
-                                          <option value="10">Last updated</option>
-                                          <option value="11">Mobile phone</option>
-                                          <option value="12">Nationality</option>
-                                          <option value="13">Phone</option>
-                                          <option value="14">Registration started</option>
-                                          <option value="15">Religion</option>
-                                          <option value="16">Wallet balance</option>
-                                        </select>
-                                      </div>
-                                    </div> -->
                                     <div class="col-md-3">
                                         <div class="form-group mt-3">
-                                            <button type="button" class="btn btn-info btn-md" id="filter"><i
-                                                        class="fa fa-search"></i>Search
+                                            <button type="button" class="btn btn-primary btn-md" id="filter" onclick="return resetForm()">
+                                                <i class="fa fa-refresh"></i>Reset
                                             </button>
                                         </div>
                                     </div>
@@ -239,8 +195,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <table id="student-b-table" class="table table-bordered table-striped nowrap"
-                                   style="width: 100%;">
+                            <table id="student-b-table" class="table table-bordered table-striped" style="width: 100%;">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -267,8 +222,9 @@
                                 <?php foreach ($students as $student) { ?>
                                     <tr>
                                         <td>
-                                            <a class="prof-link"
-                                               href="<?php echo site_url('students/student_profile/') . $student['student_id'] ?>"><?php echo $student['surname'] . ', ' . $student['first_name'] ?></a>
+                                            <a class="prof-link std_profile"
+                                               data-student-id = "<?php echo $student['student_id']; ?>"
+                                               data-href="<?php echo site_url('students/profile/') . $student['student_id'] ?>"><?php echo $student['surname'] . ', ' . $student['first_name'] ?></a>
                                         </td>
                                         <td class="visibility">
                                             <?php echo $student['address_line']; ?>
@@ -319,9 +275,13 @@
 
                                         </td>
                                         <td>
-                                            <!-- use function to pass edit url -->
-                                            <a class="edit-studentsss btn btn-info btn-xs" href="javascript:void(0)"><i
-                                                        class="fa fa-user-plus"></i> Select</a>
+                                            <div class="material-switch pull-right">
+                                                <input id="<?php echo "s".$student['student_id']; ?>" name="<?php echo "s".$student['student_id']; ?>"
+                                                       type="checkbox" class="select-student"
+                                                       data-student-id = "<?php  echo $student['student_id'];  ?>"
+                                                       data-action="<?php echo site_url('students/select_student') ?>" />
+                                                <label for="<?php  echo "s".$student['student_id'];  ?>" class="label-info switch"></label>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -346,90 +306,111 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Title</label>
-                                    <input type="text" name="" class="form-control" placeholder="Stident List"
-                                           maxlength="15">
+                    <form id="inst_item_form_modal" method="post" role="form" target="_blank"
+                          action="<?php echo base_url(); ?>students/createPdf" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" name="" class="form-control" placeholder="Student List" maxlength="50">
+                                    </div>
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="col-md-12">
-                                <div class="form-group">
+                                <hr>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Check All:&nbsp;<input type="checkbox" class="checkbox" id="checkAll"/></label>
+                                      </div>
+                                </div>
+                                <hr>
+                                <div class="col-md-12 mb-3">
+                                    <h5>Fields to show</h5>
+                                </div>
+                                <div class="col-md-5 offset-md-1">
                                     <div class="checkbox">
-                                        <label>Show numbering</label>
-                                        <input type="checkbox" data-toggle="toggle">
+                                        <label><input type="checkbox" class="field_to_show" value="address_line" name="student_fields[]">Address</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="batch_no" name="student_fields[]">Batch</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="date_of_birth" name="student_fields[]">Date of birth</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="email" name="student_fields[]">Email</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="mobile_phone" name="student_fields[]">Mobile phone</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="phone" name="student_fields[]">Phone</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="religion" name="student_fields[]">Religion</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="admission_date" name="student_fields[]">Admission date</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="blood_group" name="student_fields[]">Blood group</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="nationality" name="student_fields[]">Nationality</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="created" name="student_fields[]">Registration started</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="field_to_show" value="" name="student_fields[]">Wallet balance</label>
                                     </div>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="col-md-12 mb-3">
-                                <h5>Fields to show</h5>
-                            </div>
-                            <div class="col-md-5 offset-md-1">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Address</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Batch</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Class set</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Date of birth</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Email</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Mobile phone</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Phone</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Religion</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Admission date</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Blood group</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Date left</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Due fees balance</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Last updated</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Nationality</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Registration started</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="">Wallet balance</label>
-                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-md-6 text-center">
+                                <button type="submit" class="btn btn-danger waves-effect waves-light"
+                                        id="generate_pdf_student">Generate PDF</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="col-md-6 text-center">
-                            <a href="<?php echo base_url(); ?>students/createPdf" target="_blank" type="button"
-                               class="btn btn-primary">Generate PDF</a>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 </div>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document.body).on('click', '#list_itmes_add_student', function(){
+            get_students($(this).attr('data-func-call'));
+        });
+        $("#checkAll").change(function () {
+            $(".field_to_show:checkbox").prop('checked', $(this).prop("checked"));
+        });
+
+
+        $('#st_dobd').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        }).on("change", function() {
+            $('#st_dob').hide();
+                student_filters();
+                return;
+        });
+
+    });
+    $(function() {
+        $('#toggle-event').change(function() {
+            $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+        });
+    });
+    
+    function resetForm() {
+        $('.st_filter').val('');
+        student_filters();
+    }
+
+</script>

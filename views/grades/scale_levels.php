@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listing Grade Scale Levels</h1>
+                    <h1 class="m-0 text-dark">Grade Scale Levels</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -41,7 +41,7 @@
                                     <a href="<?php echo site_url('grade_scale/grades')?>" class="btn btn-info btn-rounded mb-4"><i class="fa fa-angle-double-left"></i>Grades</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="" class="btn btn-default btn-rounded mb-4 pull-right" data-toggle="modal" data-target="#add_scale_level"><i class="fa fa-plus"></i>New Scale Level</a>
+                                    <a href="" class="btn btn-primary btn-rounded mb-4 pull-right" data-toggle="modal" data-target="#add_scale_level"><i class="fa fa-plus"></i>New Scale Level</a>
                                 </div>
                             </div>
                             <table id="account-table" class="table table-bordered table-striped datatables" width="100%">
@@ -50,7 +50,7 @@
                                     <th>Name</th>
                                     <th>Min Percentage</th>
                                     <th>Remark</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 9%;">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -66,9 +66,11 @@
                                                    data-percent="<?php echo $scale['min_percentage'] ?>"
                                                    data-scale-id="<?php echo $scale['grade_scale_id'] ?>"
                                                    data-remaks="<?php echo $scale['remarks'] ?>"
-                                                   data-href="<?php echo $scale['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+                                                   data-href="<?php echo $scale['id']; ?>">
+                                                   <i class="fa fa-edit icon-margin" title="Edit"></i></a>
                                                 <a class="delete-grade-scale-level btn btn-danger btn-xs" href="javascript:void(0)"
-                                                   data-href="<?php echo site_url('grade_scale/delete_scale_level/').$scale['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                                   data-href="<?php echo site_url('grade_scale/delete_scale_level/').$scale['id'] ?>">
+                                                   <i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -86,7 +88,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">New Grade Scale</h4>
+                <h4 class="modal-title w-100 font-weight-bold">New Grade Scale Level</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -118,7 +120,8 @@
                         <textarea class="form-control" name="remarks"></textarea>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="save_scale_level" type="submit" class="btn btn-default">Save Scale</button>
+                        <button id="save_scale_level" type="submit" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add Scale</button>
                     </div>
                 </form>
             </div>
@@ -163,10 +166,17 @@
                         <textarea class="form-control" id="level_remarks" name="remarks"></textarea>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="update_scale_level" type="submit" class="btn btn-default">Save Scale</button>
+                        <button id="update_scale_level" type="submit" class="btn btn-primary">
+                            <i class="fa fa-floppy-o"></i> Update Scale</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#account-table").DataTable({ });
+
+    });
+</script>

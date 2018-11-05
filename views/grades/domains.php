@@ -32,13 +32,13 @@
                 <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Listing Domain Groups</h3>
+                            <h3 class="card-title">Domain Groups</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">  
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="<?php echo site_url('domains/add_domain_group_view/'); ?>" class="btn btn-default btn-rounded mb-4">
+                                    <a href="<?php echo site_url('domains/add_domain_group_view/'); ?>" class="btn btn-primary btn-rounded mb-4">
                                         <i class="fa fa-plus"></i> Add Behavioural Domain Group</a>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                     <th>Type</th>
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th data-orderable="false">Operations</th>
+                                    <th data-orderable="false" style="width: 9%">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -62,10 +62,11 @@
                                             <td>
                                                 <a class="btn btn-info btn-xs"
                                                    href="<?php echo site_url('domains/edit_domain_group_view/').$domain['id']; ?>">
-                                                   Edit<i class="fa fa-edit" title="Edit"></i>
+                                                   <i class="fa fa-edit icon-margin" title="Edit"></i>
                                                 </a>
-                                                <a class="delete-assessment-category btn btn-danger btn-xs" href="#"
-                                                   data-href="<?php echo site_url('assessment/delete_assessment_category/').$domain['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                                                <a class="delete-domain-group btn btn-danger btn-xs" href="#"
+                                                   data-href="<?php echo site_url('domains/delete_domain_group/').$domain['id'] ?>">
+                                                   <i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -127,7 +128,8 @@
                         <textarea class="form-control" name="description"></textarea>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="save_assessment_category" type="submit" class="btn btn-default">Save Assessment Category</button>
+                        <button id="save_assessment_category" type="submit" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add Assessment Category</button>
                     </div>
                 </form>
             </div>
@@ -169,7 +171,8 @@
 
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="update_assessment" type="submit" class="btn btn-default">Save Assessment Category</button>
+                        <button id="update_assessment" type="submit" class="btn btn-primary">
+                            <i class="fa fa-floppy-o"></i> Update Assessment Category</button>
                     </div>
                 </div>
             </form>

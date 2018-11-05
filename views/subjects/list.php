@@ -1,3 +1,7 @@
+<?php
+$user_data = $this->session->userdata('userdata');
+$user_name = $user_data['name'];
+?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -40,35 +44,38 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <form rol="form" style="width: 100%;" id="student_form_filters">
+                                    <form rol="form" style="width: 100%;" id="batch_subject_form">
                                         <div class="row">
-<!--                                            <div class="col-md-4">-->
-<!--                                                <div class="form-group">-->
-<!--                                                    <label>Status</label>-->
-<!--                                                    <select class="form-control">-->
-<!--                                                        <option value="">Please select</option>-->
-<!--                                                        <option>Active</option>-->
-<!--                                                        <option>Left institution</option>-->
-<!--                                                    </select>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-md-4">-->
-<!--                                                <div class="form-group">-->
-<!--                                                    <label>Status</label>-->
-<!--                                                    <select class="form-control">-->
-<!--                                                        <option value="">Please select</option>-->
-<!--                                                        <option>Active</option>-->
-<!--                                                        <option>Left institution</option>-->
-<!--                                                    </select>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-md-4">-->
-<!--                                                <div class="form-group mt-3">-->
-<!--                                                    <button type="button" class="btn btn-info btn-md" id="filter"><i-->
-<!--                                                                class="fa fa-search"></i>Search-->
-<!--                                                    </button>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Batch</label>
+                                                    <select prompt="Select Batch" class="form-control st_filter"
+                                                            required="required" name="batch_no">
+                                                        <option value="0">All</option>
+                                                        <?php $priorGroup = "";
+                                                        foreach ($batches
+
+                                                        as $batch){ ?>
+                                                        <?php if ($batch["session"] != $priorGroup){ ?>
+                                                        <optgroup label="<?php echo $batch['session']; ?>">
+                                                            <?php } ?>
+                                                            <option value="<?php echo $batch['id']; ?>"<?php echo isset($batch_no) && ($batch_no == $batch['id']) ? 'selected' : ''; ?> >
+                                                                <?php echo $batch['code'] . '-' . $batch['arm'] . '(' . $batch['session'] . ')' ?>
+                                                            </option>
+                                                            <?php $priorGroup = $batch["session"];
+                                                            }
+                                                            if ($batch["session"] != $priorGroup) {
+                                                                echo '</optgroup>';
+                                                            } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group mt-3">
+                                                    <button type="button" class="btn btn-primary btn-md" id="filter" onclick="return batch_filter()">
+                                                        <i  class="fa fa-search"></i>View Subjects</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -121,20 +128,22 @@
                                             <td><?php echo $detail['max_weekly_class']; ?></td>
                                             <td><?php echo $detail['emp_count']; ?></td>
                                             <td>
-                                                <a class="btn btn-light btn-xs"
-                                                   href="javascript:void(0)"
-                                                   data-batch-id="<?php echo $detail['batch_id']; ?>"
-                                                   data-action="<?php echo site_url()."subjects/assigned_employees/".$detail['id'];  ?>"
-                                                   data-href="<?php echo $detail['id']; ?>">
-                                                   Assign Employee<i class="fa fa-user" title="Assign Employee"></i></a>
-                                                <a class="edit_subject btn btn-info btn-xs"
-                                                   href="javascript:void(0)"
-                                                   data-batch-id="<?php echo $detail['batch_id']; ?>"
-                                                   data-href="<?php echo $detail['id']; ?>">
-                                                    Edit<i class="fa fa-edit" title="Edit"></i></a>
-                                                <a href="javascript:void(0)" data-href="<?php echo site_url('subjects/delete/').$detail['id']; ?>"
-                                                    class="btn btn-danger btn-xs waves-effect waves-light delete_subject_detail">
-                                                    <i class="fa fa-remove"></i>Delete</a>
+                                                <?php if(isset($user_name) && ($user_name=='admin')): ?>
+                                                    <a class="btn btn-light btn-xs"
+                                                       href="javascript:void(0)"
+                                                       data-batch-id="<?php echo $detail['batch_id']; ?>"
+                                                       data-action="<?php echo site_url()."subjects/assigned_employees/".$detail['id'];  ?>"
+                                                       data-href="<?php echo $detail['id']; ?>">
+                                                       Assign Employee<i class="fa fa-user" title="Assign Employee"></i></a>
+                                                    <a class="edit_subject btn btn-info btn-xs"
+                                                       href="javascript:void(0)"
+                                                       data-batch-id="<?php echo $detail['batch_id']; ?>"
+                                                       data-href="<?php echo $detail['id']; ?>">
+                                                       <i class="fa fa-edit icon-margin" title="Edit"></i></a>
+                                                    <a href="javascript:void(0)" data-href="<?php echo site_url('subjects/delete/').$detail['id']; ?>"
+                                                        class="btn btn-danger btn-xs waves-effect waves-light delete_subject_detail">
+                                                        <i class="fa fa-trash icon-margin"></i></a>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -172,20 +181,22 @@
                                         <td><?php echo $detail['max_weekly_class']; ?></td>
                                         <td><?php echo $detail['emp_count']; ?></td>
                                         <td>
-                                            <a class="btn btn-light btn-xs"
-                                               href="javascript:void(0)"
-                                               data-batch-id="<?php echo $detail['batch_id']; ?>"
-                                               data-action="<?php echo site_url()."subjects/assigned_employees/".$detail['id'];  ?>"
-                                               data-href="<?php echo $detail['id']; ?>">
-                                                Assign Employee<i class="fa fa-user" title="Assign Employee"></i></a>
-                                            <a class="edit_subject btn btn-info btn-xs"
-                                               href="javascript:void(0)"
-                                               data-batch-id="<?php echo $detail['batch_id']; ?>"
-                                               data-href="<?php echo $detail['id']; ?>">
-                                                Edit<i class="fa fa-edit" title="Edit"></i></a>
-                                            <a href="javascript:void(0)" data-href="<?php echo site_url('subjects/delete/').$detail['id']; ?>"
-                                               class="btn btn-danger btn-xs waves-effect waves-light delete_subject_detail">
-                                               <i class="fa fa-remove"></i>Delete</a>
+                                            <?php if(isset($user_name) && ($user_name=='admin')): ?>
+                                                <a class="btn btn-light btn-xs"
+                                                   href="javascript:void(0)"
+                                                   data-batch-id="<?php echo $detail['batch_id']; ?>"
+                                                   data-action="<?php echo site_url()."subjects/assigned_employees/".$detail['id'];  ?>"
+                                                   data-href="<?php echo $detail['id']; ?>">
+                                                    Assign Employee<i class="fa fa-user" title="Assign Employee"></i></a>
+                                                <a class="edit_subject btn btn-info btn-xs"
+                                                   href="javascript:void(0)"
+                                                   data-batch-id="<?php echo $detail['batch_id']; ?>"
+                                                   data-href="<?php echo $detail['id']; ?>">
+                                                   <i class="fa fa-edit icon-margin" title="Edit"></i></a>
+                                                <a href="javascript:void(0)" data-href="<?php echo site_url('subjects/delete/').$detail['id']; ?>"
+                                                   class="btn btn-danger btn-xs waves-effect waves-light delete_subject_detail">
+                                                   <i class="fa fa-trash icon-margin"></i></a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -200,13 +211,12 @@
 
         </div><!-- /.container-fluid -->
     </section>
-
     <div class="modal fade" id="new_subject" tabindex="-1" role="dialog" aria-labelledby="new_subject_label"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New Subject</h5>
+                    <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">New Subject</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -258,9 +268,11 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="save_subject">
-                            <i class="fa fa-floppy-o"></i>Save Batch
-                        </button>
+                        <div class="col-md-12" style="text-align: center">
+                            <button type="submit" class="btn btn-primary" id="save_subject">
+                                <i class="fa fa-plus"></i>Add Subject
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -347,8 +359,6 @@
             </div>
         </div>
     </div>
-
-
     <script>
         $(function () {
 
@@ -395,7 +405,6 @@
             });
             return false;
         });
-
         $('#add_subject_role').click(function () {
             var fieldHTML = '<div class="form-row"><div class="form-group col-md-4">' +
                 '<select id="employee" name="employee[]" class="form-control">' +
@@ -417,9 +426,7 @@
                 '</div></div>';
 
             $('.assign_employee').append(fieldHTML); //Add field html
-
         });
-
         $(document.body).on('click', '.btn-light', function(){
             $.ajax({
                 url: $(this).attr('data-action'),
@@ -438,7 +445,6 @@
             });
             return false;
         });
-
         //Once remove button is clicked
         $('.assign_employee').on('click', '.remove_button', function(e){
             e.preventDefault();

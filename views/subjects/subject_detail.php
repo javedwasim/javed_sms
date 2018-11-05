@@ -99,7 +99,7 @@
                                                 <div class="col-12">
                                                     <div class="table-responsive">
                                                         <?php //print_r($score_sheet); ?>
-                                                        <table class="table table-bordered table-striped table-info">
+                                                        <table class="table table-bordered nowrap responsive table-info">
                                                             <thead>
                                                                 <tr>
                                                                     <th rowspan="2" style="background-color: #31bc86; color: #fff"><strong>Name</strong></th>
@@ -109,18 +109,45 @@
                                                                     <?php endforeach; ?>
                                                                 </tr>
                                                                 <tr>
-                                                                    <?php $points = explode(',',$score_points); foreach ($points as $point):  ?>
+                                                                    <?php $points = explode(',',$score_points); foreach ($points as $point):; ?>
                                                                         <th class="bg-gray-light"><strong><?php echo $point; ?></strong></th>
                                                                     <?php endforeach; ?>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <?php foreach ($score_sheet as $sheet): ?>
+                                                                <?php foreach ($score_sheet as $sheet): //$rpoints  = explode(',',$sheet['obtain_score']); ?>
                                                                     <tr>
-                                                                        <th scope="row"><code><?php echo $sheet['surname'].", ".$sheet['first_name'][0].".".$sheet['last_name'][0] ?></code></th>
-                                                                        <td class="is-visible">EX</td>
-                                                                        <td class="is-hidden">EX</td>
-                                                                        <td class="is-hidden">EX</td>
+                                                                        <th scope="row"><code><?php echo $sheet['surname'].", ".$sheet['first_name'].".".$sheet['last_name']; ?></code></th>
+                                                                        <td class="is-visible" contenteditable="true"
+                                                                            onBlur="saveToDatabase(this,
+                                                                                    '<?php echo $sheet['student_id']; ?>',
+                                                                                    '<?php echo $sheet['subj_detail_id']; ?>',
+                                                                                    '<?php echo $sheet['bacth_id']; ?>',
+                                                                                    '<?php echo isset($score_detail[0])?$score_detail[0]:''; ?>',
+                                                                                    '<?php echo isset($points[0])?$points[0]:''; ?>')"
+                                                                            onClick="showEdit(this);">
+                                                                            <?php echo isset($sheet['first_value'])?$sheet['first_value']:''; ?>
+                                                                        </td>
+                                                                        <td class="is-visible" contenteditable="true"
+                                                                            onBlur="saveToDatabase(this,
+                                                                                    '<?php echo $sheet['student_id']; ?>',
+                                                                                    '<?php echo $sheet['subj_detail_id']; ?>',
+                                                                                    '<?php echo $sheet['bacth_id']; ?>',
+                                                                                    '<?php echo isset($score_detail[1])?$score_detail[1]:''; ?>',
+                                                                                    '<?php echo isset($points[1])?$points[1]:''; ?>')"
+                                                                            onClick="showEdit(this);">
+                                                                            <?php echo isset($sheet['second_value'])?$sheet['second_value']:''; ?>
+                                                                        </td>
+                                                                        <td class="is-visible" contenteditable="true"
+                                                                            onBlur="saveToDatabase(this,
+                                                                                    '<?php echo $sheet['student_id']; ?>',
+                                                                                    '<?php echo $sheet['subj_detail_id']; ?>',
+                                                                                    '<?php echo $sheet['bacth_id']; ?>',
+                                                                                    '<?php echo isset($score_detail[2])?$score_detail[2]:''; ?>',
+                                                                                    '<?php echo isset($points[2])?$points[2]:''; ?>')"
+                                                                            onClick="showEdit(this);">
+                                                                            <?php echo isset($sheet['third_value'])?$sheet['third_value']:''; ?>
+                                                                        </td>
                                                                     </tr>
                                                                 <?php endforeach; ?>
                                                             </tbody>
@@ -152,7 +179,7 @@
                                                         <th>Category</th>
                                                         <th>Pb.Scores?</th>
                                                         <th>FG?</th>
-                                                        <th></th>
+                                                        <th style="width: 9%">Actions</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -183,16 +210,14 @@
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <a class="btn btn-xs btn-success edit_assessment"
+                                                                <a class="btn btn-xs btn-info edit_assessment"
                                                                    data-href="<?php echo base_url() . "subjects/edit_assessment/" . $assessment['id']; ?>">
-                                                                    Edit<i class="fa fa-edit"></i>
-                                                                </a>
+                                                                   <i class="fa fa-edit icon-margin"></i></a>
                                                                 <a class="btn btn-xs btn-danger delete-assessment"
                                                                    data-assessment-id="<?php echo $assessment['id']; ?>"
                                                                    data-subject-detail-id="<?php echo $assessment['subject_detail_id']; ?>"
                                                                    data-href="<?php echo base_url() . "subjects/delete_assessment"; ?>">
-                                                                    Delete<i class="fa fa-remove"></i>
-                                                                </a>
+                                                                   <i class="fa fa-trash icon-margin"></i></a>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -221,7 +246,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Save Assessment</h5>
+                <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">Subject Assessment</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body edit_assessment_modal">
@@ -277,7 +302,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="include_final_grade" class="col-sm-2 col-form-label">Include in final grade</label>
+                        <label for="include_final_grade" class="col-sm-2 col-form-label">Include in final grade?</label>
                         <div class="col-sm-10">
                             <input type="checkbox" class="form-check-input" id="include_final_grade"
                                    name="include_final_grade" value="1">
@@ -307,7 +332,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="publish_score" class="col-sm-2 col-form-label">Include in final grade</label>
+                        <label for="publish_score" class="col-sm-2 col-form-label">Publish score?</label>
                         <div class="col-sm-10">
                             <input type="checkbox" class="form-check-input" id="publish_score" name="publish_score"
                                    value="1">
@@ -335,31 +360,11 @@
 
         $("#example1").DataTable();
         $('#due_date').datepicker({
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            autoclose: true,
         });
     });
-    $(document.body).on('click', '#save_assessment', function () {
-        $.ajax({
-            url: $('#subject_assessment_form').attr('data-action'),
-            type: 'post',
-            data: $('#subject_assessment_form').serialize(),
-            cache: false,
-            success: function (response) {
-                if (response.success) {
-                    $('#subject_assessment').empty();
-                    $('#subject_assessment').append(response.subject_html);
-                    $(".modal-backdrop").remove();
-                    $('#new_assessment').modal('hide');
-                    toastr["success"](response.message);
-                } else {
-                    toastr["error"](response.message);
-                }
 
-            }
-        });
-
-        return false;
-    });
     $(document.body).on('click', '.edit_assessment', function () {
         var url = $(this).attr('data-href');
         $.ajax({
@@ -373,32 +378,30 @@
         });
         return false;
     });
-    $(document.body).on('click', '.delete-assessment', function () {
-        var assessment_id = $(this).attr('data-assessment-id');
-        var subject_detail_id = $(this).attr('data-subject-detail-id');
-        if (confirm('Are you sure to delete this record?')) {
-            $.ajax({
-                url: $(this).attr('data-href'),
-                cache: false,
-                type: 'post',
-                data: {subject_detail_id: subject_detail_id, assessment_id: assessment_id},
-                success: function (response) {
-                    if (response.success) {
-                        $('#subject_assessment').empty();
-                        $('#subject_assessment').append(response.subject_html);
-                        $(".modal-backdrop").remove();
-                        $('#new_assessment').modal('hide');
-                        toastr["success"](response.message);
-                    } else {
-                        toastr["warning"](response.message);
-                    }
-                }
-            });
-        } else {
-            return false;
-        }
 
-        return false;
-    });
+    function showEdit(editableObj) {
+        $(".table-info td").css("background-color", "");
+        $(".table-info td").css("color", "black");
+        $(editableObj).css("background-color", "#1e88e5");
+        $(editableObj).css("color", "#FFF");
+    }
+    function saveToDatabase(editableObj, student_id, subject_detail_id,batch_id,term,points) {
+        $.ajax({
+            url: "<?php echo base_url() . 'Subjects/saveStudentScoreSheet' ?>",
+            type: "POST",
+            data: 'student_id=' + student_id +
+                  '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+
+                  '&subject_detail_id=' + subject_detail_id+'&assessment_term='+term+'&points='+points,
+            success: function (response) {
+                $(editableObj).css("background", "#FDFDFD");
+                if (response.success) {
+                    toastr["success"](response.message);
+                }else{
+                    toastr["error"](response.message);
+                }
+            }
+        });
+        $(editableObj).css("color", "#212529");
+    }
 
 </script>

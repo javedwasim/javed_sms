@@ -1,3 +1,4 @@
+<?php $user_data = $this->session->userdata('userdata'); $username = $user_data['name'];?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -26,8 +27,10 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Behavioural Scoresheet</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#demographic" data-toggle="tab">Demographics</a></li>
-                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Assign Employee</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#transfer" data-toggle="tab">Student Transfer</a></li>
+                                <?php if($username == 'admin'): ?>
+                                    <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Assign Employee</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#transfer" data-toggle="tab">Student Transfer</a></li>
+                                <?php endif; ?>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">

@@ -43,24 +43,24 @@
                                     <th>Ends</th>
                                     <th>Is holiday</th>
                                     <th>Is common</th>
-                                    <th></th>
+                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($events as $event): ?>
                                         <tr>
                                             <td><?php echo $event['title']; ?></td> 
-                                            <td><?php echo $event['start']; ?></td> 
-                                            <td><?php echo $event['end']; ?></td> 
+                                            <td><?php echo date('F j, Y',strtotime($event['start'])); ?></td>
+                                            <td><?php echo date('F j, Y',strtotime($event['end'])); ?></td>
                                             <td><?php echo $event['is_holiday']==1?'Yes':'No'; ?></td> 
                                             <td><?php echo $event['is_common']==1?'Yes':'No'; ?></td> 
                                             <td>
-                                                <a href="javascript:void(0)" data-href="<?php echo base_url()."calendar/edit_view/".$event['id']; ?>" class="btn btn-primary btn-xs add-calendar-eveent">
-                                                    <i class="fa fa-edit"></i>Edit
+                                                <a href="javascript:void(0)" data-href="<?php echo base_url()."calendar/edit_view/".$event['id']; ?>" class="btn btn-info btn-xs add-calendar-eveent">
+                                                    <i class="fa fa-edit icon-margin" title="Edit"></i>
                                                 </a>
                                                 <a href="javascript:void(0)" data-href="<?php echo site_url('calendar/delete'); ?>" data-event-id="<?php echo $event['id']; ?>"
                                                    class="btn btn-danger btn-xs waves-effect waves-light delete-event">
-                                                   <i class="fa fa-remove"></i>Delete</a>
+                                                   <i class="fa fa-trash icon-margin"  title="Delete"></i></a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

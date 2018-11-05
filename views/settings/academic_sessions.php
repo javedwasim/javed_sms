@@ -72,10 +72,9 @@
                            data-third-term-start = "<?php echo $session['third_term_start']; ?>"
                            data-third-term-end = "<?php echo $session['third_term_end']; ?>"
                            href="#"  data-value="<?php echo $session['name']; ?>"
-                           data-href="<?php echo $session['id']; ?>">
-                            Edit<i class="fa fa-edit" title="Edit"></i></a>
+                           data-href="<?php echo $session['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
                         <a class="delete-session btn btn-danger btn-xs" href="#"
-                           data-href="<?php echo site_url('general_setting/delete_session/').$session['id'] ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+                           data-href="<?php echo site_url('general_setting/delete_session/').$session['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
 
                         </td>
                       </tr>
@@ -107,65 +106,65 @@
                             <label data-error="wrong" data-success="right" for="defaultForm-name"><code>*</code>Name</label>
                         </div>
                     </div>
-                    <h5 class="ml-1"><code>*</code>First Term</h5>
+                    <h5 class="ml-1" style="margin-left: 2.0rem !important;"><code>*</code>First Term</h5>
                     <div class="row modal-body ml-1 mr-1">
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
-                                <input type="text"  name="first_term_start" class="form-control datepicker" />
+                                <input type="date"  name="first_term_start" class="form-control datepicker" />
                             </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="font-size: 12px;">to</span>
                                 </div>
-                                <input type="text"  name="first_term_end" class="form-control datepicker" />
+                                <input type="date"  name="first_term_end" class="form-control datepicker" />
                             </div>
                         </div>
                     </div>
-                    <h5 class="ml-1"><code>*</code>Second Term</h5>
+                    <h5 class="ml-1" style="margin-left: 2.0rem !important;"><code>*</code>Second Term</h5>
                     <div class="row modal-body ml-1 mr-1">
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
-                                <input type="text"  name="second_term_start" class="form-control datepicker" />
+                                <input type="date"  name="second_term_start" class="form-control datepicker" />
                             </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="font-size: 12px;">to</span>
                                 </div>
-                                <input type="text"  name="second_term_end"  class="form-control datepicker" />
+                                <input type="date"  name="second_term_end"  class="form-control datepicker" />
                             </div>
                         </div>
                     </div>
-                    <h5 class="ml-1"><code>*</code>Third Term</h5>
+                    <h5 class="ml-1" style="margin-left: 2.0rem !important;"><code>*</code>Third Term</h5>
                     <div class="row modal-body ml-1 mr-1">
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
-                                <input type="text"  name="third_term_start" class="form-control datepicker" />
+                                <input type="date"  name="third_term_start" class="form-control datepicker" />
                             </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="font-size: 12px;">to</span>
                                 </div>
-                                <input type="text"  name="third_term_end" class="form-control datepicker" />
+                                <input type="date"  name="third_term_end" class="form-control datepicker" />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="save_session" class="btn btn-default">Save</button>
+                        <button id="save_session" class="btn btn-primary"><i class="fa fa-plus"></i>Add Academic Session</button>
                     </div>
                 </div>
             </form>
@@ -192,65 +191,65 @@
                             <label data-error="wrong" data-success="right" for="defaultForm-name"><code>*</code>Name</label>
                         </div>
                     </div>
-                    <h5 class="ml-1"><code>*</code>First Term</h5>
+                    <h5 class="ml-1" style="margin-left: 2.0rem !important;"><code>*</code>First Term</h5>
                     <div class="row modal-body ml-1 mr-1">
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
-                                <input type="text" id="first_term_start" name="first_term_start" class="form-control datepicker" />
+                                <input type="date" id="first_term_start" name="first_term_start" class="form-control datepicker" />
                             </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="font-size: 12px;">to</span>
                                 </div>
-                                <input type="text" id="first_term_end" name="first_term_end" class="form-control datepicker" />
+                                <input type="date" id="first_term_end" name="first_term_end" class="form-control datepicker" />
                             </div>
                         </div>
                     </div>
-                    <h5 class="ml-1"><code>*</code>Second Term</h5>
+                    <h5 class="ml-1" style="margin-left: 2.0rem !important;"><code>*</code>Second Term</h5>
                     <div class="row modal-body ml-1 mr-1">
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
-                                <input type="text" id="second_term_start" name="second_term_start" class="form-control datepicker" />
+                                <input type="date" id="second_term_start" name="second_term_start" class="form-control datepicker" />
                             </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="font-size: 12px;">to</span>
                                 </div>
-                                <input type="text" id="second_term_end" name="second_term_end"  class="form-control datepicker" />
+                                <input type="date" id="second_term_end" name="second_term_end"  class="form-control datepicker" />
                             </div>
                         </div>
                     </div>
-                    <h5 class="ml-1"><code>*</code>Third Term</h5>
+                    <h5 class="ml-1" style="margin-left: 2.0rem !important;"><code>*</code>Third Term</h5>
                     <div class="row modal-body ml-1 mr-1">
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
-                                <input type="text" id="third_term_start" name="third_term_start" class="form-control datepicker" />
+                                <input type="date" id="third_term_start" name="third_term_start" class="form-control datepicker" />
                             </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="font-size: 12px;">to</span>
                                 </div>
-                                <input type="text" id="third_term_end" name="third_term_end" class="form-control datepicker" />
+                                <input type="date" id="third_term_end" name="third_term_end" class="form-control datepicker" />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button id="update_session" class="btn btn-default">Save</button>
+                        <button id="update_session" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Update Academic Session</button>
                     </div>
                 </div>
             </form>
