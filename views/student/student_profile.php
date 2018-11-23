@@ -138,12 +138,6 @@
                                         <li class="list-group-item">
                                             <b>Health Info:</b> <a class="float-right"></a>
                                         </li>
-                                        <!--  <li class="list-group-item">
-                          <b>Mobile Phone:</b> <a class="float-right"><?php echo isset($student['mobile_phone']) && (!empty($student['mobile_phone'])) ? $student['mobile_phone'] : "" ?></a>
-                      </li>
-                      <li class="list-group-item">
-                          <b></b> <a class="float-right">Yes</a>
-                      </li> -->
                                     </ul>
                                 </div>
                             </div>
@@ -459,58 +453,59 @@
             </div>
             <!-- /.row -->
         </div><!-- /.container-fluid -->
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit
-                            password: <?php echo $student['first_name'] . " " . $student['last_name'] ?></h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="change_pwd" method="post" role="form"
-                              data-action="<?php echo site_url('students/change_pwd') ?>"
-                              enctype="multipart/form-data">
-                            <input type="hidden" name="student_id" value="<?php echo $student['student_id']; ?>">
-                            <input type="hidden" name="email" value="<?php echo $student['email']; ?>">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Current password</label>
-                                        <input type="text" class="form-control" name="current_pwd"/>
-                                    </div>
+
+    </section>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit
+                        password: <?php echo $student['first_name'] . " " . $student['last_name'] ?></h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="change_pwd" method="post" role="form"
+                          data-action="<?php echo site_url('students/change_pwd') ?>"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="student_id" value="<?php echo $student['student_id']; ?>">
+                        <input type="hidden" name="email" value="<?php echo $student['email']; ?>">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Current password</label>
+                                    <input type="password" class="form-control" name="current_pwd"/>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>New Password</label>
-                                        <input type="text" class="form-control" name="new_pwd"/>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input type="password" class="form-control" name="new_pwd"/>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Password confirmation</label>
-                                        <input type="text" class="form-control" name="c_pwd"/>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Password confirmation</label>
+                                    <input type="password" class="form-control" name="c_pwd"/>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" id="change_password" class="btn btn-primary">Save</button>
-                                <button type="submit" class="btn btn-default" data-dismiss="modal">
-                                    Close
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="change_password" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
     <!-- /.content -->
     <div class="modal fade" id="assign_guardian" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -601,14 +596,10 @@
                 } else {
                     toastr["error"](response.message);
                 }
-
             }
         });
         return false;
     });
-
-
-
     function myFunction() {
         window.print();
     }

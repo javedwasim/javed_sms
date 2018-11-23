@@ -163,11 +163,12 @@ Class Student_model extends CI_Model {
     }
 
 	public function get_student_by_id($student_id) {
-		$result = $this->db->select('students.*,login.email as email,b.arm,b.session,c.code')
+		$result = $this->db->select('students.*,login.email as email,b.arm,b.session,c.code,ases.*')
 						->from('students')
                         ->join('login', 'login.name=students.username', 'left')
                         ->join('batches b', 'b.id=students.batch_no', 'left')
                         ->join('classes c', 'c.id=b.course_id', 'left')
+                        ->join('acadamic_sessions ases', 'ases.name=b.session', 'left')
 						->where('student_id', $student_id)
 						->limit(1)
 						->get();
@@ -320,15 +321,21 @@ Class Student_model extends CI_Model {
 
 
     public function get_all_student_guardian($student_id) {
+        $user = $this->logged_user_info();
+        if($user){
+            $sql = "select guardians.*,s.student_id from guardians 
+                    INNER JOIN student_guardians s on s.guardian_id=guardians.guardian_id and student_id = $student_id
+                    GROUP BY guardians.guardian_id
+                    ORDER by guardians.guardian_id";
+        }else{
+            $sql = "select guardians.*,s.student_id from guardians 
+                    LEFT JOIN student_guardians s on s.guardian_id=guardians.guardian_id and student_id = $student_id
+                    GROUP BY guardians.guardian_id
+                    ORDER by guardians.guardian_id";
+        }
 
-        $sql = "select guardians.*,s.student_id from guardians 
-                left join student_guardians s on s.guardian_id=guardians.guardian_id and student_id = $student_id
-                GROUP BY guardians.guardian_id
-                ORDER by guardians.guardian_id";
-        $result = $query = $this->db->query($sql);
-
+        $result = $this->db->query($sql);
         if($result) {
-            //echo "<pre>";  print_r($result->result_array()); die();
             return $result->result_array();
         } else {
             return array();
@@ -706,6 +713,19 @@ Class Student_model extends CI_Model {
                   'fee_management_id'=>$data['fee_management_id'],
                   'amount'=>$data['amount']));
         return $this->db->insert_id();
+    }
+
+    public function get_student_guardian($student_id) {
+        $sql = "select guardians.*,s.student_id from guardians 
+                INNER join student_guardians s on s.guardian_id=guardians.guardian_id and student_id = $student_id
+                GROUP BY guardians.guardian_id
+                ORDER by guardians.guardian_id";
+        $result = $this->db->query($sql);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
     }
 
 }

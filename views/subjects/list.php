@@ -24,18 +24,6 @@ $user_name = $user_data['name'];
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div id="batches_error" style="display: none;" class="alert alert-danger alert-dismissible"
-                         role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                    <div id="batches_success" style="display: none;" class="alert alert-success alert-dismissible"
-                         role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Subject Filter</h3>
@@ -86,23 +74,25 @@ $user_name = $user_data['name'];
                     <!-- /.card -->
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <button type="button" class="btn btn-primary"
-                                    data-toggle="modal" data-target="#new_subject">
-                                <i class="fa fa-plus"></i>New Subject
-                            </button>
+            <?php if(isset($user_name) && ($user_name=='admin')): ?>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#new_subject">
+                                    <i class="fa fa-plus"></i>New Subject
+                                </button>
 
-                            <button type="button" class="btn btn-primary"
-                                    data-toggle="modal" data-target="#new_group">
-                                <i class="fa fa-plus"></i>New Elective Group
-                            </button>
+                                <button type="button" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#new_group">
+                                    <i class="fa fa-plus"></i>New Elective Group
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
             <div class="row">
                 <div class="col-12">
                     <div class="card">

@@ -159,9 +159,9 @@ class Guardians extends MY_Controller
     public function change_pwd(){
         $this->load->library('form_validation');
         $this->load->helper('security');
-        $this->form_validation->set_rules('current_pwd', 'current password', 'required|xss_clean');
-        $this->form_validation->set_rules('new_pwd', 'new password', 'required|xss_clean');
-        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|matches[new_pwd]');
+        $this->form_validation->set_rules('current_pwd', 'current password', 'required|min_length[8]|xss_clean');
+        $this->form_validation->set_rules('new_pwd', 'new password', 'required|min_length[8]|xss_clean');
+        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|min_length[8]|matches[new_pwd]');
 
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
@@ -251,6 +251,7 @@ class Guardians extends MY_Controller
                                             'city'=>$guardian_data['city'],
                                             'address_line'=>$guardian_data['address_line'],
                                             'lga'=>$guardian_data['lga'],
+                                            'status'=>$guardian_data['status'],
                                     );
 
             //echo "<pre>"; print_r($update_guardian_data); die();

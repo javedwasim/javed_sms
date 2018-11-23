@@ -191,12 +191,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $data['fees'] = $this->Finance_model->get_fee_type();
                 $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                 $json['success'] = true;
-                $json['message'] = "Account successfully deleted.";
+                $json['message'] = "Fee type successfully deleted.";
             } else {
                 $data['fees'] = $this->Finance_model->get_fee_type();
                 $json['finance_html'] = $this->load->view('finance/fee_types', $data, true);
                 $json['success'] = true;
-                $json['message'] = "Seems to an error in delete student record.";
+                $json['message'] = "Seems to an error.";
             }
             if($this->input->is_ajax_request()) {
                 set_content_type($json);

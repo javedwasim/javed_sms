@@ -400,5 +400,45 @@ Class Attendance_model extends CI_Model {
            return array();
        }
     }
+
+    public function get_student_attendance_term_report($term_id,$student){
+        $batch = $student['batch_no'];
+        $student_id = $student['student_id'];
+        if($term_id==1){
+            $from = $student['first_term_start'];
+            $to = $student['first_term_end'];
+        }elseif($term_id==2){
+            $from = $student['second_term_start'];
+            $to = $student['second_term_end'];
+        }elseif($term_id==3){
+            $from = $student['third_term_start'];
+            $to = $student['third_term_end'];
+        }
+        $query = "SELECT s.student_id, CONCAT(s.first_name,' ', s.last_name) as student_name,a.status,a.attendance_date,
+                    a.attendance_date,a.present,a.late,a.absent
+                    FROM students s
+                    LEFT JOIN(
+                        SELECT a.user_id,a.attendance_date,
+                        SUM(CASE WHEN a.status = 'present' THEN 1 ELSE 0 END) AS 'present',
+	                    SUM(CASE WHEN a.status = 'late' THEN 1 ELSE 0 END) AS 'late',
+	                    SUM(CASE WHEN a.status = 'absent' THEN 1 ELSE 0 END) AS 'absent',
+                        GROUP_CONCAT(CONCAT(a.attendance_date),'=',(a.status) 
+                        ORDER BY a.attendance_date ASC) as status    
+                        FROM attendance a    
+                        WHERE a.attendance_group = 'student' 
+                        AND batch_id  = $batch
+                        AND attendance_date BETWEEN '$from' AND '$to'
+                        GROUP BY a.user_id
+                        ORDER BY a.attendance_date
+                    )a on s.student_id = a.user_id
+                    WHERE attendance_date IS NOT NULL AND student_id = $student_id 
+                    GROUP BY student_name LIMIT 1 ";
+        $result = $query = $this->db->query($query);
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
            
 }

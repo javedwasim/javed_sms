@@ -127,14 +127,14 @@
                                             <td><?php echo $payment['amount']; ?></td>
                                             <td><?php echo date('F j, Y',strtotime($payment['start_date'])); ?></td>
                                             <td><?php echo date('F j, Y',strtotime($payment['due_date'])); ?></td>
-                                            <td><?php echo $payment['status']==1?'Actve':''; ?></td>
+                                            <td><?php echo $payment['status']==1?'Active':''; ?></td>
                                             <td><?php echo $payment['code'] . '-' . $payment['arm'] . '(' . $payment['session'] . ')' ?></td>
                                             <td><?php echo date('F j, Y',strtotime($payment['created_at'])); ?></td>
                                             <td>
                                                 <a class="edit-fee-mangement-btn btn btn-info btn-xs" href="javascript:void(0)"
                                                    data-action="<?php echo site_url('fee_management/edit').$payment['id']; ?>">
                                                    <i class="fa fa-edit icon-margin" title="Edit"></i></a>
-                                                <a class="delete-income btn btn-danger btn-xs" href="#"
+                                                <a class="delete-fee-group btn btn-danger btn-xs" href="#"
                                                    data-href="http://localhost/isms/fee_management/delete_income/1">
                                                     <i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                             </td>

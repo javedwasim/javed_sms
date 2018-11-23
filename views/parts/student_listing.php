@@ -195,7 +195,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <table id="student-b-table" class="table table-bordered table-striped" style="width: 100%;">
+                            <table id="student-b-table" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -205,9 +205,9 @@
                                     <th class="visibility">Blood grp.</th>
                                     <th class="visibility">Course set</th>
                                     <th class="visibility">Date left</th>
-                                    <th class="visibility">D.O.B</th>
+                                    <th class="">D.O.B</th>
                                     <th class="visibility">Due fees</th>
-                                    <th class="visibility">Email</th>
+                                    <th class="">Email</th>
                                     <th class="visibility">Last Updated</th>
                                     <th class="visibility">Mobile</th>
                                     <th class="visibility">Nationality</th>
@@ -235,22 +235,16 @@
                                         <td>
                                             <?php echo $student['code'] . '-' . $student['arm'] . '(' . $student['session'] . ')' ?>
                                         </td>
-                                        <td class="visibility">
+                                        <td class="">
                                             <?php echo $student['blood_group']; ?>
                                         </td>
-                                        <td class="visibility">
-
-                                        </td>
-                                        <td class="visibility">
-
-                                        </td>
-                                        <td class="visibility">
+                                        <td class="visibility"></td>
+                                        <td class="visibility"></td>
+                                        <td class="">
                                             <?php echo $student['date_of_birth']; ?>
                                         </td>
-                                        <td class="visibility">
-
-                                        </td>
-                                        <td class="visibility">
+                                        <td class="visibility"></td>
+                                        <td class="">
                                             <?php echo $student['email']; ?>
                                         </td>
                                         <td class="visibility">
@@ -265,15 +259,9 @@
                                         <td class="visibility">
                                             <?php echo $student['phone']; ?>
                                         </td>
-                                        <td class="visibility">
-
-                                        </td>
-                                        <td class="visibility">
-                                            <?php echo $student['religion']; ?>
-                                        </td>
-                                        <td class="visibility">
-
-                                        </td>
+                                        <td class="visibility"></td>
+                                        <td class="visibility"> <?php echo $student['religion']; ?> </td>
+                                        <td class="visibility"></td>
                                         <td>
                                             <div class="material-switch pull-right">
                                                 <input id="<?php echo "s".$student['student_id']; ?>" name="<?php echo "s".$student['student_id']; ?>"

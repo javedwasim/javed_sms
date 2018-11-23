@@ -176,7 +176,7 @@ class Domains extends MY_Controller
                 }
                 $json['indicator_html'] = $this->load->view('grades/domain_indicator_table', $data, true);
                 $json['error'] = true;
-                $json['message'] = "Seems to an error while updating domain indicator.";
+                $json['message'] = "Seems to an error.";
             }
         }
         if($this->input->is_ajax_request()) {

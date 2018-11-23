@@ -9,8 +9,7 @@ Class Batches_model extends CI_Model {
         if($user_data['name']!='admin' ){
             $this->load->model('Dashboard_model');
             $other_rights = $this->Dashboard_model->get_other_rights_detail();
-            $query = $this->db->select('employee_id')->from('employees')
-                            ->where('username',$user_data['name'])->limit(1)->get();
+            $query = $this->db->select('employee_id')->from('employees')->where('username',$user_data['name'])->limit(1)->get();
             $result = $query->row_array();
             $employee_id = $result['employee_id'];
             if($other_rights[0]['status']){
@@ -19,7 +18,7 @@ Class Batches_model extends CI_Model {
                 $where = " where employee_id = $employee_id ";
             }
         }
-         $query = "SELECT b.*, c.code,student_count,bas.employee_id
+         $query = "SELECT b.*, c.code,student_count,bas.employee_id,c.name as class_name
                     FROM batches b 
                     LEFT JOIN classes c ON c.id=b.course_id 
                     LEFT JOIN (
@@ -251,7 +250,6 @@ Class Batches_model extends CI_Model {
         $result = $query->row_array();
         if($query->num_rows()>0){
             $id = $result['id'];
-            //echo "<pre>";print_r($data); die();
             $this->db->where('id', $id)->update('student_grades', $data);
             return $this->db->affected_rows();
         }else{
@@ -267,6 +265,7 @@ Class Batches_model extends CI_Model {
                     ->where('student_grades.student_id',$id)
                     ->where('term_id',$term_id)
                     ->limit(1)->get();
+       //echo $this->db->last_query();
        if($result){
            return $result->row_array();
        } else {
@@ -277,6 +276,61 @@ Class Batches_model extends CI_Model {
     public function save_batch($data) {
         $this->db->insert('batches', $data);
         return $this->db->insert_id();
+    }
+
+    public function get_domain_indicators($id) {
+        $result = $this->db->select('dg.*,cs.batch_id')
+                    ->from('class_set_learning_domain cs')
+                    ->join('domain_group_indicator dg','dg.domain_group_id=cs.domain_group_id','left')
+                    ->where('batch_id',$id)
+                    ->get();
+        //echo $this->db->last_query(); die();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_batches_course_session($course_id,$session){
+
+        $query = "SELECT b.*, c.code,student_count,bas.employee_id
+                    FROM batches b 
+                    LEFT JOIN classes c ON c.id=b.course_id 
+                    LEFT JOIN (
+                        select student_id,batch_no,Count(students.student_id) as student_count,
+                        students.last_name,students.first_name
+                        FROM students 
+                        GROUP by batch_no
+                    )students on students.batch_no = b.id
+                    LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
+                    WHERE course_id = $course_id AND session =  '$session'            
+                    GROUP By b.id
+                    ORDER BY b.session ASC
+                    Limit 1";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_term_domain_indicators($id,$term_id)
+    {
+        $result = $this->db->select('dg.*,cs.batch_id')
+            ->from('class_set_learning_domain cs')
+            ->join('domain_group_indicator dg','dg.domain_group_id=cs.domain_group_id','left')
+            ->where('batch_id',$id)
+            ->get();
+        //echo $this->db->last_query(); die();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
     }
            
 }

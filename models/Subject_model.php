@@ -256,12 +256,17 @@ Class Subject_model extends CI_Model {
     }
 
     public function get_subject_assessments($id){
-        $result = $this->db->select('sa.*,ac.name as cate_name')
-                    ->join('assessment_categories ac','ac.id=sa.assessment_category_id','left')
-                    ->from('subject_assessments sa')
-                    ->where('subject_detail_id',$id)
-                    ->get();
-        if ($result) {
+        $query = "SELECT sa.*, ac.name as cate_name, ases.name as session_name,sd.batch_id,batches.session
+                    FROM subject_assessments sa
+                    LEFT JOIN assessment_categories ac ON ac.id=sa.assessment_category_id 
+                    LEFT JOIN acadamic_sessions ases ON sa.due_date >=ases.first_term_start
+                    AND sa.due_date BETWEEN ases.first_term_start AND ases.first_term_end
+                    LEFT JOIN subjects_detail sd on sd.id = sa.subject_detail_id
+                    LEFT JOIN batches on batches.id = sd.batch_id and batches.session = ases.name
+                    WHERE subject_detail_id = $id 
+                    GROUP BY sa.id";
+        $result = $query = $this->db->query($query);
+        if($result) {
             return $result->result_array();
         } else {
             return array();
@@ -313,21 +318,29 @@ Class Subject_model extends CI_Model {
                     GROUP_CONCAT(sas.points ORDER BY sas.id ASC) as score_points,
                     SUBSTRING_INDEX(sc.obtain_score,',', 1) AS first_value,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 2),',','-1') as second_value,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 3),',','-1') as third_value
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 3),',','-1') as third_value,
+                    sc.term_id
                     FROM students s
                     LEFT JOIN batches on batches.id  = s.batch_no
                     LEFT JOIN acadamic_sessions acs on acs.id=s.batch_no
                     LEFT JOIN subjects_detail sd on sd.batch_id=batches.id
+                    
                     LEFT JOIN(
-                     SELECT * FROM subject_assessments
-                        GROUP BY subject_assessments.id 
-                        ORDER BY subject_assessments.abbreviation DESC
-                        
-                    )sas on sas.subject_detail_id=sd.id                     
+                         SELECT sa.*,batches.session as sess 
+                         FROM subject_assessments sa
+                         LEFT JOIN acadamic_sessions ases ON sa.due_date >=ases.first_term_start
+                         AND sa.due_date BETWEEN ases.first_term_start AND ases.first_term_end
+                         LEFT JOIN subjects_detail sd on sd.id = sa.subject_detail_id
+                         LEFT JOIN batches on batches.id = sd.batch_id and batches.session = ases.name
+                         WHERE sd.id = $id AND batches.session IS NOT NULL
+                         GROUP BY sa.id 
+                         ORDER BY sa.abbreviation DESC                        
+                    )sas on sas.subject_detail_id=sd.id   
+                                      
                     LEFT JOIN(
                         SELECT ss.*,GROUP_CONCAT(ss.score ORDER BY ss.id ASC) as obtain_score
                         FROM student_score_sheet ss
-                        WHERE ss.subject_detail_id = $id
+                        WHERE ss.subject_detail_id = $id AND (term_id = 1)
                         GROUP BY ss.student_id
                     )sc on sc.student_id = s.student_id
                     WHERE (sd.id=$id)
@@ -346,6 +359,7 @@ Class Subject_model extends CI_Model {
                 ->where('subject_detail_id',$data['subject_detail_id'])
                 ->where('assessment_term',$data['assessment_term'])
                 ->where('batch_id',$data['batch_id'])
+                ->where('term_id',$data['term_id'])
                 ->limit(1)
                 ->get();
 
@@ -364,5 +378,47 @@ Class Subject_model extends CI_Model {
 
 
     }
+
+    public function get_term_score_sheet($id,$term_id){
+        $query = "SELECT s.student_id, batches.id as bacth_id,acs.id as session_id,
+                    batches.session,sd.id as subj_detail_id,s.first_name,s.last_name,s.surname,
+                    GROUP_CONCAT(sas.abbreviation ORDER BY sas.id ASC) as score_term,
+                    GROUP_CONCAT(sas.points ORDER BY sas.id ASC) as score_points,
+                    SUBSTRING_INDEX(sc.obtain_score,',', 1) AS first_value,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 2),',','-1') as second_value,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 3),',','-1') as third_value,
+                    sc.term_id
+                    FROM students s
+                    LEFT JOIN batches on batches.id  = s.batch_no
+                    LEFT JOIN acadamic_sessions acs on acs.id=s.batch_no
+                    LEFT JOIN subjects_detail sd on sd.batch_id=batches.id
+                    
+                    LEFT JOIN(
+                         SELECT sa.*,batches.session as sess 
+                         FROM subject_assessments sa
+                         LEFT JOIN acadamic_sessions ases ON sa.due_date >=ases.first_term_start
+                         AND sa.due_date BETWEEN ases.first_term_start AND ases.first_term_end
+                         LEFT JOIN subjects_detail sd on sd.id = sa.subject_detail_id
+                         LEFT JOIN batches on batches.id = sd.batch_id and batches.session = ases.name
+                         WHERE sd.id = $id AND batches.session IS NOT NULL
+                         GROUP BY sa.id 
+                         ORDER BY sa.abbreviation DESC                        
+                    )sas on sas.subject_detail_id=sd.id                                         
+                    LEFT JOIN(
+                        SELECT ss.*,GROUP_CONCAT(ss.score ORDER BY ss.id ASC) as obtain_score
+                        FROM student_score_sheet ss
+                        WHERE ss.subject_detail_id = $id AND (term_id = $term_id)
+                        GROUP BY ss.student_id
+                    )sc on sc.student_id = s.student_id
+                    WHERE (sd.id=$id)
+                    GROUP BY s.student_id";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
 
 }

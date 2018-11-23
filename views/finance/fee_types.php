@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_fee" type="submit" class="btn btn-default">Create Fee type</button>
+                    <button id="save_fee" type="submit" class="btn btn-primary"><i class="fa fa-plus"></i>Add Fee type</button>
                 </div>
             </form>
         </div>
@@ -109,7 +109,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Edit fee type</h4>
+                <h4 class="modal-title w-100 font-weight-bold">Edit Fee Type</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -139,10 +139,16 @@
 
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="update_fee" type="submit" class="btn btn-default">Update Fee type</button>
+                    <button id="update_fee" type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Update Fee type</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $("#account-table").DataTable();
+
+    });
+</script>
 

@@ -88,14 +88,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <a href="javascript:void(0)" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#add_domain_group_indicator">
-                                        <?php if(isset($domain_id)): ?>
-                                            <i class="fa fa-floppy-o"></i>
-                                            Update Domain Indicator
-                                        <?php else: ?>
-                                            <i class="fa fa-plus"></i>
-                                            Add Domain Indicator
-                                        <?php endif; ?>
-                                    </a>
+                                        <i class="fa fa-plus"></i>Add Domain Indicator</a>
                                 </div>
                             </div>
                             <div class="domain_indicator_table">

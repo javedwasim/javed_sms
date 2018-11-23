@@ -492,7 +492,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Current password</label>
-                                    <input type="text" class="form-control" name="current_pwd"/>
+                                    <input type="password" class="form-control" name="current_pwd"/>
                                 </div>
                             </div>
                         </div>
@@ -500,7 +500,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="text" class="form-control" name="new_pwd"/>
+                                    <input type="password" class="form-control" name="new_pwd"/>
                                 </div>
                             </div>
                         </div>
@@ -508,7 +508,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Password confirmation</label>
-                                    <input type="text" class="form-control" name="c_pwd"/>
+                                    <input type="password" class="form-control" name="c_pwd"/>
                                 </div>
                             </div>
                         </div>
@@ -571,27 +571,5 @@
             return false;
         });
 
-        $(document.body).on('click', '.delete-employee', function () {
-            if (confirm('Are you sure to delete this record?')) {
-                $.ajax({
-                    url: $(this).attr('data-href'),
-                    cache: false,
-                    success: function (response) {
-                        $('#student_error').hide();
-                        $('#student_success').hide();
-                        if (response.success) {
-                            $('.content-wrapper').remove();
-                            $('#content-wrapper').append(response.employee_html);
-                            $('#student_success').show().html(response.message);
-                        } else {
-                            $('#student_error').show().html(response.message);
-                        }
-                    }
-                });
-            } else {
-                return false;
-            }
 
-            return false;
-        });
     </script>

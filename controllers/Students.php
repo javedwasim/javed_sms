@@ -465,6 +465,7 @@ class Students extends MY_Controller
         $record['student'] = $data;
         $record['student_id'] = $id;
         $json['student_html'] = $this->load->view('student/student_profile', $record,true);
+
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }

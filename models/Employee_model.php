@@ -112,7 +112,6 @@ class Employee_model extends CI_Model {
         foreach ($data as $key => $value) {
             $update_data[] = $key;
         }
-        print_r($update_data);
         foreach ($employee_fields as $field) {
             if (array_search($field['field_name'], $update_data)) {
                 $this->db->where('field_name', $field['field_name'])->where('profile_setting_id', 3)->update('profile_group_detail', array('add_view' => 1));

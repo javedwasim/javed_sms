@@ -1,4 +1,4 @@
-<table id="example1" class="table table-bordered table-striped">
+<table id="batch" class="table table-bordered table-striped">
     <thead>
     <tr>
         <th>Abbrev.</th>
@@ -37,15 +37,28 @@
             </td>
             <td>
                 <a class="btn btn-xs btn-success edit_assessment" data-href="<?php echo base_url()."subjects/edit_assessment/".$assessment['id']; ?>">
-                    Edit<i class="fa fa-edit"></i>
+                    <i class="fa fa-edit icon-margin" title="edit"></i>
                 </a>
                 <a class="btn btn-xs btn-danger delete-assessment" data-assessment-id = "<?php echo $assessment['id']; ?>"
                    data-subject-detail-id="<?php echo $assessment['subject_detail_id']; ?>"
                    data-href="<?php echo base_url()."subjects/delete_assessment"; ?>">
-                    Delete<i class="fa fa-remove"></i>
+                    <i class="fa fa-trash icon-margin" title="delete"></i>
                 </a>
             </td>
         </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+<script>
+    $(function () {
+
+        $('#batch').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>

@@ -122,7 +122,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Update Employee Position</h4>
+                <h4 class="modal-title w-100 font-weight-bold">Update Course</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -152,9 +152,15 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="update_class" type="submit" class="btn btn-default">Update Employee Position</button>
+                    <button id="update_class" type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Update Course</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $('#class-table').DataTable();
+    });
+</script>

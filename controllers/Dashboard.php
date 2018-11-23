@@ -12,6 +12,11 @@ class Dashboard extends CI_Controller {
     }
 
     public function index() {
+
+        $this->load->model('General_model');
+        $institution = $this->General_model->get_institution();
+        $this->session->set_userdata('institution_detail', $institution);
+
         if (!$this->session->userdata('is_logged_in')) {
             $this->load->view('login');
         } else {
@@ -25,7 +30,7 @@ class Dashboard extends CI_Controller {
                 $result = $query->row_array();
                 $student_id = $result['student_id'];
                 $data = $this->Student_model->get_student_by_id($student_id);
-                $record['guardians'] = $this->Student_model->get_all_student_guardian($student_id);
+                $record['guardians'] = $this->Student_model->get_student_guardian($student_id);
                 $record['student'] = $data;
                 $record['student_id'] = $student_id;
                 $record['screen'] = 'student_profile';

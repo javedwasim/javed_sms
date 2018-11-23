@@ -10,7 +10,7 @@
 <div class="form-group row">
     <label for="inputPassword" class="col-sm-2 col-form-label">Course</label>
     <div class="col-sm-10">
-        <select class="form-control" name="course_id">
+        <select class="form-control" name="course_id" disabled>
             <option value="">Please Select</option>
             <?php foreach ($classes as $class): ?>
                 <option value="<?php echo $class['id'] ?>"
@@ -22,7 +22,7 @@
 <div class="form-group row">
     <label for="inputPassword" class="col-sm-2 col-form-label">Academic session</label>
     <div class="col-sm-10">
-        <select class="form-control" name="session">
+        <select class="form-control" name="session" readonly>
             <option value="">Please Select</option>
             <?php foreach ($sessions as $session): ?>
                 <option value="<?php echo $session['name'] ?>"

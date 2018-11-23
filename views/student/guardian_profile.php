@@ -70,8 +70,7 @@
                                     <!--  <p class="text-muted text-center">Software Engineer</p> -->
                                     <ul class="list-group list-group-unbordered mb-3">
                                         <li class="list-group-item">
-                                            <b>Title</b> <a
-                                                    class="float-right"><?php echo isset($guardian['title']) ? $guardian['title'] : ''; ?></a>
+                                            <b>Title</b> <a class="float-right"><?php echo isset($guardian['title']) ? $guardian['title'] : ''; ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>First Name:</b> <a
@@ -124,7 +123,12 @@
                                             <h3 class="profile-username profile-badge"><i
                                                         class="fa fa-map-marker azure"></i></h3>
                                         </div>
-                                        <div class="contact-info"><?php echo isset($guardian['address_line']) ? $guardian['address_line'] : ''; ?></div>
+                                        <?php if (strlen($guardian['address_line']) > 120): ?>
+                                            <div class="contact-info"><?php echo isset($guardian['address_line']) ? substr($guardian['address_line'], 0, 120) . '...' : ''; ?></div>
+                                        <?php else: ?>
+                                            <div class="contact-info"><?php echo isset($guardian['address_line']) ? $guardian['address_line']: ''; ?></div>
+                                        <?php endif; ?>
+
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +197,7 @@
                                 <div class="tab-pane" id="timeline">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5>Personal Details</h5>
+                                            <h4>Personal Details</h4>
                                             <hr>
                                             <form id="update_guardian_form" method="post" role="form" action="<?php echo site_url('guardians/update_guardian/').$guardian['guardian_id'] ?>"
                                                   data-action="<?php echo site_url('guardians/update_guardian/').$guardian['guardian_id'] ?>"
@@ -222,7 +226,7 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label>Last name</label>
+                                                            <label>Middle name</label>
                                                             <input type="text" class="form-control"  name="last_name"
                                                                    value="<?php echo isset($guardian['last_name']) ? $guardian['last_name'] : ''; ?>"/>
                                                         </div>
@@ -240,7 +244,7 @@
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label>Mobile phone</label>
-                                                                <input type="text" class="form-control"  name="mobile_phone"
+                                                                <input type="number" class="form-control"  name="mobile_phone"
                                                                        value="<?php echo isset($guardian['mobile_phone']) ? $guardian['mobile_phone'] : ''; ?>"/>
                                                             </div>
                                                         </div>
@@ -249,7 +253,7 @@
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label>Phone</label>
-                                                                <input type="text" class="form-control"  name="phone"
+                                                                <input type="number" class="form-control"  name="phone"
                                                                        value="<?php echo isset($guardian['phone']) ? $guardian['phone'] : ''; ?>"/>
                                                             </div>
                                                         </div>
@@ -289,22 +293,32 @@
                                                             </div>
                                                         </div>
                                                     <?php } ?>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="gender_status">Status</label>
+                                                            <select class="form-control" name="status" id="gender_status">
+                                                                <option value="">Please select</option>
+                                                                <option value="1"<?php echo isset($guardian['status']) &&($guardian['status']=='1') ? 'selected' : ''; ?>>Active</option>
+                                                                <option value="0"<?php echo isset($guardian['status']) &&($guardian['status']=='0') ? 'selected' : ''; ?>>Inactive</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <h5>Wards</h5>
+                                                <h4>Wards</h4>
                                                 <hr>
                                                 <div class="row">
-                                                    <div class="row">
-                                                        <?php foreach($wards as $ward): ?>
-                                                            <div class="col-sm">
+                                                    <?php foreach($wards as $ward): ?>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
                                                                 <label>Relationship with <?php echo $ward['first_name']." ".$ward['last_name']; ?></label>
                                                                 <input type="hidden" name="relation[]" id="<?php echo $ward['id']; ?>" value="<?php echo isset($ward['relation']) ? $ward['id']."_".$ward['relation'] : ''; ?>">
                                                                 <input type="text" class="form-control relation"  data-relation-id="<?php echo $ward['id']; ?>"
                                                                        value="<?php echo isset($ward['relation']) ? $ward['relation'] : ''; ?>"/>
                                                             </div>
-                                                        <?php endforeach; ?>
-                                                    </div>
+                                                        </div>
+                                                    <?php endforeach; ?>
                                                 </div>
-                                                <h5>Contact Address</h5>
+                                                <h4>Contact Address</h4>
                                                 <hr>
                                                 <div class="row">
                                                     <div class="col-md-4">
@@ -343,7 +357,7 @@
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label>Address line</label>
-                                                            <textarea class="form-control" rows="3" name="address_line"><?php echo isset($guardian['address_line']) ? $guardian['address_line'] : ''; ?></textarea>
+                                                            <textarea class="form-control" rows="3" name="address_line" maxlength="120"><?php echo isset($guardian['address_line']) ? $guardian['address_line'] : ''; ?></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
@@ -415,8 +429,8 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit
-                        password: <?php echo $guardian['first_name'] . " " . $guardian['surname'] ?></h5>
+                    <h4 class="modal-title w-100 font-weight-bold">Edit
+                        password: <?php echo $guardian['first_name'] . " " . $guardian['surname'] ?></h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -429,7 +443,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Current password</label>
-                                    <input type="text" class="form-control" name="current_pwd" required maxlength="10"/>
+                                    <input type="password" class="form-control" name="current_pwd" required maxlength="10"/>
                                 </div>
                             </div>
                         </div>
@@ -437,7 +451,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="text" class="form-control" name="new_pwd" required maxlength="10"/>
+                                    <input type="password" class="form-control" name="new_pwd" required maxlength="10"/>
                                 </div>
                             </div>
                         </div>
@@ -445,14 +459,14 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Password confirmation</label>
-                                    <input type="text" class="form-control" name="c_pwd" required maxlength="10"/>
+                                    <input type="password" class="form-control" name="c_pwd" required maxlength="10"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" data-dismiss="modal"><i class="fa fa-backspace"></i> Close</button>
-                            <button type="submit" id="change_password" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Update Password</button>
-
+                        <div class="modal-footer" style="display: block">
+                            <div style="text-align: center">
+                                <button type="submit" id="change_password" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Update Password</button>
+                            </div>
                         </div>
                     </form>
                 </div>

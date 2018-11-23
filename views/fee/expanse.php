@@ -114,6 +114,7 @@ $user_name = $user_data['name'];
                                             </div>
                                         </form>
                                     <?php endif; ?>
+                                    <?php if($user_name == 'admin'): ?>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <form id="create_student_fee_pdf_form" method="post" role="form" target="_blank" action="<?php echo site_url('fee_management/createPdf') ?>" enctype="multipart/form-data">
@@ -127,6 +128,7 @@ $user_name = $user_data['name'];
                                             </form>
                                         </div>
                                     </div>
+                                    <?php endif; ?>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <table id="fee_history" class="table table-bordered table-striped nowrap"

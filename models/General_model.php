@@ -301,8 +301,8 @@ Class General_model extends CI_Model {
 
     public function get_all_sessions(){
         $result = $this->db->select('*')
-            ->from('acadamic_sessions')
-            ->get();
+                    ->from('acadamic_sessions')
+                    ->get();
         if ($result) {
             return $result->result_array();
         } else {
@@ -330,7 +330,6 @@ Class General_model extends CI_Model {
         } else {
             return array();
         }
-
     }
 
     public function get_institution(){
@@ -343,7 +342,126 @@ Class General_model extends CI_Model {
         } else {
             return array();
         }
+    }
 
+    public function get_all_domains(){
+        $affective = $this->db->select('*')
+                    ->from('domain_goup')
+                    ->where('learning_domain','affective')
+                    ->get();
+
+        $psychomotor = $this->db->select('*')
+                    ->from('domain_goup')
+                    ->where('learning_domain','psychomotor')
+                    ->get();
+
+        $result = array();
+        if ($psychomotor || $affective) {
+            $result['affective'] =  $affective->result_array();
+            $result['pychomotor'] =  $psychomotor->result_array();
+            return $result;
+        } else {
+            return array();
+        }
+
+    }
+
+    public function update_class_set_domain($data){
+        $batches = $this->get_batches_course_session($data['course_id'],$data['session']);
+        //delete last batch learning domain.
+        $learning_domain_ids = array();
+        foreach ($batches as $batch){
+            $this->db->where('course_id',$batch['course_id'])
+                    ->where('session',$batch['session'])
+                    ->delete('class_set_learning_domain');
+        }
+
+        //insert new entries
+        foreach ($batches as $batch){
+            if($data['affective_domain']){
+                $this->db->insert('class_set_learning_domain',
+                    array(
+                        'batch_id'=>$batch['id'],
+                        'domain_group_id'=>$data['affective_domain'],
+                        'course_id'=>$batch['course_id'],
+                        'session'=>$batch['session']
+                    ));
+                $effective_domain_id = $this->db->insert_id();
+                $learning_domain_ids['affective_domain_id'] = $effective_domain_id;
+            }
+            if($data['phychomotor_domain']){
+                $this->db->insert('class_set_learning_domain',
+                    array(
+                        'batch_id'=>$batch['id'],
+                        'domain_group_id'=>$data['phychomotor_domain'],
+                        'course_id'=>$batch['course_id'],
+                        'session'=>$batch['session']
+                    ));
+                $phychomotor_domain_id = $this->db->insert_id();
+                $learning_domain_ids['phychomotor_domain_id'] = $phychomotor_domain_id;
+            }
+        }
+        return $learning_domain_ids;
+    }
+
+    public function get_class_set_domain($course_id,$session){
+        $result = $this->db->select('cd.domain_group_id')
+                    ->from('class_set_learning_domain cd')
+                    ->join('domain_goup dg','dg.id = cd.domain_group_id')
+                    ->where('course_id',$course_id)
+                    ->where('session',$session)
+                    ->group_by('domain_group_id')
+                    ->get();
+        $this->db->last_query();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_class_set(){
+        $query = "SELECT b.*, c.code,student_count,bas.employee_id,c.name as class_name
+                    FROM batches b 
+                    LEFT JOIN classes c ON c.id=b.course_id 
+                    LEFT JOIN (
+                        select student_id,batch_no,Count(students.student_id) as student_count
+                        FROM students 
+                        GROUP by batch_no
+                    )students on students.batch_no = b.id
+                    LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
+                    where 1
+                    GROUP BY course_id
+                    ORDER BY b.session ASC";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_batches_course_session($course_id,$session){
+
+        $query = "SELECT b.*, c.code,student_count,bas.employee_id
+                    FROM batches b 
+                    LEFT JOIN classes c ON c.id=b.course_id 
+                    LEFT JOIN (
+                        select student_id,batch_no,Count(students.student_id) as student_count,
+                        students.last_name,students.first_name
+                        FROM students 
+                        GROUP by batch_no
+                    )students on students.batch_no = b.id
+                    LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
+                    WHERE course_id = $course_id AND session =  '$session'            
+                    GROUP By b.id
+                    ORDER BY b.session ASC";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
     }
 
 }

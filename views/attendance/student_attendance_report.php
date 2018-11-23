@@ -557,6 +557,22 @@
                                                         }
                                                     }
 
+                                                    if ($day == '31') {
+                                                        if ($attendance[1] == 'absent') {
+                                                            echo "<li class='list-inline-item'>
+                                                                    <a href='javascript:void()' title='$date'><span class='badge-info'>$day</span></a>
+                                                                    <small class='label pull-right bg-red a-absent'>A</small></li>";
+                                                        } elseif ($attendance[1] == 'present') {
+                                                            echo "<li class='list-inline-item'>
+                                                                    <a href='javascript:void()' title='$date'><span class='badge-info'>$day</span></a>
+                                                                    <small class='label pull-right bg-green a-present'>P</small></li>";
+                                                        } elseif ($attendance[1] == 'late') {
+                                                            echo "<li class='list-inline-item'>
+                                                                    <a href='javascript:void()' title='$date'><span class='badge-info'>$day</span></a>
+                                                                    <small class='label pull-right bg-warning a-late'>L</small></li>";
+                                                        }
+                                                    }
+
                                                 }
                                                 ?>
                                             </ul>

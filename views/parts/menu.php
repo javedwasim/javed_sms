@@ -185,6 +185,14 @@
        get_student_fees($(this).attr('data-func-call'));
    });
 
+   $('#list_itmes_class_sets').click(function(){
+       get_class_set($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_report_card').click(function(){
+       get_report_card($(this).attr('data-func-call'));
+   });
+
    $(document).ready(function()
    {
 

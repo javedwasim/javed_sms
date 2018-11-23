@@ -395,4 +395,31 @@ class Subjects extends MY_Controller
             set_content_type($json);
         }
     }
+
+    public function get_term_scores(){
+        $data = $this->input->post();
+        $id = $data['subject_detail_id'];
+        $term_id = $data['term_id'];
+        $data['assessments']=$this->Subject_model->get_subject_assessments($id);
+        $data['employees']=$this->Batches_model->get_all_employees();
+        $data['assigned_employee']=$this->Batches_model->get_assigned_employees($id);
+        $data['categories']=$this->Subject_model->get_assessment_categories();
+        $result=$this->Subject_model->get_term_score_sheet($id,$term_id);
+        $data['score_sheet']=$result;
+        if(isset($result[0]['score_term'])){
+            $data['score_term']=$result[0]['score_term'];
+        }else{
+            $data['score_term'] = '';
+        }
+        if(isset($result[0]['score_points'])){
+            $data['score_points'] = $result[0]['score_points'];
+        }else{
+            $data['score_points'] = '';
+        }
+        $data['subject_detail_id']=$id;
+        $json['result_html'] = $this->load->view('subjects/score_sheet', $data,true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
 }

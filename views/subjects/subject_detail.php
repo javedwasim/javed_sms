@@ -96,6 +96,17 @@
                                     <section class="content">
                                         <div class="container-fluid">
                                             <div class="row">
+                                                <div class="col-xs-6 col-sm-4 col-lg-3">
+                                                    <form class="data-filter-form" id="scoresheet-filter" role="form" action="/subjects/802/scoresheet" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                                                        <div class="form-group">
+                                                            <select name="term" id="term" class="form-control"><option selected="selected" value="1">First Term</option>
+                                                                <option value="2">Second Term</option>
+                                                                <option value="3">Third Term</option></select>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-12">
                                                     <div class="table-responsive">
                                                         <?php //print_r($score_sheet); ?>
@@ -253,7 +264,7 @@
                 <form id="subject_assessment_form" method="post" role="form"
                       data-action="<?php echo site_url('Subjects/save_assessment') ?>"
                       enctype="multipart/form-data">
-                    <input type="hidden" name="subject_detail_id" value="<?php echo $subject_detail_id; ?>">
+                    <input type="hidden" name="subject_detail_id" id="subject_detail_id" value="<?php echo $subject_detail_id; ?>">
                     <div class="form-group row">
                         <label for="assessment_category_id" class="col-sm-2 col-form-label">Save Assessment
                             Category</label>
@@ -386,11 +397,12 @@
         $(editableObj).css("color", "#FFF");
     }
     function saveToDatabase(editableObj, student_id, subject_detail_id,batch_id,term,points) {
+        var term_id = $('#term').val();
         $.ajax({
             url: "<?php echo base_url() . 'Subjects/saveStudentScoreSheet' ?>",
             type: "POST",
             data: 'student_id=' + student_id +
-                  '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+
+                  '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+'&term_id='+term_id+
                   '&subject_detail_id=' + subject_detail_id+'&assessment_term='+term+'&points='+points,
             success: function (response) {
                 $(editableObj).css("background", "#FDFDFD");

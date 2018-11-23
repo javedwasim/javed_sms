@@ -1,10 +1,11 @@
+<?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name'];?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Fees</h1>
+                    <h1 class="m-0 text-dark">Fee Detail</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -21,90 +22,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div id="student_error" style="display: none;" class="alert alert-danger alert-dismissible"
-                         role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                    <div id="student_success" style="display: none;" class="alert alert-success alert-dismissible"
-                         role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Fees</h3>
+                            <h3 class="card-title">Fee</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                        <i class="fa fa-plus"></i>Add Fee</button>
-                                </div>
-                            </div>
-                            <hr/>
-                            <form rol="form" style="width: 100%;" id="student_form_filters">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <input type="text" name="search-employee" id="search-employee" class="form-control st_filter"
-                                                   value="<?php echo isset($filters['search-employee']) ? $filters['search-employee'] : ''; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Fee Type</label>
-                                            <select class="form-control st_filter" name="status" onchange="student_filters()">
-                                                <option value="">All</option>
-                                                <?php foreach ($fee_types as $type): ?>
-                                                    <option value="<?php echo $type['id'] ?>"><?php echo $type['name']; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Amount</label>
-                                            <input type="text" name="search-employee" id="search-employee" class="form-control st_filter"
-                                                   value="<?php echo isset($filters['search-employee']) ? $filters['search-employee'] : ''; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Status</label>
-                                            <select class="form-control" name="fee_search_request" id="fee_search_request_status">
-                                                <option value=""></option>
-                                                <option value="inactive">Inactive</option>
-                                                <option value="active">Active</option>
-                                                <option value="hold">Hold</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Due Date</label>
-                                            <input class="form-control" type="text" name="due_date" id="due_date" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Date Created</label>
-                                            <input class="form-control" type="text" name="date_created" id="date_created" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mt-3">
-                                            <button type="button" class="btn btn-primary btn-md" id="filter" onclick="return resetForm()">
-                                                <i class="fa fa-search"></i>Search
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -186,7 +109,9 @@
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script>
     $(document).ready(function () {
-        var table = $("#fee_management_table").DataTable();
+        var table = $("#fee_management_table").DataTable({
+            "scrollX": true
+        });
         $('#date_payment').datepicker({
             format: 'yyyy-mm-dd',
             autoclose:true

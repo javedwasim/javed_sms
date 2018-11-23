@@ -294,7 +294,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" id="save_student_guardians" class="btn btn-primary" id="save-guardian">
                             <i class="fa fa-plus fa-cli"></i>Add Guardian</button>
                     </div>

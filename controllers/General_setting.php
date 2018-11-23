@@ -10,8 +10,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $this->load->model('General_model');
             $this->load->model('Employee_model');
             $this->load->helper('content-type');
-
             $this->load->model('General_model');
+            $this->load->model('Batches_model');
             $institution = $this->General_model->get_institution();
             $this->session->set_userdata('institution_detail', $institution);
 		}
@@ -69,12 +69,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     $data['classes'] = $this->General_model->get_classes();
                     $json['classes_html'] = $this->load->view('settings/classes', $data, true);
                     $json['success'] = true;
-                    $json['message'] = "Class successfully added.";
+                    $json['message'] = "Class successfully updated.";
                 } else {
                     $data['classes'] = $this->General_model->get_classes();
                     $json['classes_html'] = $this->load->view('settings/classes', $data, true);
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
             }
             if($this->input->is_ajax_request()) {
@@ -313,6 +313,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     'second_term_end'=>date('Y-m-d',strtotime($data['second_term_end'])),
                     'third_term_start'=>date('Y-m-d',strtotime($data['third_term_start'])),
                     'third_term_end'=>date('Y-m-d',strtotime($data['third_term_end'])),
+                    'name'=>$data['name']
                 );
                 $result = $this->General_model->update_session($update_fields,$data['session_id']);
                 if ($result) {
@@ -349,6 +350,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
             }
+        }
+
+        public function class_sets(){
+            $data['batches'] = $this->General_model->get_class_set();
+            $json['result_html'] = $this->load->view('settings/class_set', $data, true);
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+
+        }
+
+        public function get_learning_domains(){
+            $fdata = $this->input->post();
+            $data['domain'] = $this->General_model->get_all_domains();
+            $data['batch'] = $this->Batches_model->get_batches_course_session($fdata['course_id'],$fdata['session']);
+            $class_set_domain = $this->General_model->get_class_set_domain($fdata['course_id'],$fdata['session']);
+            $result = array();
+            foreach ($class_set_domain as $domain){
+                $result[] = $domain['domain_group_id'];
+            }
+            $data['class_set_domains'] = $result;
+            $data['session'] = $fdata['session'];
+            $data['course_id'] = $fdata['course_id'];
+            $json['result_html'] = $this->load->view('settings/edit_learning_domain', $data, true);
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+        }
+
+        public function update_class_set_domain(){
+            $data = $this->input->post();
+            $result = $this->General_model->update_class_set_domain($data);
+            if($result){
+                $json['success'] = true;
+                $json['message'] = "Class Set was successfully updated.";
+            }else{
+                $json['error'] = true;
+                $json['message'] = "Seem to be an error.";
+            }
+
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+
         }
 
 }

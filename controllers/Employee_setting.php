@@ -289,7 +289,6 @@ class Employee_setting extends MY_Controller
             $employee_fields[$field['field_name']]=$field['add_view'];
         }
         $data['employee_fields'] = $employee_fields;
-
         $json['employee_html'] = $this->load->view('employee/employee_fields', $data, true);
         if($this->input->is_ajax_request()) {
             set_content_type($json);

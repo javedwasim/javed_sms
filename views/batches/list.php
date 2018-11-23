@@ -114,59 +114,60 @@
                 </div>
             </div>
         </div><!-- /.container-fluid -->
-        <div class="modal fade" id="new_batch" tabindex="-1" role="dialog" aria-labelledby="new_batch_label"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">New Batch</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="batch_form" method="post" role="form"  data-action="<?php echo site_url('batches/save') ?>" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <label for="inputPassword" class="col-sm-2 col-form-label">Arm<span style="color: red">*</span></label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="arm" name="arm" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="inputPassword" class="col-sm-2 col-form-label">Course</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" name="course_id">
-                                        <option value="">Please Select</option>
-                                        <?php foreach ($classes as $class): ?>
-                                            <option value="<?php echo $class['id'] ?>"><?php echo $class['name'] ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="inputPassword" class="col-sm-2 col-form-label">Academic session</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" name="session">
-                                        <option value="">Please Select</option>
-                                        <?php foreach ($sessions as $session): ?>
-                                            <option value="<?php echo $session['name'] ?>"><?php echo $session['name'] ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="col-sm-12" style="text-align: center">
-                                <button type="submit" class="btn btn-primary" id="save_batch">
-                                    <i class="fa fa-plus"></i>Add Batch
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+    </section>
+
+    <div class="modal fade" id="new_batch" tabindex="-1" role="dialog" aria-labelledby="new_batch_label"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">Save Batch</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <form id="batch_form" method="post" role="form"  data-action="<?php echo site_url('batches/save') ?>" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Arm<span style="color: red">*</span></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="arm" name="arm" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Course</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="course_id">
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($classes as $class): ?>
+                                        <option value="<?php echo $class['id'] ?>"><?php echo $class['name'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Academic session</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="session">
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($sessions as $session): ?>
+                                        <option value="<?php echo $session['name'] ?>"><?php echo $session['name'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-sm-12" style="text-align: center">
+                            <button type="submit" class="btn btn-primary" id="save_batch">
+                                <i class="fa fa-floppy-o"></i>Save Batch
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
 
     <script>
         $(function () {

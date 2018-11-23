@@ -276,13 +276,15 @@ function students_listing(func_call) {
 				$('#content-wrapper').append(response.student_html);
 				$('.select2').select2();
 				var sttable = $("#student-b-table").DataTable({
-			        dom: 'Bfrtip',
-			        buttons: [
-			            'colvis'
-			        ]   
+                    dom:            "Bfrtip",
+                    scrollX:        true,
+                    scrollCollapse: true,
+                    paging:         true,
+                    buttons:        [ 'colvis' ],
 			    });
 			    $(".buttons-colvis").html('Fields to Show');
-			    sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+			    //sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                sttable.columns( [ 1, 4, 5, 6, 8,10,11,12,13,14,15,16 ] ).visible( false, true );
 			     $(function () {
 			        $(".show-more").click(function () {
 			            if ($(this).is(":checked")) {
@@ -356,12 +358,14 @@ $(document.body).on('click', '#update_student', function(){
                 $('#student-table').DataTable();
                 var sttable = $("#student-b-table").DataTable({
                     dom: 'Bfrtip',
+                    scrollX: true,
                     buttons: [
                         'colvis'
                     ]
                 });
                 $(".buttons-colvis").html('Fields to Show');
-                sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                //sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                sttable.columns( [ 1, 4, 5, 6, 8,10,11,12,13,14,15,16 ] ).visible( false, true );
                 $('#title').html('Student Listing | ISMS');
                 toastr["success"](response.message);
 			} else {
@@ -423,11 +427,10 @@ function student_filters(){
                 $('#student-table').DataTable();
                 var sttable = $("#student-b-table").DataTable({
                     dom: 'Bfrtip',
-                    buttons: [
-                        'colvis'
-                    ]
+                    buttons: ['colvis']
                 });
-                sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                //sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                sttable.columns( [ 1, 4, 5, 6, 8,10,11,12,13,14,15,16 ] ).visible( false, true );
                 $('#title').html('Student Listing | ISMS');
             }
         }
@@ -866,13 +869,12 @@ $(document.body).on('click', '#update_class', function(){
             if(response.success){
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.classes_html);
-                $('#class_success').show().html(response.message);
-                $('.datatables').DataTable();
-                $('#title').html('Classes | ISMS');
                 $( ".modal-backdrop" ).remove();
+                $('#class_update_form')[0].reset();
                 $('#class_update').modal('hide');
+                toastr["success"](response.message);
             } else {
-                $('#class_error').show().html(response.message);
+                toastr["error"](response.message);
             }
 
         }
@@ -1272,6 +1274,7 @@ $(document.body).on('click', '#save_fee', function(){
                 $('#title').html('Session | ISMS');
                 $( ".modal-backdrop" ).remove();
                 $('#add_fee').modal('hide');
+                $('#add_fee_form')[0].reset();
             } else {
                 toastr["error"](response.message);
             }
@@ -1854,6 +1857,7 @@ $(document.body).on('click', '#save_domain_indicator', function(){
                 $('.domain_indicator_table').empty();
                 $('.domain_indicator_table').append(response.indicator_html);
                 $('#add_domain_group_indicator').modal('hide');
+                $('#add_domain_indicator_form')[0].reset();
                 toastr["success"](response.message);
             } else {
                 toastr["error"](response.message);
@@ -1882,11 +1886,11 @@ $(document.body).on('click', '#update_domain_indicator', function(){
         data: $('#edit_domain_indicator_form').serialize(),
         cache: false,
         success: function(response) {
-            if(response.indicator_html != ''){
+            if(response.success){
                 $('.domain_indicator_table').empty();
                 $('.domain_indicator_table').append(response.indicator_html);
                 $('#edit_domain_group_indicator').modal('hide');
-                toastr["error"](response.message);
+                toastr["success"](response.message);
             } else {
                 toastr["error"](response.message);
             }
@@ -2158,7 +2162,7 @@ $(document.body).on('click', '#assign_employee', function(){
                 $( ".modal-backdrop" ).remove();
                 toastr["success"](response.message);
             } else {
-                toastr["success"](response.message);
+                toastr["error"](response.message);
             }
         }
     });
@@ -2654,7 +2658,6 @@ $(document.body).on('click', '#save_exam_subject', function(){
             } else {
                 toastr["error"](response.message);
             }
-
         }
     });
 
@@ -3229,11 +3232,13 @@ $(document.body).on('click', '.delete-student', function(){
                     $('#student-table').DataTable();
                     var sttable = $("#student-b-table").DataTable({
                         dom: 'Bfrtip',
+                        scrollX: true,
                         buttons: [
                             'colvis'
                         ]
                     });
-                    sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                    //sttable.columns( [ 1, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16 ] ).visible( false, false );
+                    sttable.columns( [ 1, 4, 5, 6, 8,10,11,12,13,14,15,16 ] ).visible( false, true );
                     $('#title').html('Student Listing | ISMS');
                 } else {
                     $('#student_error').show().html(response.message);
@@ -3554,4 +3559,271 @@ $(document.body).on('click', '.edit-fee-management-btn', function(){
 $(document.body).on('click', '.disabled', function(){
     toastr["error"]('You are not authorized for this action!');
     return false;
+});
+
+function get_class_set(func_call) {
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'general_setting/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.classes_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.result_html);
+                $('.datatables').DataTable();
+                $('#title').html('Class Set | ISMS');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '.edit-domain', function(){
+    var base_url = $('#base').val();
+    var session = $(this).attr('data-session');
+    var course_id = $(this).attr('data-course-id');
+    $.ajax({
+        url: base_url+'general_setting/get_learning_domains',
+        data:{session:session,course_id:course_id},
+        type: 'post',
+        cache: false,
+        success: function(response) {
+            if(response.result_html != ''){
+                $('.modal-content').empty();
+                $('.modal-content').append(response.result_html);
+                $('#domain_edit_modal').modal('show');
+            }
+        }
+    });
+    return false;
+
+});
+
+$(document.body).on('click', '#save_class_set_domain', function(){
+    $.ajax({
+        url: $('#class_set_form').attr('data-action'),
+        type: 'post',
+        data: $('#class_set_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                toastr["success"](response.message);
+                $('#class_set_form')[0].reset();
+                $('#domain_edit_modal').modal('hide');
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+
+    return false;
+});
+
+function get_report_card(func_call) {
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'reportcard/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.result_html != ''){
+                $('#content-wrapper').empty();
+                $('#content-wrapper').append(response.result_html);
+                $('#title').html('SMS | Report Card');
+            }
+        }
+    });
+}
+
+$(document.body).on('click', '#save_report_card_group', function(){
+    $.ajax({
+        url: $('#report_card_group_form').attr('data-action'),
+        type: 'post',
+        data: $('#report_card_group_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                $('#content-wrapper').empty();
+                $('#content-wrapper').append(response.result_html);
+                $('#title').html('SMS | Report Card');
+
+                $('#report_card_group_form')[0].reset();
+                $('#report_card_modal').modal('hide');
+                $( ".modal-backdrop" ).remove();
+                toastr["success"](response.message);
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.edit-card-group', function(){
+    $.ajax({
+        url: $(this).attr('data-href'),
+        cache: false,
+        success: function(response) {
+            if(response.result_html != ''){
+                $('#report_form_container').empty();
+                $('#report_form_container').append(response.result_html);
+                $('#report_card_modal').modal('show');
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+    return false;
+});
+
+
+$(document.body).on('click', '.delete-card-group', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.result_html);
+                    toastr["error"](response.message);
+                } else {
+                    toastr["error"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+$(document.body).on('click', '#class_set_students', function(){
+	var class_set_id = $(this).attr('data-class-set-id');
+	var term_id = $(this).attr('data-term');
+    $.ajax({
+        url: $(this).attr('data-href'),
+        type: 'post',
+        data : { class_set_id : class_set_id, term_id:term_id },
+        cache: false,
+        success: function(response) {
+            $('.content-wrapper').remove();
+            $('#content-wrapper').append(response.result_html);
+        }
+    });
+    return false;
+});
+
+
+
+$(document.body).on('click', '.std-subject-report', function(){
+    var student_id = $(this).attr('data-href')
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'reportcard/get_student_subjects_report/'+student_id,
+        data: $('#student_form_filters').serialize(),
+        type: 'get',
+        cache: false,
+        success: function(response) {
+            if(response.result_html != ''){
+                $('#std_subjects_report_container').empty();
+                $('#std_subjects_report_container').append(response.result_html);
+            }
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.delete-employee', function () {
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            cache: false,
+            success: function (response) {
+                $('#student_error').hide();
+                $('#student_success').hide();
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.employee_html);
+                    $('#student_success').show().html(response.message);
+                } else {
+                    $('#student_error').show().html(response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+$(document.body).on('click', '.delete-fee-group', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.employee_html);
+                    $('.datatables').DataTable();
+                    $('#title').html('Employee Categories | ISMS');
+                    toastr['error'](response.message);
+                } else {
+                    toastr['error'](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
+    return false;
+});
+
+$(document.body).on('change', '#term', function(){
+    var term_id = $('#term').val();
+    var subject_detail_id = $('#subject_detail_id').val();
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'subjects/get_term_scores',
+        type: 'post',
+        data : { subject_detail_id : subject_detail_id, term_id:term_id },
+        cache: false,
+        success: function(response) {
+            if(response.result_html != ''){
+                $('.table-responsive').empty();
+                $('.table-responsive').append(response.result_html);
+            } else {
+                toastr["error"]('seem to be an error.');
+            }
+        }
+    });
+
+});
+
+$(document.body).on('click', '#save_report_comment', function(){
+    $.ajax({
+        url: $('#report_comment_form').attr('data-action'),
+        type: 'post',
+        data: $('#report_comment_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                toastr["success"](response.message);
+                $('#comment-field-1').empty();
+                $('#comment-field-1').append(response.result_html);
+                $('#report_comment_form')[0].reset();
+                $('#add_report_comment').modal('hide');
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '#student_report_btn', function(){
+    $("#student_report_form").submit();
 });
