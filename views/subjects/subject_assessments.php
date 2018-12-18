@@ -9,7 +9,7 @@
         <th>Category</th>
         <th>Pb.Scores?</th>
         <th>FG?</th>
-        <th></th>
+        <th style="width: 9%">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -36,7 +36,7 @@
                 </label>
             </td>
             <td>
-                <a class="btn btn-xs btn-success edit_assessment" data-href="<?php echo base_url()."subjects/edit_assessment/".$assessment['id']; ?>">
+                <a class="btn btn-xs btn-info edit_assessment" data-href="<?php echo base_url()."subjects/edit_assessment/".$assessment['id']; ?>">
                     <i class="fa fa-edit icon-margin" title="edit"></i>
                 </a>
                 <a class="btn btn-xs btn-danger delete-assessment" data-assessment-id = "<?php echo $assessment['id']; ?>"

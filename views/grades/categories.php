@@ -138,7 +138,7 @@
                 <input type="hidden" name="assessment_category_id" id="assessment_category_id">
                 <div class="modal-body mx-3">
                     <div class="form-group">
-                        <label for="category_name" class="col-form-label">Description:</label>
+                        <label for="category_name" class="col-form-label">Name:</label>
                         <input type="text" id="assessment_category_name" name="name" class="form-control validate">
 
                     </div>

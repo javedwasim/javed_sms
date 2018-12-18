@@ -127,19 +127,29 @@ Class Fee_model extends CI_Model {
             $fee_paid_filter = '=';
         }
 
-       $query = "SELECT sf.*, sf.id as student_fee_id, s.first_name, s.last_name, b.*, c.code, fee_type.name as fee_type
-                    FROM students s
-                    LEFT JOIN student_fee sf ON s.student_id=sf.student_id
-                    LEFT JOIN batches b ON b.id=s.batch_no
-                    LEFT JOIN classes c ON c.id=b.course_id
-                    LEFT JOIN fee_type ON fee_type.id=sf.fee_type_id
-                    WHERE 1 
-                    AND($batch_no = 0 OR s.batch_no = '$batch_no') 
-                    AND ($fee_from = 0  OR sf.date BETWEEN '$fee_from' AND '$fee_to')
-                    AND($fee_status = 0 OR CASE WHEN $fee_status = 3  THEN sf.status IS NULL
-                                            ELSE sf.status = '$fee_status' END)
-                    AND($fee_paid = 0 OR sf.amount_paid $fee_paid_filter $fee_paid)
-                  ";
+       $query ="SELECT sf.*, sf.id as student_fee_id, s.first_name, s.last_name,
+                fm.b_id,fm.arm,fm.course_id,fm.session, fm.code,
+                fee_type.name as fee_type,fm.fee_due_amount,fm.student_paid_fee
+                FROM students s 
+                LEFT JOIN student_fee sf ON s.student_id=sf.student_id 
+                LEFT JOIN fee_type ON fee_type.id=sf.fee_type_id 
+                LEFT JOIN(
+                    SELECT fm.amount as fee_due_amount,SUM(sf.amount) as 	student_paid_fee,sf.student_id,sf.fee_management_id,fm.id,fm.batch_id,c.code,
+                    b.id as b_id,b.arm,b.course_id,b.session
+                    FROM fee_management fm
+                    LEFT JOIN student_fee sf ON sf.fee_management_id = fm.id
+                    LEFT JOIN batches b ON b.id=fm.batch_id 
+                    LEFT JOIN classes c ON c.id=b.course_id 
+                    WHERE  sf.student_id IS NOT NULL
+                    GROUP BY sf.student_id,sf.fee_management_id
+                
+                )fm ON fm.student_id = sf.student_id and fm.id = sf.fee_management_id
+                WHERE 1 AND sf.id IS NOT NULL
+                AND($batch_no = 0 OR s.batch_no = '$batch_no') 
+                AND ($fee_from = 0  OR sf.date BETWEEN '$fee_from' AND '$fee_to')
+                AND($fee_status = 0 OR CASE WHEN $fee_status = 3  THEN sf.status IS NULL ELSE sf.status = '$fee_status' END)
+                AND($fee_paid = 0 OR sf.amount $fee_paid_filter $fee_paid)
+                ORDER BY `sf`.`id` ASC ";
 
         $result = $this->db->query($query);
         if($result) {
@@ -198,19 +208,82 @@ Class Fee_model extends CI_Model {
 
     }
 
-    public function get_all_fee() {
-        $result = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session,c.code')
-                    ->from('fee_management fm')
-                    ->join('fee_type ft','ft.id=fm.fee_type_id','left')
-                    ->join('batches b','b.id=fm.batch_id','left')
-                    ->join('classes c', 'c.id=b.course_id', 'left')
-                    ->get();
-        if ($result) {
+    public function get_all_fee($filter) {
+        $balance_filter = '>';
+        if(!empty($filter['fee_type'])){
+            $fee_type = $filter['fee_type'];
+        }else{
+            $fee_type = 0;
+        }
+        if(!empty($filter['due_balance'])){
+            $due_balance = $filter['due_balance'];
+            $balance_filter = $filter['balance_filter']=='greater'?'>':'<';
+        }else{
+            $due_balance = 0;
+
+        }
+        if(!empty($filter['fee_status'])){
+            $fee_status = $filter['fee_status'];
+        }else{
+            $fee_status = 0;
+        }
+        if(!empty($filter['due_date'])){
+            $due_date = $filter['due_date'];
+        }else{
+            $due_date = 0;
+        }
+        if(!empty($filter['start_date'])){
+            $start_date = $filter['start_date'];
+        }else{
+            $start_date = 0;
+        }
+        $query = "SELECT fm.*, ft.name as fee_name, b.arm, b.session, c.code
+                    FROM fee_management fm
+                    LEFT JOIN fee_type ft ON ft.id=fm.fee_type_id
+                    LEFT JOIN batches b ON b.id=fm.batch_id
+                    LEFT JOIN classes c ON c.id=b.course_id
+                    WHERE 1 
+                    AND($fee_type = 0 OR fm.fee_type_id = $fee_type)
+                    AND($due_balance = 0 OR fm.amount $balance_filter= $due_balance)
+                    AND($fee_status = 0 OR fm.status = $fee_status) 
+                    AND($due_date = 0 OR fm.due_date = '$due_date')
+                    AND($start_date = 0 OR fm.start_date = '$start_date')";
+        //echo $this->db->last_query();
+        $result = $this->db->query($query);
+        if($result) {
             return $result->result_array();
         } else {
             return array();
         }
 
+    }
+
+    public function delete_fee_group($id) {
+        $this->db->where('id', $id)->delete('fee_management');
+        return $this->db->affected_rows();
+    }
+
+    public function get_fee_group_by_id($id) {
+        $result = $this->db->select('fm.*')
+                    ->from('fee_management fm')
+                    ->where('fm.id',$id)
+                    ->limit(1)
+                    ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function update_fee_group($data){
+        $id = $data['fee_group_id'];
+        unset($data['fee_group_id']);
+        unset($data['created_by']);
+        $this->db->where('id', $id)->update('fee_management', $data);
+        //echo $this->db->last_query();
+        return $this->db->affected_rows();
     }
 
 }

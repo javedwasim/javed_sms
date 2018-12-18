@@ -46,7 +46,7 @@
     <div class="form-group row">
         <label for="due_date" class="col-sm-2 col-form-label">Due date<span style="color: red">*</span></label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="edit_due_date" name="due_date"
+            <input type="text" class="form-control disabled" id="edit_due_date" name="due_date" autocomplete="off"
                    value="<?php echo $assessment['due_date']; ?>" required>
         </div>
     </div>

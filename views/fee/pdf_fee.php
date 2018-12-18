@@ -36,7 +36,7 @@ $pdf->SetSubject('ISMS');
 $pdf->SetKeywords('ISMS, PDF, example, test, guide');
 
 // set default header data
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' Student List', PDF_HEADER_STRING);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, 12, PDF_HEADER_TITLE.' Student List', PDF_HEADER_STRING);
 
 // set header and footer fonts
 $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
@@ -82,8 +82,8 @@ $html  .= "
                     <th>Student</th>
                     <th>Batch</th>
                     <th>Title</th>
-                    <th>Amount</th>
-                    <th>Total</th>
+                    <th>Due Fee</th>
+                    <th>Paid Fee</th>
                     <th>Type</th>
                     <th>Status</th>
                     <th>Date</th>
@@ -93,22 +93,20 @@ $html  .= "
             ";
 foreach ($payments as $payment):
     $session = $payment['session'];
-    $session = $payment['code']. ' '.$payment['arm'].'($session)';
+    $session = $payment['code']. ' '.$payment['arm']."($session)";
     $first_name = $payment['first_name'];
     $last_name = $payment['last_name'];
     $code = $payment['code'];
     $arm = $payment['arm'];
     $title = $payment['title'];
     $amount = $payment['amount'];
-    $amount_paid = $payment['amount_paid'];
+    $fee_due_amount = $payment['fee_due_amount'];
     $fee_type = $payment['fee_type'];
     $status = $payment['status'];
     $date = $payment['date'];
     $class = '';
-    if($payment['status']=='1'){
-        $fstatus = '<span class="badge badge-danger">pending</span>';
-    }elseif($payment['status']=='2'){
-        $fstatus = '<span class="badge badge-danger">completed</span>';
+    if($payment['fee_due_amount']-$payment['student_paid_fee'] == 0){
+        $fstatus = '<span class="badge badge-success">completed</span>';
     }else{
         $fstatus = '<span class="badge badge-warning" >fee due</span>';
         $class = 'bgcolor="#FFFF00"';
@@ -117,8 +115,8 @@ $html .= "<tr>
             <td>$first_name.$last_name</td>
             <td>$session</td>
             <td>$title</td>
+            <td>$fee_due_amount</td>
             <td>$amount</td>
-            <td>$amount_paid</td>
             <td>$fee_type</td>
             <td $class>$fstatus</td>
             <td>$date</td>

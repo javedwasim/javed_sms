@@ -120,7 +120,7 @@ Class Student_model extends CI_Model {
 		$student_id = $this->db->insert_id();
         //create menu group
         $this->db->insert('menu_group', array(
-            'menu_group_name' => $student_data['first_name'] . ' ' . $student_data['middle_name'],
+            'menu_group_name' => $student_data['first_name'] . ' ' . $student_data['last_name'],
             'created_by' => 1,
             'status' => 1,
         ));
@@ -136,7 +136,7 @@ Class Student_model extends CI_Model {
         //create student demographic
         $this->db->insert('demographics',array('student_id'=>$student_id,'batch_id'=>$student_data['batch_no']));
 	    //create user of employee.
-        $password = password_hash('s' . $student_id.'123', PASSWORD_BCRYPT);
+        $password = password_hash('s' . $student_id.'12345', PASSWORD_BCRYPT);
         $user_data = array('name' => 's' . $student_id, 'created_by' => $created_by['login_id'],
             'email' => $student_data['email'], 'password' => $password, 'login_rights_group_id' => $login_rights_group_id);
         $this->db->insert('login', $user_data);
@@ -163,12 +163,17 @@ Class Student_model extends CI_Model {
     }
 
 	public function get_student_by_id($student_id) {
-		$result = $this->db->select('students.*,login.email as email,b.arm,b.session,c.code,ases.*')
+		$result = $this->db->select('students.*,login.email as email,b.arm,b.session,c.code,ases.*,
+		                cl.country_name,states.name as state_name,cities.name as city_name,sc.category')
 						->from('students')
                         ->join('login', 'login.name=students.username', 'left')
                         ->join('batches b', 'b.id=students.batch_no', 'left')
                         ->join('classes c', 'c.id=b.course_id', 'left')
                         ->join('acadamic_sessions ases', 'ases.name=b.session', 'left')
+                        ->join('countries_list cl', 'cl.id=students.nationality', 'left')
+                        ->join('states', 'states.id=students.state_of_origin', 'left')
+                        ->join('cities', 'cities.id=students.lga_of_origin', 'left')
+                        ->join('student_categories sc', 'sc.id=students.student_category', 'left')
 						->where('student_id', $student_id)
 						->limit(1)
 						->get();
@@ -264,7 +269,7 @@ Class Student_model extends CI_Model {
         $login_rights_group_id = $this->db->insert_id();
 
         //create user of guardian.
-        $password = password_hash('g' . $guardian_id.'123', PASSWORD_BCRYPT);
+        $password = password_hash('g' . $guardian_id.'12345', PASSWORD_BCRYPT);
         $user_data = array('name' => 'g' . $guardian_id, 'created_by' => $created_by['login_id'],
                     'email' => $guardian_data['email'], 'password' => $password,
                     'login_rights_group_id' => $login_rights_group_id);
@@ -328,8 +333,17 @@ Class Student_model extends CI_Model {
                     GROUP BY guardians.guardian_id
                     ORDER by guardians.guardian_id";
         }else{
+            $guardian = $this->student_guardian_profile();
+            if(isset($guardian['guardian_id']) && !empty($guardian['guardian_id'])){
+                $guardian_id = $guardian['guardian_id'];
+                $where = " WHERE guardians.guardian_id = $guardian_id ";
+            }else{
+                $where = " WHERE 1 ";
+            }
+
             $sql = "select guardians.*,s.student_id from guardians 
                     LEFT JOIN student_guardians s on s.guardian_id=guardians.guardian_id and student_id = $student_id
+                    $where
                     GROUP BY guardians.guardian_id
                     ORDER by guardians.guardian_id";
         }
@@ -366,17 +380,14 @@ Class Student_model extends CI_Model {
 
         if(isset($filters['gender']) && (!empty($filters['gender'])) ){
             $gender = $filters['gender'];
-            $where .=  " AND (gender = '' OR gender = '$gender')";
+            $where .=  " AND ('$gender' = '' OR gender = '$gender')";
         }
+
+
 
         if(isset($filters['status']) && (!empty($filters['status'])) ){
             $status = $filters['status'];
-            $where .=  " AND (status = '' OR status = '$status')";
-        }
-
-        if(isset($filters['status']) && (!empty($filters['status'])) ){
-            $status = $filters['status'];
-            $where .=  " AND (status = '' OR status = '$status')";
+            $where .=  " AND ($status = 0 OR students.status = '$status')";
         }
 
         if(isset($filters['course']) && (!empty($filters['course'])) ){
@@ -512,7 +523,7 @@ Class Student_model extends CI_Model {
     public function change_pwd($data){
 	    $id = $data['student_id'];
 	    $new_pwd = password_hash($data['new_pwd'], PASSWORD_BCRYPT);
-        $this->db->where('user_id', $id)->update('login', array('password'=>$new_pwd));
+        $this->db->where('name', $id)->update('login', array('password'=>$new_pwd));
         return $this->db->affected_rows();
     }
 
@@ -636,17 +647,46 @@ Class Student_model extends CI_Model {
 
     public function get_student_fees(){
         $student = $this->logged_user_info();
+        $std_id = $student['student_id'];
         $batch_no = $student['batch_no'];
-        $result  = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session,
+        if($student){
+            $result  = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session,
                     c.code,SUM(sf.amount) as amount_paid')
-                    ->from('fee_management fm')
-                    ->join('fee_type ft','ft.id=fm.fee_type_id','left')
-                    ->join('batches b','b.id=fm.batch_id','left')
-                    ->join('classes c', 'c.id=b.course_id', 'left')
-                    ->join('student_fee sf', 'sf.fee_management_id = fm.id', 'left')
-                    ->where('fm.batch_id',$batch_no)
-                    ->group_by('fm.id')
-                    ->get();
+                ->from('fee_management fm')
+                ->join('fee_type ft','ft.id=fm.fee_type_id','left')
+                ->join('batches b','b.id=fm.batch_id','left')
+                ->join('classes c', 'c.id=b.course_id', 'left')
+                ->join('student_fee sf', 'sf.fee_management_id = fm.id and student_id = '.$std_id.' ', 'left')
+                ->where('fm.batch_id',$batch_no)
+                ->group_by('fm.id')
+                ->get();
+            //echo $this->db->last_query();
+        }else{
+            $guardian = $this->session->userdata('userdata');
+            $query  = $this->db->select('grd.*, st.batch_no,GROUP_CONCAT(st.batch_no) as batch_no,
+                        GROUP_CONCAT(st.student_id) as st_id')
+                        ->from('guardians grd')
+                        ->join('student_guardians stg','stg.guardian_id=grd.guardian_id','left')
+                        ->join('students st','stg.student_id=st.student_id','left')
+                        ->where('grd.username',$guardian['name'])
+                        ->group_by('grd.guardian_id')
+                        ->get();
+            $student_batch = $query->row_array();
+            $batch_no = $student_batch['batch_no'];
+            $student_id = $student_batch['st_id'];
+            //print_r($student_batch['st_id']); die();
+            $result  = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session,
+                        c.code,SUM(sf.amount) as amount_paid')
+                        ->from('fee_management fm')
+                        ->join('fee_type ft','ft.id=fm.fee_type_id','left')
+                        ->join('batches b','b.id=fm.batch_id','left')
+                        ->join('classes c', 'c.id=b.course_id', 'left')
+                        ->join('student_fee sf', 'sf.fee_management_id = fm.id and sf.student_id IN ('.$student_id.')', 'left')
+                        ->where('fm.batch_id',$batch_no)
+                        ->where_in('fm.batch_id',$batch_no)
+                        ->group_by('fm.id')
+                        ->get();
+        }
         //echo $this->db->last_query();
         if ($result) {
             return $result->result_array();
@@ -655,7 +695,7 @@ Class Student_model extends CI_Model {
         }
     }
 
-    public function get_student_fee($id){
+    public function get_student_fee($id,$student_id){
         $user = $this->session->userdata('userdata');
         $result = $this->db->select('*')->from('students')->where('username',$user['name'])->limit(1)->get();
         $student = $result->row_array();
@@ -668,8 +708,10 @@ Class Student_model extends CI_Model {
                             ->join('classes c', 'c.id=b.course_id', 'left')
                             ->join('student_fee sf', 'sf.fee_management_id = fm.id', 'left')
                             ->where('fm.id',$id)
+                            ->where('sf.student_id',$student_id)
                             ->limit(1)
                             ->get();
+        //echo $this->db->last_query();
         if ($result) {
             return $result->row_array();
         } else {
@@ -708,10 +750,15 @@ Class Student_model extends CI_Model {
     }
 
     public function create_payment($data){
-        $this->db->insert('student_fee',
-            array('student_id'=>$data['student_id'],
+        $this->db->insert('student_fee', array('student_id'=>$data['student_id'],
                   'fee_management_id'=>$data['fee_management_id'],
-                  'amount'=>$data['amount']));
+                  'amount'=>$data['amount'],
+                  'fee_type_id'=>$data['fee_type_id'],
+                  'method'=>'cash',
+                  'date'=>date('Y-m-d H:i:s'),
+                  'title'=>'cash',
+                  'description'=>'Payment through cash',
+        ));
         return $this->db->insert_id();
     }
 
@@ -723,6 +770,85 @@ Class Student_model extends CI_Model {
         $result = $this->db->query($sql);
         if($result) {
             return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function create_online_payment($chargeJson,$data){
+
+        $amount = $chargeJson['amount'];
+        $balance_transaction = $chargeJson['balance_transaction'];
+        $currency = $chargeJson['currency'];
+        $status = $chargeJson['status'];
+        //insert tansaction data into the database
+        $dataDB = array(
+            'student_id' => $data['student_id'],
+            'email' => $data['email'],
+            'card_num' => $data['card_num'],
+            'card_cvc' => $data['cvc'],
+            'card_exp_month' => $data['exp_month'],
+            'card_exp_year' => $data['exp_year'],
+            'item_price' => $data['amount_paid'],
+            'item_price_currency' => $currency,
+            'paid_amount' => $amount,
+            'paid_amount_currency' => $currency,
+            'txn_id' => $balance_transaction,
+            'payment_status' => $status,
+        );
+
+        $this->db->insert('orders', $dataDB);
+        $order_id = $this->db->insert_id();
+
+        $fee_data = array(
+            'student_id'=>$data['student_id'],
+            'title'=>$data['title'],
+            'description'=>$data['description'],
+            'date'=>$data['date'],
+            'amount'=>$data['amount_paid'],
+            'amount_paid'=>$data['amount_paid'],
+            'fee_type_id'=>$data['fee_type_id'],
+            'status'=>'completed',
+            'method'=>'card',
+            'fee_management_id'=>$data['fee_management_id'],
+        );
+        $this->db->insert('student_fee', $fee_data);
+        $student_fee = $this->db->insert_id();
+        return array('order_id'=>$order_id,'student_fee'=>$student_fee);
+
+    }
+
+    public function get_guardian_student(){
+        $user = $this->session->userdata('userdata');
+        $username = $user['name'];
+
+        $sql = "SELECT g.*, GROUP_CONCAT(student.first_name) AS st_name, 
+                GROUP_CONCAT(student.student_id) AS st_id,
+                GROUP_CONCAT(DISTINCT(CONCAT('(',student.arm,'-',student.session,')'))) AS batch,
+                st.created_at AS activated_at
+                FROM guardians g 
+                LEFT JOIN student_guardians st ON st.guardian_id=g.guardian_id 
+                LEFT JOIN(
+                    SELECT students.*,batches.arm,batches.session FROM students
+                    LEFT JOIN batches ON batches.id = students.batch_no 
+                    GROUP BY students.student_id
+                )student ON student.student_id = st.student_id
+                WHERE g.username = '$username'
+                LIMIT 1";
+        $result = $this->db->query($sql);
+        if($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+
+
+    }
+
+    public function validate_guardian_email($email){
+        $result = $this->db->select('*')->from('guardians')->where('email',$email)->limit(1)->get();
+        if($result) {
+            return $result->row_array();
         } else {
             return array();
         }

@@ -58,7 +58,11 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Students</th>
-                                            <th style="width: 9%">Actions</th>
+                                            <?php if($userdata['name']=='admin'): ?>
+                                                <th style="width: 9%">Actions</th>
+                                            <?php else: ?>
+                                                <th style="width: 9%"></th>
+                                            <?php endif; ?>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -66,18 +70,26 @@
                                             <tr>
                                                 <td>
                                                     <?php if ($userdata['name'] == 'admin') { ?>
-                                                        <a href="<?php echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                        <a href="javascript:void(0)"
+                                                           data-href="<?php echo site_url('batches/demographics/') . $batch['id']; ?>"
+                                                           class="link prof-link" id="batch_detail_view">
                                                             <?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></a>
                                                     <?php } elseif(($userdata['name'] != 'admin') && !empty($rights[0]['other_rights'])) { ?>
                                                         <?php if($batch['employee_id']>0){ ?>
-                                                            <a href="<?php  echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                            <a href="javascript:void(0)"
+                                                               data-href="<?php  echo site_url('batches/demographics/') . $batch['id']; ?>"
+                                                               class="link prof-link" id="batch_detail_view">
                                                                 <?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></a>
                                                         <?php } else { ?>
-                                                            <a href="<?php  echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                            <a href="javascript:void(0)"
+                                                               data-href="<?php  echo site_url('batches/demographics/') . $batch['id']; ?>"
+                                                               class="link prof-link" id="batch_detail_view">
                                                                 <?php echo $batch['arm']; ?></a>
                                                         <?php } ?>
                                                     <?php } else{ ?>
-                                                        <a href="<?php echo site_url('batches/demographics/') . $batch['id']; ?>" class="link prof-link">
+                                                        <a href="javascript:void(0)"
+                                                           data-href="<?php echo site_url('batches/demographics/') . $batch['id']; ?>"
+                                                           class="link prof-link" id="batch_detail_view">
                                                             <?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></a>
                                                     <?php } ?>
                                                 </td>
@@ -91,7 +103,7 @@
                                                            data-batch-id="<?php echo $batch['id']; ?> ?>"
                                                            data-href="<?php echo site_url('batches/edit/') . $batch['id']; ?>">
                                                            <i class="fa fa-edit icon-margin"  title="Edit"></i></a>
-                                                    <?php } else { ?>
+                                                    <?php } elseif($userdata['name'] == 'admin') { ?>
                                                         <a class="btn btn-info btn-xs" onclick="notification();">
                                                             Edit<i class="fa fa-edit" title="Edit"></i></a>
                                                     <?php } ?>
@@ -165,12 +177,21 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 
     <script>
         $(function () {
+
+            $('#new_batch').on('hidden.bs.modal', function () {
+                $('#arm').val('');
+                $('#course_id').removeAttr("disabled");
+                $('#session').removeAttr("readonly");
+                $('#course_id').find('option:selected').remove();
+                $('#session').find('option:selected').remove();
+            });
 
             $('#batch').DataTable({
                 "paging": true,

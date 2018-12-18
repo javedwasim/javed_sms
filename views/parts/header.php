@@ -52,11 +52,14 @@
   <!-------- radio toggle ----------->
   <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
   <!-- Material Design Bootstrap -->
-    <link href="<?php echo base_url(); ?>assets/plugins/mbbootstrap/css/mdb.min.css" rel="stylesheet">
-    <!-- toster alerts -->
-     <link href="<?php echo base_url(); ?>assets/plugins/toster/build/toastr.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/plugins/mbbootstrap/css/mdb.min.css" rel="stylesheet">
+  <!-- toster alerts -->
+  <link href="<?php echo base_url(); ?>assets/plugins/toster/build/toastr.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- Custom style -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/custom.css">
+
 
   <script src="<?php echo base_url(); ?>assets/plugins/jquery/jquery.min.js"></script>
 

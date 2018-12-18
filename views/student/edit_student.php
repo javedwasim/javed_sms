@@ -32,7 +32,7 @@
         <div class="container-fluid">
           <div class="row"> 
             <div class="col-md-12">
-              <form id="student_update_form" role="form" method="post" action="<?php echo site_url('students/update_student/').$student['student_id'] ?>"
+              <form id="student_update_form" role="form" method="post"
                     data-action="<?php echo site_url('students/update_student/').$student['student_id'] ?>" enctype="multipart/form-data">
                 <div class="card card-primary">
                   <div class="card-header">

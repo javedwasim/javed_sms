@@ -47,14 +47,14 @@
                                 </div>
                             </div>
                             <hr/>
-                            <form rol="form" style="width: 100%;" id="employee_form_filters">
+                            <form rol="form" style="width: 100%;" id="employee_form_filters" onsubmit="return false;" >
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label> Search</label>
                                             <input type="text" name="search-employee" class="form-control emp_filter"
                                                    value="<?php echo isset($filters['search-employee']) ? $filters['search-employee'] : ''; ?>"
-                                                   onchange="employee_filters()">
+                                                   onchange=" employee_filters()">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -88,9 +88,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Department</label>
@@ -134,23 +131,22 @@
                                                    onchange="employee_filters()" value="<?php echo isset($filters['date_of_birth'])?$filters['date_of_birth']: ''; ?>">
                                         </div>
                                     </div>
-                                </div>
-                            </form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group mt-3">
-                                        <button type="submit" class="btn btn-primary btn-md" onclick="return resetForm()">
-                                            <i class="fa fa-refresh"></i> Reset</button>
+                                    <div class="col-md-3">
+                                        <div class="form-group mt-3">
+                                            <button type="button" class="btn btn-primary btn-md" onclick="return resetEmpForm()">
+                                                <i class="fa fa-refresh"></i> Reset</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
+                            </form>
                             <hr/>
                             <table id="employee_listing_table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
                                     <th>Employee No</th>
+                                    <th class="">Username</th>
+                                    <th class="">Email</th>
                                     <th class="visibility">Department</th>
                                     <th class="visibility">Category</th>
                                     <th class="visibility">Postion</th>
@@ -167,12 +163,14 @@
                                 <tbody>
                                 <?php foreach ($employees as $employee) { ?>
                                     <tr>
-                                        <td>
+                                        <td class="">
                                             <a class="prof-link emp_profile"
                                                data-href="<?php echo site_url('employee/profile/') . $employee['employee_id'] ?>" >
                                                 <?php echo $employee['surname'] . ', ' . $employee['first_name'] ?></a>
                                         </td>
-                                        <td><?php echo $employee['employee_no']; ?></td>
+                                        <td class=""><?php echo $employee['employee_no']; ?></td>
+                                        <td class=""><?php echo $employee['username']; ?></td>
+                                        <td class=""><?php echo $employee['email']; ?></td>
                                         <td class="visibility"><?php echo $employee['dept_name']; ?></td>
                                         <td class="visibility"><?php echo $employee['category']; ?></td>
                                         <td class="visibility"><?php echo $employee['position']; ?></td>
@@ -224,9 +222,11 @@
             dom: 'Bfrtip',
             buttons: [
                 'colvis'
-            ]
+            ],
+            scrollX:true
+
         });
-        epmtable.columns( [ 2, 3,4, 5, 6,7,8,9,10,11] ).visible( false, false );
+        epmtable.columns( [ 4,5,6,7,8,9,10,11,12,13] ).visible( false, true );
         $(".buttons-colvis").html('Fields to Show');
 
         $('#date_of_join').datepicker({
@@ -237,9 +237,11 @@
         });
 
     });
+
     function employee_filters() {
+        var base_url = $('#base').val();
         $.ajax({
-            url: '/isms/employee/employee_filters',
+            url: base_url+'employee/employee_filters',
             data: $('#employee_form_filters').serialize(),
             type: 'post',
             cache: false,
@@ -251,11 +253,11 @@
                 }
             }
         });
+        return false;
     }
 
-    function resetForm() {
+    function resetEmpForm() {
         $('.emp_filter').val('');
         employee_filters();
     }
-
 </script>

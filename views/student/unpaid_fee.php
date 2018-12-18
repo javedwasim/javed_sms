@@ -77,7 +77,7 @@ $pdf->SetFont('helvetica', '', 8);
 
 // NON-BREAKING ROWS (nobr="true")
 
-$unpaid_fee_table = '<table id="fee_management_table" class="display responsive no-wrap table-bordered table-striped" style="width: 100%;">';
+$unpaid_fee_table = '<table id="fee_management_table"  border="1" cellspacing="3" cellpadding="4">';
 $unpaid_fee_table.= '<thead>';
 $unpaid_fee_table.= '<tr>
                         <th>Type</th>
@@ -100,7 +100,7 @@ foreach ($fees as $fee):
     $description = $fee['description'];
     $start_date = date('F j, Y',strtotime($fee['start_date']));
     $due_date = date('F j, Y',strtotime($fee['due_date']));
-    $status = $fee['status']==1?'Actve':'';
+    $status = $fee['status']==1?'Active':'';
     $session = $fee['code'] . '-' . $fee['arm'] . '(' . $fee['session'] . ')';
     $created_at = date('F j, Y',strtotime($fee['created_at']));
     $amount = $fee['amount'];

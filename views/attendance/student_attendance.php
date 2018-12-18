@@ -25,7 +25,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="attendance_date" name="attendance_date"
                                    required value="<?php echo isset($attendance_date) ? $attendance_date : ''; ?>"
-                                   autocomplete="off" placeholder="date">
+                                   autocomplete="off" placeholder="date" data-date-end-date="0d">
                         </div>
                     </div>
                     <?php ?>

@@ -45,12 +45,7 @@ class Domains extends MY_Controller
     {
         $data['indicators'] = $this->Domain_model->get_domain_indicators();
         $data['grades'] = $this->Domain_model->get_grade_scales();
-        $this->load->view('parts/header');
-        $this->load->view('parts/topbar');
-        $this->load->view('parts/sidebar');
-        $json['domain_html'] = $this->load->view('grades/add_domain_group', $data);
-        $this->load->view('parts/footer');
-
+        $json['result_html'] = $this->load->view('grades/add_domain_group', $data,true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
@@ -63,12 +58,7 @@ class Domains extends MY_Controller
         $data['domain'] = $this->Domain_model->get_domain_group_by_id($id);
         $data['domain_id'] = $id;
         $data['indicator_status'] = 'update';
-        $this->load->view('parts/header');
-        $this->load->view('parts/topbar');
-        $this->load->view('parts/sidebar');
-        $json['domain_html'] = $this->load->view('grades/add_domain_group', $data);
-        $this->load->view('parts/footer');
-
+        $json['result_html'] = $this->load->view('grades/add_domain_group', $data,true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
@@ -84,22 +74,34 @@ class Domains extends MY_Controller
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
             $json['message'] = validation_errors();
+            if ($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+
         }else{
             //save domain group
             $domain= $this->input->post();
             $domain_id = $this->Domain_model->save_domain_group($domain);
             //save domain indicators from temp table
-            $result = $this->Domain_model->save_indicators($domain_id);
-            if ($result) {
-                $this->session->set_flashdata('success', 'Domain group save successfully!');
-                redirect('domains/group_domains');
+            $this->Domain_model->save_indicators($domain_id);
+            if ($domain_id) {
+                $json['success'] = true;
+                $json['message'] = 'Domain group save successfully!';
+                $data['domains'] = $this->Domain_model->get_domains();
+                $json['result_html'] = $this->load->view('grades/domains', $data,true);
             } else {
-                $this->session->set_flashdata('error', 'Seems to an error while saving domain group');
-                redirect('domains/group_domains');
+               // $this->session->set_flashdata('error', 'Seems to an error.');
+               // redirect('domains/group_domains');
+                $json['error'] = true;
+                $json['message'] = 'Seem to be an error.';
+                $data['domains'] = $this->Domain_model->get_domains();
+                $json['result_html'] = $this->load->view('grades/domains', $data,true);
+            }
+            if ($this->input->is_ajax_request()) {
+                set_content_type($json);
             }
 
         }
-
 
     }
 
@@ -123,7 +125,6 @@ class Domains extends MY_Controller
 
                     $data['indicators'] = $this->Domain_model->get_domain_indicators();
                 }
-
                 $json['indicator_html'] = $this->load->view('grades/domain_indicator_table', $data, true);
                 $json['success'] = true;
                 $json['message'] = "Domain indicator successfully added.";
@@ -220,7 +221,6 @@ class Domains extends MY_Controller
         }
     }
 
-
     public function delete_domain_group($id) {
         $result = $this->Domain_model->delete_domain_group($id);
         if ($result) {
@@ -237,6 +237,12 @@ class Domains extends MY_Controller
         }
     }
 
-
+    public function add_domain_indicator_view(){
+        $data['domain_id'] = $this->input->post('domain_id');
+        $json['result_html'] = $this->load->view('grades/add_indicator_form', $data, true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+    }
 
 }

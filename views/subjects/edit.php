@@ -3,7 +3,7 @@
     ?>">
     <label for="inputPassword" class="col-sm-4 col-form-label">Subject base</label>
     <div class="col-sm-8">
-        <select class="form-control select2" name="subject_id" required>
+        <select class="form-control select2" name="subject_id" id="subject_id" required>
             <option value="">Please Select</option>
             <?php foreach ($subjects as $subject): ?>
                 <option value="<?php echo $subject['id'] ?>"<?php echo ($subject_detail['subject_id']==$subject['id'])?'selected':''; ?>>
@@ -24,7 +24,7 @@
 <div class="form-group row">
     <label for="inputPassword" class="col-sm-4 col-form-label">Elective group</label>
     <div class="col-sm-8">
-        <select class="form-control" name="elective_group_id">
+        <select class="form-control" name="elective_group_id" id="elective_group_id">
             <option value="">Please Select</option>
             <?php foreach ($groups as $group): ?>
                 <option value="<?php echo $group['id'] ?>"<?php echo ($subject_detail['elective_group_id']==$group['id'])?'selected':''; ?>>
@@ -37,7 +37,7 @@
 <div class="form-group row">
     <label for="inputPassword" class="col-sm-4 col-form-label">Batches</label>
     <div class="col-sm-8">
-        <select class="form-control" name="batch_id">
+        <select class="form-control" name="batch_id" id="batch_id">
             <option value="">Please Select</option>
             <?php foreach ($batches as $batch):$session = $batch['session']; ?>
                 <option value="<?php echo $batch['id'] ?>"<?php echo ($subject_detail['batch_id']==$batch['id'])?'selected':''; ?>>

@@ -85,25 +85,7 @@
         <?php }elseif(!empty($this->session->flashdata('success'))){ ?>
             toastr["success"]('<?php echo $this->session->flashdata('success'); ?>');
         <?php } ?>
-            
-        $(document.body).on('click', '.add-calendar-eveent', function(){
-            $.ajax({
-                    url: $(this).attr('data-href'),
-                    type: 'post',
-                    cache: false,
-                    success: function(response) {
-                        if (response.add_event_html!=='') {
-                            $('.content-wrapper').remove();
-                            $('#content-wrapper').append(response.add_event_html);
-                        } else {
-                            toastr["warning"]('Unable to load view');
-                        }
-                    }
-            });
-
-            return false;
-        });
 	
-	$("#events_table").DataTable({});
+	    $("#events_table").DataTable({});
     });
 </script>

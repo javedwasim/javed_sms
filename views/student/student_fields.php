@@ -113,7 +113,7 @@
                     <div class="col-md-3">
                       <div class="form-group">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="email" <?php echo isset($student_fields['email'])&&($student_fields['email']==1)?'checked':''; ?> name="student_form_fields[]">
+                          <input class="form-check-input" type="checkbox" value="email" disabled checked name="student_form_fields[]">
                           <label class="form-check-label">Email.</label>
                         </div>
                       </div>
@@ -198,14 +198,14 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="health_info" <?php echo isset($student_fields['health_info'])&&($student_fields['health_info']==1)?'checked':''; ?> name="student_form_fields[]">
-                          <label class="form-check-label">Health Info.</label>
-                        </div>
-                      </div>
-                    </div>
+<!--                    <div class="col-md-3">-->
+<!--                      <div class="form-group">-->
+<!--                        <div class="form-check">-->
+<!--                          <input class="form-check-input" type="checkbox" value="health_info" --><?php //echo isset($student_fields['health_info'])&&($student_fields['health_info']==1)?'checked':''; ?><!-- name="student_form_fields[]">-->
+<!--                          <label class="form-check-label">Health Info.</label>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
                     <div class="col-md-3">
                       <div class="form-group">
                         <div class="form-check">

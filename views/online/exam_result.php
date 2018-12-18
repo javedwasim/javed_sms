@@ -82,7 +82,7 @@
                                                             } ?>
                                                     </select>
                                                 <?php endif; ?>
-                                                <button id="student_result_summary" type="submit" class="btn btn-sm btn-success pull-right get-btn"><i class="fa fa-plus"></i> Get Student Result</button>
+                                                <button id="student_result_summary" type="submit" class="btn  btn-primary pull-right get-btn"><i class="fa fa-plus"></i> Get Student Result</button>
                                             </form>
                                         </div>
                                     </div>

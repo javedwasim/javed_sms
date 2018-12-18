@@ -269,11 +269,8 @@ class Employee_setting extends MY_Controller
                 $employee_fields[$employee_field] = 1;
             }
             $result_employee = $this->Employee_model->update_employee_form_fields($employee_fields, 'employee');
-
-            if (!$result_employee) {
-                $json['message'] = 'Fields successfully added/updated.';
-                $json['success'] = true;
-            }
+            $json['message'] = 'Fields successfully updated.';
+            $json['success'] = true;
 
         }
         if($this->input->is_ajax_request()) {

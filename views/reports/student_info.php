@@ -1,3 +1,4 @@
+<?php $userdata = $this->session->userdata('userdata');  $role = $userdata['role']; ?>
 <div class="row">
     <div class="col-sm-5" >
         <table class="table table-condensed">
@@ -37,15 +38,17 @@
             </tbody>
         </table>
     </div>
-    <div class="btn-group pull-right" style="height: 20%">
-        <form id="student_report_form" method="post" role="form" target="_blank"
-             action="<?php echo site_url('reportcard/createPdf') ?>" enctype="multipart/form-data">
-            <input type="hidden" name="student_id" id="student_id" value="<?php echo $student['student_id']; ?>">
-            <input type="hidden" name="term_id" id="term_id" value="<?php echo $term_id; ?>">
-            <a class="btn btn-primary"  href="javascript:void(0)" id="student_report_btn">
-                <i class="fa fa-file-pdf-o"></i>PDF</a>
-        </form>
-    </div>
+    <?php if(($userdata['name']=='admin') || !empty($student)): ?>
+        <div class="btn-group pull-right" style="height: 20%">
+            <form id="student_report_form" method="post" role="form" target="_blank"
+                 action="<?php echo site_url('reportcard/createPdf') ?>" enctype="multipart/form-data">
+                <input type="hidden" name="student_id" id="student_id" value="<?php echo $student['student_id']; ?>">
+                <input type="hidden" name="term_id" id="term_id" value="<?php echo $term_id; ?>">
+                <a class="btn btn-primary"  href="javascript:void(0)" id="student_report_btn">
+                    <i class="fa fa-file-pdf-o"></i>PDF</a>
+            </form>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div class="modal fade" id="add_report_comment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -53,7 +56,7 @@
         <div class="modal-content">
             <div class="modal-header text-center">
                 <h4 class="modal-title w-100 font-weight-bold">Edit comment-
-                    <?php echo isset($student)?$student['surname'].', '.$student['first_name']:''; ?></h4>
+                    <?php echo isset($student)?$student['first_name'].', '.$student['surname']:''; ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

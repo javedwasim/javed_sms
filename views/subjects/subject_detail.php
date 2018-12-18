@@ -63,7 +63,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark"><?php //echo isset($students[0])?$students[0]['code'] . '-' . $students[0]['arm'] . '(' . $students[0]['session'] . ')':''; ?></h1>
+                    <h1 class="m-0 text-dark"><?php echo isset($batch_info)&&isset($assessments[0]['sbj_name'])?$assessments[0]['sbj_name'].' '.$batch_info['code'] . '-' . $batch_info['arm'] . '(' . $batch_info['session'] . ')':''; ?></h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -85,11 +85,11 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Score
                                         Sheet</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#assessments" data-toggle="tab">Assessments</a>
-                                </li>
-
+                                <li class="nav-item"><a class="nav-link" href="#assessments" data-toggle="tab">
+                                        Assessments</a></li>
                             </ul>
                         </div><!-- /.card-header -->
+
                         <div class="card-body">
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
@@ -97,11 +97,14 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-xs-6 col-sm-4 col-lg-3">
-                                                    <form class="data-filter-form" id="scoresheet-filter" role="form" action="/subjects/802/scoresheet" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                                                    <form class="data-filter-form" id="scoresheet-filter" role="form" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                                                        <input type="hidden" name="subject_detail_id" id="subject_detail_id" value="<?php echo $subject_detail_id; ?>">
                                                         <div class="form-group">
-                                                            <select name="term" id="term" class="form-control"><option selected="selected" value="1">First Term</option>
+                                                            <select name="term" id="term" class="form-control">
+                                                                <option selected="selected" value="1">First Term</option>
                                                                 <option value="2">Second Term</option>
-                                                                <option value="3">Third Term</option></select>
+                                                                <option value="3">Third Term</option>
+                                                            </select>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -115,6 +118,7 @@
                                                                 <tr>
                                                                     <th rowspan="2" style="background-color: #31bc86; color: #fff"><strong>Name</strong></th>
                                                                     <?php $score_detail = explode(',',$score_term);
+                                                                    $assessment_id = explode(',',$asses_id);
                                                                     foreach ($score_detail as $detail):  ?>
                                                                         <th style="background-color: #31bc86;color: #fff"><strong><?php echo $detail; ?></strong></th>
                                                                     <?php endforeach; ?>
@@ -126,39 +130,23 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <?php foreach ($score_sheet as $sheet): //$rpoints  = explode(',',$sheet['obtain_score']); ?>
+                                                                <?php foreach ($score_sheet as $sheet): $rpoints  = explode(',',$sheet['obtain_score']); ?>
                                                                     <tr>
                                                                         <th scope="row"><code><?php echo $sheet['surname'].", ".$sheet['first_name'].".".$sheet['last_name']; ?></code></th>
-                                                                        <td class="is-visible" contenteditable="true"
-                                                                            onBlur="saveToDatabase(this,
-                                                                                    '<?php echo $sheet['student_id']; ?>',
-                                                                                    '<?php echo $sheet['subj_detail_id']; ?>',
-                                                                                    '<?php echo $sheet['bacth_id']; ?>',
-                                                                                    '<?php echo isset($score_detail[0])?$score_detail[0]:''; ?>',
-                                                                                    '<?php echo isset($points[0])?$points[0]:''; ?>')"
-                                                                            onClick="showEdit(this);">
-                                                                            <?php echo isset($sheet['first_value'])?$sheet['first_value']:''; ?>
-                                                                        </td>
-                                                                        <td class="is-visible" contenteditable="true"
-                                                                            onBlur="saveToDatabase(this,
-                                                                                    '<?php echo $sheet['student_id']; ?>',
-                                                                                    '<?php echo $sheet['subj_detail_id']; ?>',
-                                                                                    '<?php echo $sheet['bacth_id']; ?>',
-                                                                                    '<?php echo isset($score_detail[1])?$score_detail[1]:''; ?>',
-                                                                                    '<?php echo isset($points[1])?$points[1]:''; ?>')"
-                                                                            onClick="showEdit(this);">
-                                                                            <?php echo isset($sheet['second_value'])?$sheet['second_value']:''; ?>
-                                                                        </td>
-                                                                        <td class="is-visible" contenteditable="true"
-                                                                            onBlur="saveToDatabase(this,
-                                                                                    '<?php echo $sheet['student_id']; ?>',
-                                                                                    '<?php echo $sheet['subj_detail_id']; ?>',
-                                                                                    '<?php echo $sheet['bacth_id']; ?>',
-                                                                                    '<?php echo isset($score_detail[2])?$score_detail[2]:''; ?>',
-                                                                                    '<?php echo isset($points[2])?$points[2]:''; ?>')"
-                                                                            onClick="showEdit(this);">
-                                                                            <?php echo isset($sheet['third_value'])?$sheet['third_value']:''; ?>
-                                                                        </td>
+                                                                        <?php for($j=0;$j<count($score_detail);$j++){ ?>
+                                                                            <td class="is-visible" contenteditable="true"
+                                                                                onBlur="saveToDatabase(this,
+                                                                                        '<?php echo $sheet['student_id']; ?>',
+                                                                                        '<?php echo $sheet['subj_detail_id']; ?>',
+                                                                                        '<?php echo $sheet['bacth_id']; ?>',
+                                                                                        '<?php echo isset($score_detail[$j])?$score_detail[$j]:''; ?>',
+                                                                                        '<?php echo isset($points[$j])?$points[$j]:''; ?>',
+                                                                                        '<?php echo isset($assessment_id[$j])?$assessment_id[$j]:''; ?>')"
+                                                                                ondblclick="showEdit(this);">
+                                                                                <?php //echo isset($sheet['first_value'])?$sheet['first_value']:''; ?>
+                                                                                <?php echo isset($rpoints[$j])?$rpoints[$j]:''; ?>
+                                                                            </td>
+                                                                        <?php } ?>
                                                                     </tr>
                                                                 <?php endforeach; ?>
                                                             </tbody>
@@ -173,8 +161,8 @@
                                 <div class="tab-pane" id="assessments">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary"
-                                                    data-toggle="modal" data-target="#new_assessment">
+                                            <button type="button" class="btn btn-primary" id="add_sbj_assessment"
+                                                    data-href="<?php echo $subject_detail_id ?>">
                                                 <i class="fa fa-plus"></i>New Assessment
                                             </button>
                                             <hr>
@@ -368,26 +356,11 @@
 </div>
 <script>
     $(document).ready(function () {
-
         $("#example1").DataTable();
         $('#due_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
         });
-    });
-
-    $(document.body).on('click', '.edit_assessment', function () {
-        var url = $(this).attr('data-href');
-        $.ajax({
-            url: url,
-            cache: false,
-            success: function (response) {
-                $('.edit_assessment_modal').empty();
-                $('.edit_assessment_modal').append(response.subject_html);
-                $('#new_assessment').modal('show');
-            }
-        });
-        return false;
     });
 
     function showEdit(editableObj) {
@@ -396,13 +369,14 @@
         $(editableObj).css("background-color", "#1e88e5");
         $(editableObj).css("color", "#FFF");
     }
-    function saveToDatabase(editableObj, student_id, subject_detail_id,batch_id,term,points) {
+    function saveToDatabase(editableObj, student_id, subject_detail_id,batch_id,term,points,asses_id) {
         var term_id = $('#term').val();
+        $(".table-info td").css("background-color", "#bee5eb");
         $.ajax({
             url: "<?php echo base_url() . 'Subjects/saveStudentScoreSheet' ?>",
             type: "POST",
             data: 'student_id=' + student_id +
-                  '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+'&term_id='+term_id+
+                  '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+'&term_id='+term_id+'&asses_id=' + asses_id+
                   '&subject_detail_id=' + subject_detail_id+'&assessment_term='+term+'&points='+points,
             success: function (response) {
                 $(editableObj).css("background", "#FDFDFD");

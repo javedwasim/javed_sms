@@ -37,7 +37,7 @@ Class Domain_model extends CI_Model {
     public function save_indicators($domain_id){
         $indicators = $this->get_domain_indicators();
         foreach ($indicators as $indicator){
-            $updated_fields = array('domain_group_id'=>$indicator['domain_group_id'],
+            $updated_fields = array('domain_group_id'=>$domain_id,
                                 'name'=>$indicator['name'],'code'=>$indicator['code'],
                                 'description'=>$indicator['description']);
             $this->db->insert('domain_group_indicator',$updated_fields);
@@ -327,7 +327,17 @@ Class Domain_model extends CI_Model {
     }
 
     public function delete_domain_group($id) {
+        $this->db->where('domain_group_id', $id)->delete('domain_group_indicator');
         $this->db->where('id', $id)->delete('domain_goup');
-        return $this->db->affected_rows();
+        //reset auto increment after delete.
+        $result = $this->db->query('SELECT MAX(id) as id FROM domain_group_indicator limit 1');
+        $result = $result->row_array();
+        $this->db->query('ALTER TABLE domain_group_indicator AUTO_INCREMENT = ' . $result['id']);
+
+        $result1 = $this->db->query('SELECT MAX(id) as id FROM domain_goup limit 1');
+        $result1 = $result1->row_array();
+        $this->db->query('ALTER TABLE domain_goup AUTO_INCREMENT = ' . $result1['id']);
+
+        return true;
     }
 }

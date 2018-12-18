@@ -39,7 +39,7 @@ $user_name = $user_data['name'];
                                                     <label>Batch</label>
                                                     <select prompt="Select Batch" class="form-control st_filter"
                                                             required="required" name="batch_no">
-                                                        <option value="0">All</option>
+                                                        <option value="0">Please select</option>
                                                         <?php $priorGroup = "";
                                                         foreach ($batches
 
@@ -69,19 +69,11 @@ $user_name = $user_data['name'];
                                 </div>
                             </div>
                         </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-            </div>
-            <?php if(isset($user_name) && ($user_name=='admin')): ?>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
+                        <?php if(isset($user_name) && ($user_name=='admin')): ?>
                             <div class="card-body">
                                 <button type="button" class="btn btn-primary"
                                         data-toggle="modal" data-target="#new_subject">
-                                    <i class="fa fa-plus"></i>New Subject
+                                    <i class="fa fa-plus"></i>Subject
                                 </button>
 
                                 <button type="button" class="btn btn-primary"
@@ -89,10 +81,12 @@ $user_name = $user_data['name'];
                                     <i class="fa fa-plus"></i>New Elective Group
                                 </button>
                             </div>
-                        </div>
+                        <?php endif; ?>
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                 </div>
-            <?php endif; ?>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -104,6 +98,7 @@ $user_name = $user_data['name'];
                                 <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Batch</th>
                                     <th>Max-Weekly Classes</th>
                                     <th>Employees</th>
                                     <th></th>
@@ -113,8 +108,11 @@ $user_name = $user_data['name'];
                                     <?php foreach ($core_subjects as $detail): ?>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo site_url('subjects/subject_detail/').$detail['id']; ?>" class="link prof-link"><?php echo $detail['subject_name']; ?></a>
+                                                <a href="javascript:void(0)"
+                                                   data-href="<?php echo site_url('subjects/subject_detail/').$detail['id']; ?>"
+                                                   class="link prof-link" id="sbj_detail_view"><?php echo $detail['subject_name']; ?></a>
                                             </td>
+                                            <td><?php echo $detail['arm'].'('.$detail['c_name'].$detail['session'].')'; ?></td>
                                             <td><?php echo $detail['max_weekly_class']; ?></td>
                                             <td><?php echo $detail['emp_count']; ?></td>
                                             <td>
@@ -157,6 +155,7 @@ $user_name = $user_data['name'];
                                 <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Batch</th>
                                     <th>Max-Weekly Classes</th>
                                     <th>Employees</th>
                                     <th></th>
@@ -166,8 +165,11 @@ $user_name = $user_data['name'];
                                 <?php foreach ($elective_subjects as $detail): ?>
                                     <tr>
                                         <td>
-                                            <a href="<?php echo site_url('subjects/subject_detail/').$detail['id']; ?>" class="link prof-link"><?php echo $detail['subject_name']; ?></a>
+                                            <a href="javascript:void(0)"
+                                               data-href="<?php echo site_url('subjects/subject_detail/').$detail['id']; ?>"
+                                               class="link prof-link" id="sbj_detail_view"><?php echo $detail['subject_name']; ?></a>
                                         </td>
+                                        <td><?php echo $detail['arm'].'('.$detail['c_name'].$detail['session'].')'; ?></td>
                                         <td><?php echo $detail['max_weekly_class']; ?></td>
                                         <td><?php echo $detail['emp_count']; ?></td>
                                         <td>
@@ -206,7 +208,7 @@ $user_name = $user_data['name'];
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">New Subject</h4>
+                    <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">Subject</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -260,7 +262,7 @@ $user_name = $user_data['name'];
                     <div class="modal-footer">
                         <div class="col-md-12" style="text-align: center">
                             <button type="submit" class="btn btn-primary" id="save_subject">
-                                <i class="fa fa-plus"></i>Add Subject
+                                <i class="fa fa-plus"></i>Save Subject
                             </button>
                         </div>
                     </div>
@@ -360,41 +362,16 @@ $user_name = $user_data['name'];
                 "info": true,
                 "autoWidth": false
             });
+
+            $('#new_subject').on('hidden.bs.modal', function () {
+                $('#subject_id').val('');
+                $('#max_weekly_class').val('');
+                $('#elective_group_id').val('');
+                $('#batch_id').val('');
+            });
+
         });
 
-        $(document.body).on('click', '#save_elective_group', function(){
-            $.ajax({
-                url: $('#elective_subject_form').attr('data-action'),
-                type: 'post',
-                data: $('#elective_subject_form').serialize(),
-                cache: false,
-                success: function(response) {
-                    console.log(response);
-                    if (response.success) {
-                        $('#new_group').modal('hide');
-                        $( ".modal-backdrop" ).remove();
-                        toastr["success"](response.message);
-                    } else {
-                        toastr["error"](response.message);
-                    }
-                }
-            });
-            return false;
-        });
-
-        $(document.body).on('click', '.edit_subject', function(){
-            var subject_id = $(this).attr('data-href');
-            $.ajax({
-                url: '/isms/subjects/edit/'+subject_id,
-                cache: false,
-                success: function(response) {
-                    $('.edit_subject_body').empty();
-                    $('.edit_subject_body').append(response.subject_html);
-                    $('#new_subject').modal('show');
-                }
-            });
-            return false;
-        });
         $('#add_subject_role').click(function () {
             var fieldHTML = '<div class="form-row"><div class="form-group col-md-4">' +
                 '<select id="employee" name="employee[]" class="form-control">' +

@@ -137,7 +137,6 @@
                     <div class="md-form mb-6">
                         <input type="text" id="department_name_update" name="name" class="form-control validate" placeholder="Department Name">
                     </div>
-                    <hr>
                     <div class="md-form mb-6">
                         <input type="text" id="department_abbreviation" name="abbrevation" class="form-control validate" placeholder="Department Abbrevation">
                     </div>

@@ -1,3 +1,4 @@
+<?php $user_data = $this->session->userdata('userdata');$role = $user_data['role'];?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -40,12 +41,14 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <button type="button" class="btn btn-primary"
-                                            id="list_itmes_add_student" data-func-call="add_student">
-                                        <i class="fa fa-plus"></i>Add Student
-                                    </button>
-                                </div>
+                                <?php if($user_data['name']=='admin'): ?>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-primary"
+                                                id="list_itmes_add_student" data-func-call="add_student">
+                                            <i class="fa fa-plus"></i>Add Student
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <hr/>
                             <form rol="form" style="width: 100%;" id="student_form_filters">
@@ -62,7 +65,7 @@
                                         <div class="form-group">
                                             <label>Status</label>
                                             <select class="form-control st_filter" name="status" onchange="student_filters()">
-                                                <option value="">All</option>
+                                                <option value="0">All</option>
                                                 <option value="1"
                                                     <?php echo isset($filters['status']) && ($filters['status'] == 1) ? 'selected' : ''; ?>>
                                                     Active
@@ -143,7 +146,7 @@
                                             <label>Due Fee Balance</label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <select class="form-control st_filter" name="fee_paid_filter" onchange="student_filters()">
+                                                    <select class="form-control st_filter" name="fee_paid_filter">
                                                         <option value="greater"<?php echo isset($filters['fee_paid_filter']) && ($filters['fee_paid_filter']=='greater') ? 'selected' : ''; ?>>&gt;</option>
                                                         <option value="less"<?php echo isset($filters['fee_paid_filter']) && ($filters['fee_paid_filter']=='less') ? 'selected' : ''; ?>>&lt;</option>
                                                     </select>
@@ -222,9 +225,14 @@
                                 <?php foreach ($students as $student) { ?>
                                     <tr>
                                         <td>
-                                            <a class="prof-link std_profile"
-                                               data-student-id = "<?php echo $student['student_id']; ?>"
-                                               data-href="<?php echo site_url('students/profile/') . $student['student_id'] ?>"><?php echo $student['surname'] . ', ' . $student['first_name'] ?></a>
+                                            <?php if(($role!='Finance') || $user_data['name']=='admin'): ?>
+                                                <a class="prof-link std_profile"
+                                                   data-student-id = "<?php echo $student['student_id']; ?>"
+                                                   data-href="<?php echo site_url('students/profile/') . $student['student_id'] ?>">
+                                                   <?php echo $student['surname'] . ', ' . $student['first_name'] ?></a>
+                                            <?php else: ?>
+                                                <?php echo $student['surname'] . ', ' . $student['first_name'] ?>
+                                            <?php endif; ?>
                                         </td>
                                         <td class="visibility">
                                             <?php echo $student['address_line']; ?>
@@ -372,9 +380,7 @@
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script>
     $(document).ready(function () {
-        $(document.body).on('click', '#list_itmes_add_student', function(){
-            get_students($(this).attr('data-func-call'));
-        });
+
         $("#checkAll").change(function () {
             $(".field_to_show:checkbox").prop('checked', $(this).prop("checked"));
         });

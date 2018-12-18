@@ -21,14 +21,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $this->load->view('fee/index', $data);
         }
         public function fee_management(){
+		    $filter = $this->input->post();
             $data['batch_id'] = '';
             $data['batches'] = $this->Batches_model->get_all_batches();
-            $data['payments'] = $this->Fee_model->get_all_fee();
+            $data['payments'] = $this->Fee_model->get_all_fee($filter);
             $data['fee_types'] = $this->Fee_model->get_fees();
             $data['fee_status'] = $this->Fee_model->get_fee_status();
-            $json['classes_html'] = $this->load->view('fee/payments', $data, true);
+            $data['filter'] = $filter;
+
+            $json['result_html'] = $this->load->view('fee/payments', $data, true);
             if($this->input->is_ajax_request()) {
               set_content_type($json);
+            }
+        }
+
+        public function edit_fee_group($id){
+            $filter = array();
+            $data['batch_id'] = '';
+            $data['batches'] = $this->Batches_model->get_all_batches();
+            $data['payments'] = $this->Fee_model->get_all_fee($filter);
+            $data['fee_types'] = $this->Fee_model->get_fees();
+            $data['fee_status'] = $this->Fee_model->get_fee_status();
+
+            $data['fee_group'] = $this->Fee_model->get_fee_group_by_id($id);
+            $json['result_html'] = $this->load->view('fee/edit_fee_group', $data, true);
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
             }
         }
 
@@ -489,7 +507,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $data['payments'] = $this->Fee_model->get_payments();
                 $json['classes_html'] = $this->load->view('fee/expanse', $data, true);
                 $json['success'] = true;
-                $json['message'] = "Income/Expanse successfully deleted.";
+                $json['message'] = "Fee successfully deleted.";
             } else {
                 $data['batch_id'] = '';
                 $data['batches'] = $this->Batches_model->get_all_batches();
@@ -507,7 +525,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $result = $this->Fee_model->delete_income($id);
             if ($result) {
                 $json['success'] = true;
-                $json['message'] = "Income/Expanse successfully deleted.";
+                $json['message'] = "Fee successfully deleted.";
             } else {
                 $json['success'] = true;
                 $json['message'] = "Seems to an error.";
@@ -534,6 +552,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
 
         public function create_fee(){
+            $filter=array();
             $this->load->library('form_validation');
             $this->load->helper('security');
             $this->form_validation->set_rules('batch_id', 'Batch', 'required|xss_clean');
@@ -550,18 +569,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 //print_r($data);
                 $created_by = $this->session->userdata('userdata');
                 $data['created_by'] = $created_by['login_id'];
-                $result = $this->Fee_model->create_fee($data);
-
+                if(isset($data['fee_group_id'])){
+                    $result = $this->Fee_model->update_fee_group($data);
+                    $json['message'] = "Fee group updated successfully!";
+                }else{
+                    $result = $this->Fee_model->create_fee($data);
+                    $json['message'] = "Fee group save successfully!";
+                }
                 if ($result) {
                     $json['success'] = true;
-                    $json['message'] = "Fee save successfully!";
+
                 } else {
                     $json['error'] = true;
                     $json['message'] = "Seems to an error.";
                 }
                 $data['batch_id'] = '';
                 $data['batches'] = $this->Batches_model->get_all_batches();
-                $data['payments'] = $this->Fee_model->get_all_fee();
+                $data['payments'] = $this->Fee_model->get_all_fee($filter);
                 $data['fee_types'] = $this->Fee_model->get_fees();
                 $data['fee_status'] = $this->Fee_model->get_fee_status();
                 $json['result_html'] = $this->load->view('fee/payments', $data, true);
@@ -571,6 +595,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
 
         }
+
+        public function delete_fee_group($id) {
+            $filter=array();
+            $result = $this->Fee_model->delete_fee_group($id);
+            if ($result) {
+                $json['success'] = true;
+                $json['message'] = "Fee group successfully deleted.";
+            } else {
+                $json['success'] = true;
+                $json['message'] = "Seems to an error.";
+            }
+
+            $data['batch_id'] = '';
+            $data['batches'] = $this->Batches_model->get_all_batches();
+            $data['payments'] = $this->Fee_model->get_all_fee($filter);
+            $data['fee_types'] = $this->Fee_model->get_fees();
+            $data['fee_status'] = $this->Fee_model->get_fee_status();
+            $json['result_html'] = $this->load->view('fee/payments', $data, true);
+
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+        }
+
 
 }
 

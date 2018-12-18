@@ -36,7 +36,7 @@
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLoginForm"><i class="fa fa-plus"></i> Add Subject Name</button>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_sbj_modal"><i class="fa fa-plus"></i> Add Subject Name</button>
                 </div>
               </div>
               <hr>
@@ -56,7 +56,7 @@
                     <td>
                         <a class="edit-subject btn btn-info btn-xs"
                            href="#" data-abbreviation="<?php echo $subject['code'] ?>" data-value="<?php echo $subject['name']; ?>" data-href="<?php echo $subject['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
-                        <a class="delete-setting-subject btn btn-danger btn-xs" href="#"
+                        <a class="delete-setting-subject btn btn-danger btn-xs <?php echo $subject['subject_count']>0?'disabled':''; ?>" href="javascript:void(0)"
                            data-href="<?php echo site_url('general_setting/delete_subject/').$subject['id'] ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                     </td>
                   </tr>
@@ -72,7 +72,7 @@
   </section>
 </div>
 <div class="container">
-    <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="add_sbj_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center">
@@ -139,3 +139,8 @@
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $('.datatables').DataTable();
+    });
+</script>

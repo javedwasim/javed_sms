@@ -58,7 +58,7 @@ class Employee_model extends CI_Model {
             foreach ($emp_default_menu as $menu) {
                 $this->db->insert('menu_group_detail', array('menu_group_id' => $menu_group_id, 'menu_id' => $menu));
             }
-        }elseif($emp_role_id==7){
+        }elseif($emp_role_id==6){
             $emp_default_menu = $this->config->item('emp_staff');
             foreach ($emp_default_menu as $menu) {
                 $this->db->insert('menu_group_detail', array('menu_group_id' => $menu_group_id, 'menu_id' => $menu));
@@ -68,7 +68,7 @@ class Employee_model extends CI_Model {
         $this->db->insert('login_rights_group', array('menu_group_id' => $menu_group_id, 'other_rights_group_id' => $menu_group_id));
         $login_rights_group_id = $this->db->insert_id();
         //create user of employee.
-        $password = password_hash('e' . $employee_id.'123', PASSWORD_BCRYPT);
+        $password = password_hash('e' . $employee_id.'12345', PASSWORD_BCRYPT);
         $user_data = array('name' => 'e' . $employee_id, 'created_by' => $created_by['login_id'],
             'email' => $data['email'], 'password' => $password, 'login_rights_group_id' => $login_rights_group_id);
         $this->db->insert('login', $user_data);
@@ -81,7 +81,7 @@ class Employee_model extends CI_Model {
     public function get_employee_by_id($id) {
         $result = $this->db->select('employees.*,d.name as dept_name,login.login_rights_group_id,login_rights_group.other_rights_group_id,
                     menu_group.menu_group_id,p.name as position_name,c.category as cat_name,b.name as bankname,
-                    other_rights_group.status as org_status ')
+                    other_rights_group.status as org_status,cl.country_name,states.name as state_name,cities.name as city_name ')
                 ->from('employees')
                 ->join('departments d', 'd.id=employees.department', 'left')
                 ->join('positions p', 'p.id=employees.position', 'left')
@@ -91,6 +91,9 @@ class Employee_model extends CI_Model {
                 ->join('login_rights_group', "login_rights_group.login_rights_group_id=login.login_rights_group_id", 'left')
                 ->join('other_rights_group', "other_rights_group.other_rights_group_id=login_rights_group.other_rights_group_id", 'left')
                 ->join('menu_group', "menu_group.menu_group_id=login_rights_group.menu_group_id", 'left')
+                ->join('countries_list cl', 'cl.id=employees.nationality', 'left')
+                ->join('states', 'states.id=employees.state_of_origin', 'left')
+                ->join('cities', 'cities.id=employees.lga_of_origin', 'left')
                 ->where('employee_id', $id)
                 ->limit(1)
                 ->get();
@@ -138,6 +141,9 @@ class Employee_model extends CI_Model {
         $result = $this->db->select('ec.*,roles.name as role_name')
                     ->from('employee_categories ec')
                     ->join('roles','roles.id = ec.role_id','left')
+                    ->where_not_in('roles.id',1)
+                    ->where_not_in('roles.id',2)
+                    ->where_not_in('roles.id',3)
                     ->get();
         if ($result) {
             return $result->result_array();
@@ -227,7 +233,7 @@ class Employee_model extends CI_Model {
 
         if (isset($filters['category']) && (!empty($filters['category']))) {
             $category = $filters['category'];
-            $where .= " AND (category = '' OR category = '$category')";
+            $where .= " AND (employees.category = '' OR employees.category = '$category')";
         }
 
         if (isset($filters['department']) && (!empty($filters['department']))) {
@@ -425,6 +431,9 @@ class Employee_model extends CI_Model {
     public function get_roles() {
         $result = $this->db->select('*')
                     ->from('roles')
+                    ->where_not_in('roles.id',1)
+                    ->where_not_in('roles.id',2)
+                    ->where_not_in('roles.id',3)
                     ->get();
         if ($result) {
             return $result->result_array();
@@ -512,6 +521,17 @@ class Employee_model extends CI_Model {
         $result = $this->db->select('*')
                     ->from('cities')
                     ->where('id',$city_id)
+                    ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_bank_detail() {
+        $result = $this->db->select('banks.*')
+                    ->from('banks')
                     ->get();
         if ($result) {
             return $result->result_array();

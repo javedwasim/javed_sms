@@ -43,7 +43,6 @@
                                     <th>Sender Name</th>
                                     <th>Message</th>
                                     <th>Recipients</th>
-                                    <th>Units Used</th>
                                     <th>Created by</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -55,7 +54,6 @@
                                             <td><?php echo $message['sender_name']; ?></td>
                                             <td><?php echo $message['message']; ?></td>
                                             <td><?php echo $message['recipients']; ?></td>
-                                            <td>&nbsp;</td>
                                             <td><?php echo $message['created_by']; ?></td>
                                             <td><?php echo 'sent'; ?></td>
                                             <td>
@@ -93,6 +91,8 @@
             toastr["success"]('<?php echo $this->session->flashdata('success'); ?>');
         <?php } ?>
 	
-	    $("#sms_table").DataTable({});
+	    $("#sms_table").DataTable({
+            "scrollX": true
+        });
     });
 </script>

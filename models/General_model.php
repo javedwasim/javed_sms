@@ -250,10 +250,13 @@ Class General_model extends CI_Model {
     }
 
     public function get_all_subjects() {
-        $result = $this->db->select('*')
-            ->from('subjects')
-            ->get();
-        if ($result) {
+        $sql = "SELECT s.*,sd.subject_count FROM subjects s 
+                LEFT JOIN(
+                    SELECT sd.subject_id,count(id) as subject_count FROM subjects_detail sd 
+                    GROUP BY sd.subject_id
+                )sd ON sd.subject_id = s.id";
+        $result = $query = $this->db->query($sql);
+        if($result) {
             return $result->result_array();
         } else {
             return array();
@@ -374,8 +377,8 @@ Class General_model extends CI_Model {
             $this->db->where('course_id',$batch['course_id'])
                     ->where('session',$batch['session'])
                     ->delete('class_set_learning_domain');
-        }
 
+        }
         //insert new entries
         foreach ($batches as $batch){
             if($data['affective_domain']){
@@ -412,7 +415,7 @@ Class General_model extends CI_Model {
                     ->where('session',$session)
                     ->group_by('domain_group_id')
                     ->get();
-        $this->db->last_query();
+        //$this->db->last_query();
         if ($result) {
             return $result->result_array();
         } else {
@@ -431,7 +434,7 @@ Class General_model extends CI_Model {
                     )students on students.batch_no = b.id
                     LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
                     where 1
-                    GROUP BY course_id
+                    GROUP BY b.id
                     ORDER BY b.session ASC";
         $result = $query = $this->db->query($query);
         if($result) {

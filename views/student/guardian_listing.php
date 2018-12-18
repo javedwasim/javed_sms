@@ -153,6 +153,12 @@
                                             <input type="text" class="form-control" maxlength="20" name="middle_name"/>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Last name</label>
+                                            <input type="text" class="form-control"  name="last_name" />
+                                        </div>
+                                    </div>
                                     <?php if ($guardian_fields['mobile_phone']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -176,7 +182,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                                                 </div>
-                                                <input type="email" class="form-control" maxlength="30" name="email" required/>
+                                                <input type="email" class="form-control myTextInput" maxlength="30" name="email" required/>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -275,7 +281,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Address line</label>
-                                                <textarea class="form-control" maxlength="70" rows="3"
+                                                <textarea class="form-control" maxlength="120" rows="3"
                                                           name="address_line"></textarea>
                                             </div>
                                         </div>
@@ -372,12 +378,27 @@
             url: '/isms/students/get_origin/'+state,
             cache: false,
             success: function(response) {
-                console.log(response);
                 if (response.success) {
                     $('#lga_of_origin').empty();
                     $('#lga_of_origin').append(response.origin_html);
                 } else {
                     toastr["warning"](response.message);
+                }
+            }
+        });
+    });
+
+    $('input.myTextInput').on('input',function(e){
+        var base_url = $('#base').val();
+        var email = $('.myTextInput').val();
+        $.ajax({
+            url: base_url+'guardians/validate_email',
+            data:{email:email},
+            type: 'post',
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    toastr["error"](response.message);
                 }
             }
         });

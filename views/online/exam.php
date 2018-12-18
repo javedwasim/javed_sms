@@ -94,7 +94,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Save Exam</h4>
+                <h4 class="modal-title w-100 font-weight-bold">Add Exam</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -137,13 +137,13 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Start Time<span style="color: red;">*</span></label>
-                                            <input  name="start_time" id="start_time" type="text" placeholder="09:00:am" class="form-control">
+                                            <input  name="start_time" id="start_time" type="time" placeholder="09:00:am" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>End Time<span style="color: red;">*</span></label>
-                                            <input  name="end_time" id="end_time" type="text" placeholder="12:00:pm" class="form-control">
+                                            <input  name="end_time" id="end_time" type="time" placeholder="12:00:pm" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +163,7 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button type="submit" id="save_exam" class="btn btn-sm btn-success pull-right add-btn"><i class="fa fa-plus"></i> Add Exam</button>
+                        <button type="submit" id="save_exam" class="btn btn-primary pull-right add-btn"><i class="fa fa-plus"></i> Add Exam</button>
                     </div>
                 </form>
             </div>

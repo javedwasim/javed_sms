@@ -35,10 +35,10 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($batches as $batch) { ?>
+                                    <?php foreach($batches as $batch) { $session = $batch['session']; ?>
                                         <tr>
                                             <td><?php echo $batch['session']; ?></td>
-                                            <td><?php echo $batch['class_name']; ?></td>
+                                            <td><?php echo $batch['code'] . '-' . $batch['arm'] . "($session)"; ?></td>
                                             <td>
                                                 <a class="edit-domain btn btn-info btn-xs"
                                                    data-session="<?php echo $batch['session']; ?>"
@@ -66,7 +66,7 @@
 <!-- /.content -->
 <div class="modal fade" id="domain_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
+        <div class="modal-content domain_modal_content"></div>
     </div>
 </div>
 <script>

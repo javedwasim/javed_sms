@@ -128,7 +128,7 @@
     $(document).ready(function () {
         $('#date').datepicker({
             format: 'yyyy-mm-dd'
-        });
+        }).datepicker("setDate", new Date());
     });
     function add_payment(value) {
         $.ajax({

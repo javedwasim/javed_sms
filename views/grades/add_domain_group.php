@@ -41,7 +41,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <?php if(isset($domain_id)){ ?>
-                                    Update Domain Group
+                                    Update Domain Group <?php echo $domain_id ?>
                                 <?php } else{?>
                                     Add Domain Group
                                 <?php } ?>
@@ -51,15 +51,15 @@
                         <div class="card-body">
                             <div class="modal-body">
                                 <form id="domain_group_form" method="post" role="form" action="<?php echo site_url('domains/save_domain_group') ?>"
-                                      data-action="<?php echo site_url('domains/save_domain_group') ?>" enctype="multipart/form-data">
+                                     data-action="<?php echo site_url('domains/save_domain_group') ?>" enctype="multipart/form-data">
                                     <input type="hidden" name="domaingroup_id" value="<?php echo isset($domain_id)?$domain_id:''; ?>">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Name:</label>
+                                        <label for="recipient-name" class="col-form-label">Name<span style="color: red">*</span></label>
                                         <input type="text" class="form-control"  name="name"
                                                value="<?php echo isset($domain['name'])?$domain['name']:''; ?>" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Learning Domain:</label>
+                                        <label for="recipient-name" class="col-form-label">Learning Domain<span style="color: red">*</span></label>
                                         <select class="custom-select custom-select-lg" name="learning_domain">
                                             <option value=""></option>
                                             <option value="affective"<?php echo isset($domain['learning_domain'])&&($domain['learning_domain']=='affective')?'selected':''; ?>>Affective</option>
@@ -67,7 +67,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Grade Scale:</label>
+                                        <label for="recipient-name" class="col-form-label">Grade Scale<span style="color: red">*</span></label>
                                         <select class="custom-select custom-select-lg" name="grade_scale_id">
                                             <option value=""></option>
                                             <?php foreach ($grades as $grade){ ?>
@@ -81,65 +81,64 @@
                                     </div>
 
 
-                            <div class="form-group">
-                                <label for="message-text" class="col-form-label">Domain Indicators</label>
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Domain Indicators</label>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0)" class="btn btn-primary btn-rounded mb-4"
+                                               id="add_domain_indicator_btn" data-href="<?php echo isset($domain_id)?$domain_id:''; ?>" >
+                                               <i class="fa fa-plus"></i>Add Domain Indicator</a>
+                                        </div>
+                                    </div>
+                                    <div class="domain_indicator_table">
+                                        <table id="account-table" class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Abbreviation</th>
+                                                <th>Description</th>
+                                                <th data-orderable="false" style="width: 9%">Operations</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach ($indicators as $indicator){ ?>
+                                                <tr>
+                                                    <td><?php echo $indicator['name'] ?></td>
+                                                    <td><?php echo $indicator['code'] ?></td>
+                                                    <td><?php echo $indicator['description'] ?></td>
+                                                    <td>
+                                                        <a class="edit-domain-group-indicator btn btn-info btn-xs"
+                                                           data-name="<?php echo $indicator['name']; ?>"
+                                                           href="javascript:void(0)"
+                                                           data-code="<?php echo $indicator['code'] ?>"
+                                                           data-description="<?php echo $indicator['description'] ?>"
+                                                           data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
+                                                           data-href="<?php echo $indicator['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
+                                                        <a class="delete-domain-group-indicator btn btn-danger btn-xs" href="javascript:void(0)"
+                                                           data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
+                                                           data-delete-id="<?php echo $indicator['id']; ?>"
+                                                           data-href="<?php echo site_url('domains/delete_domain_indicator') ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button id="save_domain_group" type="submit" class="btn btn-primary">
+                                            <?php if(isset($domain_id)): ?>
+                                                <i class="fa fa-floppy-o"></i>
+                                                Update Domain Group
+                                            <?php else: ?>
+                                                <i class="fa fa-plus"></i>
+                                                Add Domain Group
+                                            <?php endif; ?>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <a href="javascript:void(0)" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#add_domain_group_indicator">
-                                        <i class="fa fa-plus"></i>Add Domain Indicator</a>
-                                </div>
-                            </div>
-                            <div class="domain_indicator_table">
-                                <table id="account-table" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Abbreviation</th>
-                                        <th>Description</th>
-                                        <th data-orderable="false" style="width: 9%">Operations</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php foreach ($indicators as $indicator){ ?>
-                                        <tr>
-                                            <td><?php echo $indicator['name'] ?></td>
-                                            <td><?php echo $indicator['code'] ?></td>
-                                            <td><?php echo $indicator['description'] ?></td>
-                                            <td>
-                                                <a class="edit-domain-group-indicator btn btn-info btn-xs"
-                                                   data-name="<?php echo $indicator['name']; ?>"
-                                                   href="javascript:void(0)"
-                                                   data-code="<?php echo $indicator['code'] ?>"
-                                                   data-description="<?php echo $indicator['description'] ?>"
-                                                   data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
-                                                   data-href="<?php echo $indicator['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
-                                                <a class="delete-domain-group-indicator btn btn-danger btn-xs" href="javascript:void(0)"
-                                                   data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
-                                                   data-delete-id="<?php echo $indicator['id']; ?>"
-                                                   data-href="<?php echo site_url('domains/delete_domain_indicator') ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-footer d-flex justify-content-center">
-                                <button id="save_domain_group" type="submit" class="btn btn-primary">
-                                    <?php if(isset($domain_id)): ?>
-                                        <i class="fa fa-floppy-o"></i>
-                                        Update Domain Group
-
-                                    <?php else: ?>
-                                        <i class="fa fa-plus"></i>
-                                        Add Domain Group
-
-                                    <?php endif; ?>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                         </div>
                     </div>
                 </div>
@@ -159,17 +158,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="assessment_category_add_error" style="display: none;" class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                    <div id="assessment_category_add_success" style="display: none;" class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body">
+            <div class="modal-body" id="indicator_form_container">
                 <form id="add_domain_indicator_form" method="post" role="form"
                       data-action="<?php echo site_url('domains/add_domain_indicator') ?>" enctype="multipart/form-data">
                     <input type="hidden" name="domain_group_id" value="<?php echo isset($domain_id)&&($domain_id>0)?$domain_id:''; ?>">

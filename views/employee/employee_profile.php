@@ -37,7 +37,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-8 offset-md-2">
-                                    <h3 class="profile-username text-center mb-3"><?php echo $Emp_profile['middle_name'] . ', ' . $Emp_profile['first_name']; ?></h3>
+                                    <h3 class="profile-username text-center mb-3"><?php echo $Emp_profile['surname'] . ' ' . $Emp_profile['first_name']; ?></h3>
                                     <!--  <p class="text-muted text-center">Software Engineer</p> -->
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
@@ -73,13 +73,12 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#overview" data-toggle="tab">Overview</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
-                                                        href="<?php echo site_url('employee/edit/') . $Emp_profile['employee_id'] ?>">Edit</a>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="employee_edit_btn" href="javascript:void(0)"
+                                       data-href="<?php echo site_url('employee/edit/') . $Emp_profile['employee_id'] ?>">Edit</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link " href="#timeline"
-                                                        data-toggle="tab">Privileges</a></li>
-                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"
-                                                        data-target="#myModal">Change Password</a></li>
+                                <li class="nav-item"><a class="nav-link " href="#timeline"   data-toggle="tab">Privileges</a></li>
+                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a>
                                 </li>
                             </ul>
@@ -93,10 +92,10 @@
                                             </h3>
                                             <!--  <p class="text-muted text-center">Software Engineer</p> -->
                                             <ul class="list-group list-group-unbordered mb-3">
-                                                <li class="list-group-item">
-                                                    <b>Title</b> <a
-                                                        class="float-right"><?php echo $Emp_profile['title']; ?></a>
-                                                </li>
+<!--                                                <li class="list-group-item">-->
+<!--                                                    <b>Title</b> <a-->
+<!--                                                        class="float-right">--><?php //echo $Emp_profile['title']; ?><!--</a>-->
+<!--                                                </li>-->
                                                 <li class="list-group-item">
                                                     <b>Last Name:</b> <a
                                                         class="float-right"><?php echo $Emp_profile['middle_name']; ?></a>
@@ -127,7 +126,7 @@
                                                 </li>
                                                 <li class="list-group-item">
                                                     <b>Nationality:</b> <a
-                                                        class="float-right"><?php echo $Emp_profile['nationality']; ?></a>
+                                                        class="float-right"><?php echo $Emp_profile['country_name']; ?></a>
                                                 </li>
                                                 <li class="list-group-item">
                                                     <b>Date Joined:</b> <a
@@ -136,18 +135,6 @@
                                                 <li class="list-group-item">
                                                     <b>Religion:</b> <a
                                                         class="float-right"><?php echo $Emp_profile['religion']; ?></a>
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <b>Department:</b> <a
-                                                        class="float-right"><?php echo $Emp_profile['dept_name']; ?></a>
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <b>Position:</b> <a
-                                                        class="float-right"><?php echo $Emp_profile['position_name']; ?></a>
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <b>Category: </b> <a
-                                                        class="float-right"><?php echo $Emp_profile['cat_name']; ?></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -500,7 +487,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="password" class="form-control" name="new_pwd"/>
+                                    <input type="password" class="form-control" name="new_pwd" minlength="8"/>
                                 </div>
                             </div>
                         </div>
@@ -508,7 +495,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Password confirmation</label>
-                                    <input type="password" class="form-control" name="c_pwd"/>
+                                    <input type="password" class="form-control" name="c_pwd" minlength="8"/>
                                 </div>
                             </div>
                         </div>

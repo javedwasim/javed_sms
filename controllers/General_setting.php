@@ -160,11 +160,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $result = $this->General_model->update_subject($update_fields,$data['subject_id']);
                 if ($result) {
                     $json['success'] = true;
-                    $json['message'] = "Subject successfully added.";
+                    $json['message'] = "Subject successfully updated.";
 
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error in image uploading.";
+                    $json['message'] = "Seems to an error.";
                 }
                 $data['subjects'] = $this->General_model->get_all_subjects();
                 $json['setting_html'] = $this->load->view('settings/subject_names', $data, true);

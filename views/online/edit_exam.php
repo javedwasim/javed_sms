@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-        <button type="submit" id="update_exam" class="btn btn-sm btn-success pull-right add-btn"><i class="fa fa-plus"></i>Update Exam</button>
+        <button type="submit" id="update_exam" class="btn btn-primary pull-right add-btn"><i class="fa fa-plus"></i>Update Exam</button>
     </div>
 </form>
 <script>

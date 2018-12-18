@@ -11,7 +11,6 @@
     <div class="modal-body">
         <div class="form-group">
             <select class="form-control" name="affective_domain">
-                <option value="">none</option>
                 <?php foreach ($domain['affective'] as $affective): ?>
                     <option value="<?php echo $affective['id']; ?>"<?php echo in_array($affective['id'], $class_set_domains)?'selected':''; ?>><?php echo $affective['name']; ?></option>
                 <?php endforeach; ?>
@@ -19,7 +18,6 @@
         </div>
         <div class="form-group">
             <select class="form-control" name="phychomotor_domain">
-                <option value="">none</option>
                 <?php foreach ($domain['pychomotor'] as $pychomotor): ?>
                     <option value="<?php echo $pychomotor['id']; ?>"<?php echo in_array($pychomotor['id'], $class_set_domains)?'selected':''; ?>><?php echo $pychomotor['name']; ?></option>
                 <?php endforeach; ?>

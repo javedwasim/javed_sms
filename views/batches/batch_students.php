@@ -26,23 +26,23 @@
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Behavioural Scoresheet</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#demographic" data-toggle="tab">Demographics</a></li>
                                 <?php if($username == 'admin'): ?>
+                                    <li class="nav-item"><a class="nav-link" href="#demographic" data-toggle="tab">Demographics</a></li>
                                     <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Assign Employee</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#transfer" data-toggle="tab">Student Transfer</a></li>
                                 <?php endif; ?>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
-                            <div class="card-header">
-                                <h3 class="card-title" style="text-align: center;">
-                                  <i class="fa fa-info"></i>
-                                  <?php $session = $current_batch_info['session']; echo $current_batch_info['code'].'-'.$current_batch_info['arm']."($session) behavioural scoresheet"; ?>
-                                </h3>
-                            </div>
-                            <hr>
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
+                                    <div class="card-header">
+                                        <h3 class="card-title" style="text-align: center;">
+                                            <i class="fa fa-info"></i>
+                                            <?php $session = $current_batch_info['session']; echo $current_batch_info['code'].'-'.$current_batch_info['arm']."($session) behavioural scoresheet"; ?>
+                                        </h3>
+                                    </div>
+                                    <hr/>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group row">
@@ -86,35 +86,37 @@
                                                                 <h5 class="card-title"><?php $session = $current_batch_info['session'];
                                                                     echo $current_batch_info['code'].'-'.$current_batch_info['arm']."($session) behavioural scoresheet"; ?></h5>
                                                                 <hr/>
-                                                                <form id="student_behavioural_score_form" method="post" role="form"  data-action="<?php echo site_url('Batches/save_student_behavioural_score') ?>"
-                                                                      enctype="multipart/form-data">
-                                                                    <input type="hidden" name="student_id" id="student_id">
-                                                                    <input type="hidden" name="grade_scale_id" id="grade_scale_id" value="2">
-                                                                    <input type="hidden" name="term_id" id="term_id" value="1">
-                                                                    <div class="form-group row" style="background-color: lightgrey;">
-                                                                        <label for="inputEmail3" class="col-sm-6 col-form-label">Affective Domain</label>
-                                                                        <label for="inputEmail3" class="col-sm-6 col-form-label">Grade</label>
-                                                                    </div>
-                                                                    <?php foreach ($domain_indicators as $indicator): ?>
-                                                                        <div class="form-group row" style="background-color: #f9f9f9;">
-                                                                            <label for="punctuality" class="col-sm-6 col-form-label"><?php echo $indicator['name']; ?></label>
-                                                                            <div class="col-sm-6">
-                                                                                <select class="custom-select mr-sm-2" name="<?php echo strtolower($indicator['name']); ?>" id="<?php echo strtolower($indicator['name']); ?>">
-                                                                                    <option value="">Please Select</option>
-                                                                                    <?php foreach($scales as $scale): ?>
-                                                                                        <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
-                                                                                    <?php endforeach; ?>
-                                                                                </select>
+                                                                <?php if(!empty($domain_indicators)):?>
+                                                                    <form id="student_behavioural_score_form" method="post" role="form"  data-action="<?php echo site_url('Batches/save_student_behavioural_score') ?>"
+                                                                          enctype="multipart/form-data">
+                                                                        <input type="hidden" name="student_id" id="student_id">
+                                                                        <input type="hidden" name="grade_scale_id" id="grade_scale_id" value="2">
+                                                                        <input type="hidden" name="term_id" id="term_id" value="1">
+                                                                        <div class="form-group row" style="background-color: lightgrey;">
+                                                                            <label for="inputEmail3" class="col-sm-6 col-form-label">Affective Domain</label>
+                                                                            <label for="inputEmail3" class="col-sm-6 col-form-label">Grade</label>
+                                                                        </div>
+                                                                        <?php foreach ($domain_indicators as $indicator): ?>
+                                                                            <div class="form-group row" style="background-color: #f9f9f9;">
+                                                                                <label for="punctuality" class="col-sm-6 col-form-label"><?php echo $indicator['name']; ?></label>
+                                                                                <div class="col-sm-6">
+                                                                                    <select class="custom-select mr-sm-2" name="<?php echo strtolower($indicator['name']); ?>" id="<?php echo strtolower($indicator['name']); ?>">
+                                                                                        <option value="">Please Select</option>
+                                                                                        <?php foreach($scales as $scale): ?>
+                                                                                            <option value="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></option>
+                                                                                        <?php endforeach; ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php endforeach; ?>
+
+                                                                        <div class="form-group row">
+                                                                            <div class="col-sm-10" style="text-align: center">
+                                                                                <button type="submit" id="save_student_grade" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Save</button>
                                                                             </div>
                                                                         </div>
-                                                                    <?php endforeach; ?>
-
-                                                                    <div class="form-group row">
-                                                                        <div class="col-sm-10" style="text-align: center">
-                                                                            <button type="submit" id="save_student_grade" class="btn btn-primary"><i class="fa fa-floppy-o"></i>Save</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
+                                                                    </form>
+                                                                <?php endif; ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -218,8 +220,7 @@
                                                 <div class="form-group row">
                                                     <label for="inputPassword3" class="col-sm-2 col-form-label">Last day in batch<span style="color: red">*</span></label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" name="last_day_in_batch" id="last_day_in_batch"
-                                                               placeholder="Last day in batch" required>
+                                                        <input type="text" class="form-control" name="last_day_in_batch" id="last_day_in_batch"  placeholder="Last day in batch" required>
                                                         <div class="alert alert-warning">
                                                             <i class="fa-fw fa fa-warning"></i>
                                                             <strong>Warning</strong> Be sure to enter the last date the selected students spent in this batch. This has effects across the application ( e.g attendance calculation) and is not reversible.
@@ -342,25 +343,10 @@
         $("#example1").DataTable();
         $('#last_day_in_batch').datepicker({
             format: 'yyyy-mm-dd'
-        });
+        }).datepicker("setDate", new Date());
         $('.student_grade_link:first-child').click();
     });
-    $(document.body).on('click', '#save_student_grade', function(){
-        $.ajax({
-            url: $('#student_behavioural_score_form').attr('data-action'),
-            type: 'post',
-            data: $('#student_behavioural_score_form').serialize(),
-            cache: false,
-            success: function(response) {
-                if (response.success) {
-                    toastr["success"](response.message);
-                } else {
-                    toastr["error"](response.message);
-                }
-            }
-        });
-        return false;
-    });
+
     $('#add_role').click(function () {
         var fieldHTML = '<div class="form-row"><div class="form-group col-md-4">' +
                             '<select id="employee" name="employee[]" class="form-control">' +

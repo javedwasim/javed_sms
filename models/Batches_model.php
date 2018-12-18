@@ -14,10 +14,11 @@ Class Batches_model extends CI_Model {
             $employee_id = $result['employee_id'];
             if($other_rights[0]['status']){
                 $where = " where 1 ";
-            }else{
+            }elseif(!empty($employee_id)){
                 $where = " where employee_id = $employee_id ";
             }
         }
+
          $query = "SELECT b.*, c.code,student_count,bas.employee_id,c.name as class_name
                     FROM batches b 
                     LEFT JOIN classes c ON c.id=b.course_id 
@@ -27,7 +28,7 @@ Class Batches_model extends CI_Model {
                         GROUP by batch_no
                     )students on students.batch_no = b.id
                     LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
-                    where 1
+                    $where
                     GROUP By b.id
                     ORDER BY b.session ASC";
         $result = $query = $this->db->query($query);
@@ -131,7 +132,7 @@ Class Batches_model extends CI_Model {
         $this->db->join('classes c', 'c.id=b.course_id', 'left');
         $this->db->order_by('s.student_id','desc');
         $this->db->where('s.status',1);
-        $this->db->where('b.id',$id);
+        $this->db->where('s.batch_no',$id);
         $result = $this->db->get();
         //print_r($this->db->last_query()); die();
         if($result) {

@@ -48,7 +48,7 @@
                                     <th>Answer Options</th>
                                     <th>Correct Answer</th>
                                     <th>Exam</th>
-                                    <th data-orderable="false" style="width: 9%"></th>
+                                    <th data-orderable="false" style="width: 9%">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -153,7 +153,7 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button type="submit" id="save_question" class="btn btn-sm btn-success pull-right add-btn"><i class="fa fa-plus"></i>Add Question</button>
+                        <button type="submit" id="save_question" class="btn btn-primary pull-right add-btn"><i class="fa fa-plus"></i>Add Question</button>
                     </div>
                 </form>
             </div>

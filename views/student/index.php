@@ -5,6 +5,8 @@
     <?php $this->load->view('student/student_profile'); ?>
 <?php elseif(isset($screen) && ($screen == 'guardian_profile')): ?>
     <?php $this->load->view('student/guardian_profile'); ?>
+<?php elseif(isset($screen) && ($screen == 'error')):  ?>
+    <?php $this->load->view('error404'); ?>
 <?php else: ?>
     <?php $this->load->view('parts/student_listing'); ?>
 <?php endif; ?>

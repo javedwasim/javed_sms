@@ -61,35 +61,12 @@ class Guardians extends MY_Controller
             exit();
         } else {
             $guardian = $this->input->post();
-            if (!empty($_FILES['photo']['name'])) {
-                $upload_path = 'assets/uploads/guardian_images';
-                $config = array(
-                    'upload_path' => $upload_path,
-                    'allowed_types' => "gif|jpg|png|jpeg",
-                    'overwrite' => TRUE,
-                    'file_name' => strtolower(str_replace(' ', '-', $this->input->post('surname') . '-' . $this->input->post('first_name'))) . '-' . uniqid()
-                );
-                $this->load->library('upload', $config);
 
-                if (!$this->upload->do_upload('photo')) {
-                    $json['error'] = true;
-                    $json['message'] = $this->upload->display_errors();
-                } else {
-                    $imageDetailArray = $this->upload->data();
-                    $photo = $imageDetailArray['file_name'];
-                }
-                if ($photo) {
-                    $guardian_data['photo'] = $imageDetailArray['file_name'];
-                } else {
-                    $json['error'] = true;
-                    $json['message'] = "Seems to an error.";
-                }
-            }
             $loggedin_user = $this->session->userdata('userdata');
             $guardian_fields = array('surname' => $guardian['surname'],
                 'first_name' => isset($guardian['first_name'])?$guardian['first_name']:'',
                 'middle_name' => isset($guardian['middle_name'])?$guardian['middle_name']:'',
-                'photo' => isset($guardian['photo'])?$guardian['photo']:'',
+                //'photo' => isset($guardian['photo'])?$guardian['photo']:'',
                 'title' => isset($guardian['title'])?$guardian['title']:'',
                 'email' => isset($guardian['email'])?$guardian['email']:'',
                 'gender' => isset($guardian['gender'])?$guardian['gender']:'',
@@ -103,6 +80,32 @@ class Guardians extends MY_Controller
                 'status' => 1,
                 'created_by' => $loggedin_user['login_id'],
             );
+            if (!empty($_FILES['photo']['name'])) {
+                $upload_path = 'assets/uploads/guardian_images';
+                $feile_name = strtolower(str_replace(' ', '-', $this->input->post('surname') . '-' . $this->input->post('first_name'))) . '-' . uniqid();
+                $config = array(
+                    'upload_path' => $upload_path,
+                    'allowed_types' => "gif|jpg|png|jpeg",
+                    'overwrite' => TRUE,
+                    'file_name' => $feile_name
+                );
+                $this->load->library('upload', $config);
+                if (!$this->upload->do_upload('photo')) {
+                    $this->session->set_flashdata('error', $this->upload->display_errors());
+                    $photo = false;
+                } else {
+                    $imageDetailArray = $this->upload->data();
+                    $photo = $imageDetailArray['file_name'];
+                }
+                if ($photo) {
+                    $guardian_fields['photo'] = $imageDetailArray['file_name'];
+                } else {
+                    $json['error'] = true;
+                    $json['message'] = "Seems to an error in image upload.";
+                }
+            }
+
+
             $guardian_id = $this->Student_model->add_new_guardian($guardian_fields);
 
             $student_guardian_fields = array(
@@ -119,7 +122,7 @@ class Guardians extends MY_Controller
                 $json['message'] = "Guardian successfully added.";
             } else {
                 $json['error'] = true;
-                $json['message'] = "Seems to an error. Please try again.";
+                $json['message'] = "Seems to an error.";
             }
 
             redirect('guardians/');
@@ -304,6 +307,7 @@ class Guardians extends MY_Controller
         $data['states'] = $this->Student_model->get_all_states();
         $data['origins'] = $this->Student_model->get_all_origins();
         $data['wards'] = $this->Student_model->get_guardian_wards($id);
+        $data['guardian_id'] = $id;
         $json['result_html'] = $this->load->view('student/guardian_profile', $data, true);
         if($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -318,6 +322,21 @@ class Guardians extends MY_Controller
         }
 
         return $fields;
+    }
+
+    public function validate_email(){
+        $email = $this->input->post('email');
+        $result = $this->Student_model->validate_guardian_email($email);
+        if($result) {
+            $json['success'] = true;
+            $json['message'] = "Email already been taken.";
+        } else {
+            $json['error'] = true;
+            $json['message'] = "Seem to be an error.";
+        }
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
     }
 
 }

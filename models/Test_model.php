@@ -137,6 +137,7 @@ class Test_model extends CI_Model {
                         ->join('subjects_detail sd','sd.id=examination.subject_id','left')
                         ->join('subjects','subjects.id=sd.subject_id','left')
                         ->where('examination.batch_no',$student['batch_no'])
+                        ->where('examination.exam_date',date("Y-m-d"))
                         ->get();
         }
         //echo $this->db->last_query();
@@ -193,6 +194,17 @@ class Test_model extends CI_Model {
     }
 
     public function add_exam_question($data) {
+        $result = $this->db->select('examination.*')->from('examination')->where('id',$data['exam_id'])->limit(1)->get();
+        $examination = $result->row_array();
+        $total_questions = $examination['no_of_question'];
+
+        $exam_question = $this->db->select('*')->from('exam_question')->where('exam_id',$data['exam_id'])->get();
+        $exam_question_entered = $exam_question->num_rows();
+        if($total_questions == $exam_question_entered){
+            return false;
+            exit();
+        }
+
         if(isset($data['answer_option']) && !empty($data['answer_option'])){
             $this->db->insert('exam_question',array('exam_id'=>$data['exam_id'],'question'=>$data['question']));
             $question_id = $this->db->insert_id();

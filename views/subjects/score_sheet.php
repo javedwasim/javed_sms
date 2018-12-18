@@ -3,6 +3,7 @@
     <tr>
         <th rowspan="2" style="background-color: #31bc86; color: #fff"><strong>Name</strong></th>
         <?php $score_detail = explode(',',$score_term);
+        $assessment_id = explode(',',$asses_id);
         foreach ($score_detail as $detail):  ?>
             <th style="background-color: #31bc86;color: #fff"><strong><?php echo $detail; ?></strong></th>
         <?php endforeach; ?>
@@ -14,39 +15,23 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($score_sheet as $sheet): //$rpoints  = explode(',',$sheet['obtain_score']); ?>
+    <?php foreach ($score_sheet as $sheet): $rpoints  = explode(',',$sheet['obtain_score']); ?>
         <tr>
             <th scope="row"><code><?php echo $sheet['surname'].", ".$sheet['first_name'].".".$sheet['last_name']; ?></code></th>
-            <td class="is-visible" contenteditable="true"
-                onBlur="saveToDatabase(this,
-                    '<?php echo $sheet['student_id']; ?>',
-                    '<?php echo $sheet['subj_detail_id']; ?>',
-                    '<?php echo $sheet['bacth_id']; ?>',
-                    '<?php echo isset($score_detail[0])?$score_detail[0]:''; ?>',
-                    '<?php echo isset($points[0])?$points[0]:''; ?>')"
-                onClick="showEdit(this);">
-                <?php echo isset($sheet['first_value'])?$sheet['first_value']:''; ?>
-            </td>
-            <td class="is-visible" contenteditable="true"
-                onBlur="saveToDatabase(this,
-                    '<?php echo $sheet['student_id']; ?>',
-                    '<?php echo $sheet['subj_detail_id']; ?>',
-                    '<?php echo $sheet['bacth_id']; ?>',
-                    '<?php echo isset($score_detail[1])?$score_detail[1]:''; ?>',
-                    '<?php echo isset($points[1])?$points[1]:''; ?>')"
-                onClick="showEdit(this);">
-                <?php echo isset($sheet['second_value'])?$sheet['second_value']:''; ?>
-            </td>
-            <td class="is-visible" contenteditable="true"
-                onBlur="saveToDatabase(this,
-                    '<?php echo $sheet['student_id']; ?>',
-                    '<?php echo $sheet['subj_detail_id']; ?>',
-                    '<?php echo $sheet['bacth_id']; ?>',
-                    '<?php echo isset($score_detail[2])?$score_detail[2]:''; ?>',
-                    '<?php echo isset($points[2])?$points[2]:''; ?>')"
-                onClick="showEdit(this);">
-                <?php echo isset($sheet['third_value'])?$sheet['third_value']:''; ?>
-            </td>
+            <?php for($j=0;$j<count($score_detail);$j++){ ?>
+                <td class="is-visible" contenteditable="true"
+                    onBlur="saveToDatabase(this,
+                            '<?php echo $sheet['student_id']; ?>',
+                            '<?php echo $sheet['subj_detail_id']; ?>',
+                            '<?php echo $sheet['bacth_id']; ?>',
+                            '<?php echo isset($score_detail[$j])?$score_detail[$j]:''; ?>',
+                            '<?php echo isset($points[$j])?$points[$j]:''; ?>',
+                            '<?php echo isset($assessment_id[$j])?$assessment_id[$j]:''; ?>')"
+                    onClick="showEdit(this);">
+                    <?php //echo isset($sheet['first_value'])?$sheet['first_value']:''; ?>
+                    <?php echo isset($rpoints[$j])?$rpoints[$j]:''; ?>
+                </td>
+            <?php } ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

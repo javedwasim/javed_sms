@@ -35,7 +35,7 @@
                             <h3 class="card-title">Grade Scale</h3>
                         </div>
                         <div class="container ">
-                            <div class="row">
+                            <div class="row" style="margin-top: 25px">
                                 <div class="col-sm-6">
                                     <label for="status">Status</label>
                                     <select name="status" id="status" class="form-control"><option value="active">Active</option>

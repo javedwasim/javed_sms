@@ -24,15 +24,21 @@
     <?php endif; ?>
     <section class="content">
         <div class="container-fluid">
+            <?php  if(!empty($validation_errors)): ?>
+                <div id="employee_error" class="alert alert-danger alert-dismissible"
+                     role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $validation_errors; ?>
+                </div>
+            <?php endif; ?>
             <div class="row student_info">
                 <div class="col-md-12">
                     <form id="student_form" method="post" role="form"
-                          action="<?php echo site_url('students/add_new_student') ?>"
                           data-action="<?php echo site_url('students/add_new_student') ?>"
                           enctype="multipart/form-data">
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Student Information<?php //print_r($student_fields); ?></h3>
+                                <h3 class="card-title">Student Information</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -40,23 +46,23 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label><code>*</code>Surname</label>
-                                            <input type="text" class="form-control" name="surname" placeholder="Surname"
-                                                   maxlength="20" required>
+                                            <input type="text" class="form-control" name="surname" placeholder="Surname" maxlength="20"
+                                                 value="<?php echo isset($form_data['surname'])?$form_data['surname']:''; ?>" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label><code>*</code>First Name</label>
-                                            <input type="text" class="form-control" name="first_name"
-                                                   placeholder="First Name" maxlength="20" required>
+                                            <input type="text" class="form-control" name="first_name"placeholder="First Name" maxlength="20"
+                                                   value="<?php echo isset($form_data['first_name'])?$form_data['first_name']:''; ?>" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <div class="form-group">
                                                 <label>Middle Name</label>
-                                                <input type="text" class="form-control" name="last_name"
-                                                       placeholder="Last Name" maxlength="20">
+                                                <input type="text" class="form-control" name="last_name" placeholder="Last Name" maxlength="20"
+                                                       value="<?php echo isset($form_data['last_name'])?$form_data['last_name']:''; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -65,8 +71,8 @@
                                         <div class="form-group">
                                             <div class="form-group">
                                                 <label><code>*</code>Admission No</label>
-                                                <input type="text" class="form-control" name="admission_no"
-                                                       placeholder="Admission No" maxlength="10" required>
+                                                <input type="text" class="form-control" name="admission_no" placeholder="Admission No" maxlength="10"
+                                                       value="<?php echo isset($form_data['admission_no'])?$form_data['admission_no']:''; ?>" required>
                                             </div>
                                         </div>
                                     </div>
@@ -79,9 +85,8 @@
                                                     <i class="fa fa-calendar"></i>
                                                   </span>
                                                 </div>
-                                                <input type="text" class="form-control datepicker" autocomplete="off"
-                                                       data-date-format="yyyy-mm-dd" name="admission_date"
-                                                       placeholder="Admission Date" required>
+                                                <input type="text" class="form-control datepicker" autocomplete="off" data-date-format="yyyy-mm-dd" name="admission_date" id="admission_date"
+                                                       value="<?php echo isset($form_data['admission_date'])?$form_data['admission_date']:''; ?>"  placeholder="Admission Date" required>
                                             </div>
                                         </div>
                                     </div>
@@ -91,13 +96,13 @@
                                                 <label>Date of Birth</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                                    <span class="input-group-text">
-                                                      <i class="fa fa-calendar"></i>
-                                                    </span>
+                                                        <span class="input-group-text">
+                                                          <i class="fa fa-calendar"></i>
+                                                        </span>
                                                     </div>
-                                                    <input type="text" class="form-control datepicker" autocomplete="off"
-                                                           data-date-format="yyyy-mm-dd" name="date_of_birth"
-                                                           placeholder="Date of Birth">
+                                                    <input type="text" class="form-control datepicker" autocomplete="off" id="date_of_birth"
+                                                           data-date-format="yyyy-mm-dd" name="date_of_birth" placeholder="Date of Birth"
+                                                           value="<?php echo isset($form_data['date_of_birth'])?$form_data['date_of_birth']:''; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -108,8 +113,8 @@
                                                 <label>Gender</label>
                                                 <select class="form-control" name="gender">
                                                     <option value="">Select Gender</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
+                                                    <option value="Male"<?php echo isset($form_data['gender'])&&($form_data['gender']=='Male')?'selected':''; ?>>Male</option>
+                                                    <option value="Female"<?php echo isset($form_data['gender'])&&($form_data['gender']=='Female')?'selected':''; ?>>Female</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -120,8 +125,8 @@
                                                 <label>Religion</label>
                                                 <select class="form-control" name="religion">
                                                     <option value="">Select Religion</option>
-                                                    <option value="Christianity">Christianity</option>
-                                                    <option value="Islam">Islam</option>
+                                                    <option value="Christianity"<?php echo isset($form_data['religion'])&&($form_data['religion']=='Christianity')?'selected':''; ?>>Christianity</option>
+                                                    <option value="Islam"<?php echo isset($form_data['religion'])&&($form_data['religion']=='Islam')?'selected':''; ?>>Islam</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -140,14 +145,14 @@
                                                 <label>Blood Group</label>
                                                 <select class="form-control" name="blood_group">
                                                     <option value="">Blood Group</option>
-                                                    <option value="A+">A+</option>
-                                                    <option value="A-">A-</option>
-                                                    <option value="AB+">AB+</option>
-                                                    <option value="AB-">AB-</option>
-                                                    <option value="B+">B+</option>
-                                                    <option value="B-">B-</option>
-                                                    <option value="O+">O+</option>
-                                                    <option value="O-">O-</option>
+                                                    <option value="A+"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='A+')?'selected':''; ?>>A+</option>
+                                                    <option value="A-"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='A-')?'selected':''; ?>>A-</option>
+                                                    <option value="AB+"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='AB+')?'selected':''; ?>>AB+</option>
+                                                    <option value="AB-"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='AB-')?'selected':''; ?>>AB-</option>
+                                                    <option value="B+"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='B+')?'selected':''; ?>>B+</option>
+                                                    <option value="B-"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='B-')?'selected':''; ?>>B-</option>
+                                                    <option value="O+"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='O+')?'selected':''; ?>>O+</option>
+                                                    <option value="O-"<?php echo isset($form_data['blood_group'])&&($form_data['blood_group']=='O-')?'selected':''; ?>>O-</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -158,10 +163,10 @@
                                                 <label>Geno Type</label>
                                                 <select class="form-control" name="genotype">
                                                     <option value="">Select Genotype</option>
-                                                    <option value="AA">AA</option>
-                                                    <option value="AS">AS</option>
-                                                    <option value="SS">SS</option>
-                                                    <option value="AC">AC-</option>
+                                                    <option value="AA"<?php echo isset($form_data['genotype'])&&($form_data['genotype']=='AA')?'selected':''; ?>>AA</option>
+                                                    <option value="AS"<?php echo isset($form_data['genotype'])&&($form_data['genotype']=='AS')?'selected':''; ?>>AS</option>
+                                                    <option value="SS"<?php echo isset($form_data['genotype'])&&($form_data['genotype']=='SS')?'selected':''; ?>>SS</option>
+                                                    <option value="AC"<?php echo isset($form_data['genotype'])&&($form_data['genotype']=='AC')?'selected':''; ?>>AC-</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -173,7 +178,9 @@
                                                 <select class="form-control select2" id="nationality" name="nationality">
                                                     <option value="">Select Nationality</option>
                                                     <?php foreach ($countries as $country) { ?>
-                                                        <option value="<?php echo $country['id'] ?>"><?php echo $country['country_name'] ?></option>
+                                                        <option value="<?php echo $country['id'] ?>"
+                                                            <?php echo isset($form_data['nationality'])&&($form_data['nationality']==$country['id'])?'selected':''; ?>>
+                                                            <?php echo $country['country_name'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -203,15 +210,15 @@
                                         <div class="form-group">
                                             <label><code>*</code>Batch</label>
                                             <!--                          <input type="text" class="form-control" placeholder="Batch No." name="batch_no" maxlength="20" required="">-->
-                                            <select prompt="Select Batch" class="form-control" required="required"
-                                                    name="batch_no">
+                                            <select prompt="Select Batch" class="form-control" required="required" name="batch_no">
                                                 <option value=""></option>
                                                 <?php $priorGroup = "";
                                                 foreach ($batches as $batch){ ?>
                                                 <?php if ($batch["session"] != $priorGroup){ ?>
                                                 <optgroup label="<?php echo $batch['session']; ?>">
                                                     <?php } ?>
-                                                    <option value="<?php echo $batch['id']; ?>">
+                                                    <option value="<?php echo $batch['id']; ?>"
+                                                        <?php echo isset($form_data['batch_no'])&&($form_data['batch_no']==$batch['id'])?'selected':''; ?>>
                                                         <?php echo $batch['code'] . '-' . $batch['arm'] . '(' . $batch['session'] . ')' ?>
                                                     </option>
                                                     <?php $priorGroup = $batch["session"];
@@ -229,7 +236,9 @@
                                                 <select class="form-control select2" name="student_category">
                                                     <option value="">Please select a state</option>
                                                     <?php foreach ($categories as $category): ?>
-                                                        <option value="<?php echo $category['id']; ?>"><?php echo $category['category']; ?></option>
+                                                        <option value="<?php echo $category['id']; ?>"
+                                                            <?php echo isset($form_data['student_category'])&&($form_data['student_category']==$category['id'])?'selected':''; ?>>
+                                                            <?php echo $category['category']; ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
@@ -240,23 +249,24 @@
                                             <div class="form-group">
                                                 <label>Mobile Phone</label>
                                                 <input type="tel" maxlength="15" id="mobile_phone" name="mobile_phone" class="form-control" placeholder="&nbsp;"
+                                                       value="<?php echo isset($form_data['mobile_phone'])?$form_data['mobile_phone']:''; ?>"
                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                         </div>
                                     <?php } ?>
-                                    <?php if ($student_fields['email']) { ?>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Email<span style="color: red">*</span></label>
-                                                <input type="text" class="form-control" name="email" maxlength="50" placeholder="Email" required>
-                                            </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Email<span style="color: red">*</span></label>
+                                            <input type="text" class="form-control" name="email" maxlength="50" placeholder="Email" required
+                                                   value="<?php echo isset($form_data['email'])?$form_data['email']:''; ?>">
                                         </div>
-                                    <?php } ?>
+                                    </div>
                                     <?php if ($student_fields['phone']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Phone</label>
                                                 <input type="tel" class="form-control" name="phone" maxlength="15" id="phone" placeholder="&nbsp;"
+                                                       value="<?php echo isset($form_data['phone'])?$form_data['phone']:''; ?>"
                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                         </div>
@@ -274,7 +284,7 @@
                                             <div class="form-group">
                                                 <label>Address Line</label>
                                                 <textarea class="form-control" rows="1" maxlength="70"
-                                                          name="address_line"></textarea>
+                                                          name="address_line"><?php echo isset($form_data['address_line'])?$form_data['address_line']:''; ?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -283,7 +293,8 @@
                                                 <select class="form-control select2" name="country" id="snationality">
                                                     <option value="">Select Country</option>
                                                     <?php foreach ($countries as $country) { ?>
-                                                        <option value="<?php echo $country['id'] ?>"><?php echo $country['country_name'] ?></option>
+                                                        <option value="<?php echo $country['id'] ?>"
+                                                            <?php echo isset($form_data['snationality'])&&($form_data['snationality']==$country['id'])?'selected':''; ?>><?php echo $country['country_name'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -294,7 +305,8 @@
                                                 <select class="form-control select2" id="scountry_states" name="state">
                                                     <option value="">Please select a state</option>
                                                     <?php foreach ($states as $state): ?>
-                                                        <option value="<?php echo $state['id']; ?>"><?php echo $state['name']; ?></option>
+                                                        <option value="<?php echo $state['id']; ?>"
+                                                            <?php echo isset($form_data['state'])&&($form_data['state']==$state['id'])?'selected':''; ?>><?php echo $state['name']; ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
@@ -305,7 +317,8 @@
                                                 <select class="form-control select2" id="slga_of_origin" name="city">
                                                     <option value="">Please select</option>
                                                     <?php foreach ($cities as $city): ?>
-                                                        <option value="<?php echo $city['id']; ?>">
+                                                        <option value="<?php echo $city['id']; ?>"
+                                                            <?php echo isset($form_data['city'])&&($form_data['city']==$city['id'])?'selected':''; ?>>
                                                             <?php echo $city['name']; ?></option>
                                                     <?php  endforeach; ?>
                                                 </select>
@@ -333,6 +346,9 @@
 <script>
     $(document).ready(function () {
         $('.select2').select2({});
+        $('#admission_date').datepicker().datepicker("setDate", new Date());
+        $('#date_of_birth').datepicker().datepicker("setDate", new Date());
+
     });
     $("#nationality").change(function () {
         var base_url = $('#base').val();

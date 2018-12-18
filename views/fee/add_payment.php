@@ -112,7 +112,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <button type="submit" id="<?php echo isset($payment_id)?'update_fee_payment_btn':'add_fee_payment_btn'; ?>" class="btn btn-success">
+                    <button type="submit" id="<?php echo isset($payment_id)?'update_fee_payment_btn':'add_fee_payment_btn'; ?>" class="btn btn-primary">
                         <i class="fa fa-save"></i><?php echo isset($payment_id)?'Update invoice':'Create invoice'; ?></button>
                 </div>
             </div>

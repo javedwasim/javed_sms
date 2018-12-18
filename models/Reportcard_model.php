@@ -83,7 +83,7 @@ Class Reportcard_model extends CI_Model {
                     )students on students.batch_no = b.id
                     LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id
                     where 1
-                    GROUP BY course_id
+                    GROUP BY b.id
                     ORDER BY b.session ASC";
         $result = $query = $this->db->query($query);
         if($result) {
@@ -254,6 +254,39 @@ Class Reportcard_model extends CI_Model {
         } else {
             return array();
         }
+    }
+
+
+    public function get_guardian_student($class_set_id,$user_name){
+        $query = $this->db->select('*')
+                    ->from('guardians')
+                    ->where("username",$user_name)
+                    ->limit(1)
+                    ->get();
+        $guardisan = $query->row_array();
+        $guardian_id = $guardisan['guardian_id'];
+        //get course and session of batch
+        $result = $this->db->select('batches.*,c.name as class_name')->from('batches')
+            ->join('classes c','c.id=batches.course_id','left')
+            ->where('batches.id',$class_set_id)
+            ->limit(1)
+            ->get();
+        $batch_info = $result->row_array();
+        //get class set students
+        $result = $this->db->select('s.*,g.guardian_id')
+                ->from('students s')
+                ->join('student_guardians g','g.student_id=s.student_id','left')
+                ->where('g.guardian_id',$guardian_id)
+                ->get();
+        $result_array = array();
+        if($result) {
+            $result_array['students'] = $result->result_array();
+            $result_array['batch'] = $batch_info;
+            return $result_array;
+        } else {
+            return array();
+        }
+
     }
 
 }

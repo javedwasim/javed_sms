@@ -23,7 +23,7 @@
                 <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Report Card</h3>
+                            <h3 class="card-title">Report Card </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -33,7 +33,7 @@
                                         <button type="button" class="btn btn-primary"
                                             data-toggle="modal" data-target="#report_card_modal" id="batch_list">
                                             <i class="fa fa-plus"></i>Add Report Card Group</button>
-                                    <?php else: ?>
+                                    <?php elseif(isset($student['surname'])): ?>
                                         <h3 class="card-title"><?php echo $student['surname'].' '.$student['first_name'].'('.$student['username'].')'; ?></h3>
                                     <?php endif; ?>
                                     <div id="std_subjects_report_container">
@@ -46,11 +46,22 @@
                                                 <th>For</th>
                                                 <th>Published</th>
                                                 <th>Status</th>
-                                                <th>Actions</th>
+                                                <?php if(isset($student['surname']) || $userdata['name']=='admin'): ?>
+                                                    <th>Actions</th>
+                                                <?php endif; ?>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <?php  foreach ($reports as $report):  ?>
+                                                <?php
+                                                    if($report['report_card_group_for']=='first_term'){
+                                                        $term_id = 1;
+                                                    }elseif($report['report_card_group_for']=='second_term'){
+                                                        $term_id = 2;
+                                                    }elseif($report['report_card_group_for']=='third_term'){
+                                                        $term_id = 3;
+                                                    }
+                                                ?>
                                                 <tr>
                                                     <td>
                                                         <?php if($userdata['name'] == 'admin'): ?>
@@ -58,6 +69,12 @@
                                                                data-class-set-id="<?php echo $report['course_set_id']; ?>"
                                                                data-term="<?php echo $report['report_card_group_for']; ?>"
                                                                class="link prof-link" id="class_set_students"><?php echo $report['name']; ?></a>
+                                                        <?php elseif(!isset($student['surname'])): ?>
+                                                            <a data-href="<?php echo site_url('reportcard/get_guardian_student');?>"
+                                                               data-class-set-id="<?php echo $report['course_set_id']; ?>"
+                                                               data-term="<?php echo $report['report_card_group_for']; ?>"
+                                                               data-user-name="<?php echo $userdata['name']; ?>"
+                                                               class="link prof-link" id="class_set_grd"><?php echo $report['name']; ?></a>
                                                         <?php else: ?>
                                                             <?php echo $report['name']; ?>
                                                         <?php endif; ?>
@@ -75,11 +92,12 @@
                                                             <a class="btn btn-danger btn-xs delete-card-group"
                                                                data-href = '<?php echo site_url("Reportcard/delete/").$report['id'];  ?>'><i class="fa fa-trash icon-margin" title="Delete"></i></a>
                                                         </td>
-                                                    <?php else: ?>
+                                                    <?php elseif(isset($student['surname'])): ?>
                                                         <td>
                                                             <a class="btn btn-info btn-xs std-subject-report"
+                                                               data-term-id = '<?php echo $term_id;  ?>'
                                                                data-href = '<?php echo $student['student_id'];  ?>'>
-                                                                <i class="fa fa-line-chart icon-margin" title="View Detail"></i>Open</a>
+                                                               <i class="fa fa-line-chart icon-margin" title="View Detail"></i>Open</a>
                                                         </td>
                                                     <?php endif; ?>
                                                 </tr>
@@ -129,17 +147,17 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="report_card_template_id" class="col-sm-5 col-form-label">Template</label>
-                                <div class="col-sm-7">
-                                    <select class="form-control" name="report_card_template_id" id="report_card_template_id">
-                                        <option value="">Please Select</option>
-                                        <?php foreach ($reportes as $report): ?>
-                                            <option value="<?php echo $report['id'] ?>"><?php echo $report['session'].' '.$report['code'] ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
+<!--                            <div class="form-group row">-->
+<!--                                <label for="report_card_template_id" class="col-sm-5 col-form-label">Template</label>-->
+<!--                                <div class="col-sm-7">-->
+<!--                                    <select class="form-control" name="report_card_template_id" id="report_card_template_id">-->
+<!--                                        <option value="">Please Select</option>-->
+<!--                                        --><?php //foreach ($reportes as $report): ?>
+<!--                                            <option value="--><?php //echo $report['id'] ?><!--">--><?php //echo $report['session'].' '.$report['code'] ?><!--</option>-->
+<!--                                        --><?php //endforeach; ?>
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="form-group row">
                                 <label for="report_type" class="col-sm-5 col-form-label">Report type<span style="color: red">*</span></label>
                                 <div class="col-sm-7">

@@ -1,4 +1,4 @@
-<?php $userdata = $this->session->userdata('userdata'); $role = $userdata['role']; ?>
+<?php $userdata = $this->session->userdata('userdata');  $role = $userdata['role']; ?>
 <div class="row">
     <div class="table-responsive col-md-12">
         <table class="table table-bordered table-striped">
@@ -39,10 +39,12 @@
                 <thead>
                 <tr>
                     <th>Principal's comment —  </th>
-                    <th>
-                        <a data-disable-with="Please wait..." class="btn btn-xs edit"
-                           data-remote="true" href="javascript:void(0)" onclick="showModal('principal');">
-                           <i class="fa fa-edit"></i> Edit</a>
+                    <?php if($userdata['name']=='admin'): ?>
+                        <th>
+                            <a data-disable-with="Please wait..." class="btn btn-xs edit"
+                               data-remote="true" href="javascript:void(0)" onclick="showModal('principal');">
+                                <i class="fa fa-edit"></i> Edit</a></th>
+                    <?php endif; ?>
                 </tr>
                 </thead>
 
@@ -61,11 +63,12 @@
                 <thead>
                 <tr>
                     <th>Class Teacher's comment — <?php echo isset($class_teacher['employees'])?$class_teacher['employees']:''; ?> </th>
-                    <th>
-                        <a data-disable-with="Please wait..." class="btn btn-xs edit"
-                           data-remote="true" href="javascript:void(0)" onclick="showModal('teacher');">
-                           <i class="fa fa-edit"></i> Edit</a>
-                    </th>
+                    <?php if($userdata['name']=='admin'): ?>
+                        <th>
+                            <a data-disable-with="Please wait..." class="btn btn-xs edit"
+                               data-remote="true" href="javascript:void(0)" onclick="showModal('teacher');">
+                                <i class="fa fa-edit"></i> Edit</a></th>
+                    <?php endif; ?>
                 </tr>
                 </thead>
 

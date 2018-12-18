@@ -1,4 +1,4 @@
-<?php $userdata = $this->session->userdata('userdata') ?>
+<?php $userdata = $this->session->userdata('userdata');?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -117,26 +117,23 @@
                                         </li>
                                         <li class="list-group-item">
                                             <b>Student Categories:</b> <a
-                                                    class="float-right"><?php echo isset($student['student_category']) && (!empty($student['student_category'])) ? $student['student_category'] : "" ?></a>
+                                                    class="float-right"><?php echo isset($student['category']) && (!empty($student['category'])) ? $student['category'] : "" ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Nationality:</b> <a
-                                                    class="float-right"><?php echo isset($student['nationality']) && (!empty($student['nationality'])) ? $student['nationality'] : "" ?></a>
+                                                    class="float-right"><?php echo isset($student['country_name']) && (!empty($student['country_name'])) ? $student['country_name'] : "" ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>State of origin:</b> <a
-                                                    class="float-right"><?php echo isset($student['state_of_origin']) && (!empty($student['state_of_origin'])) ? $student['state_of_origin'] : "" ?></a>
+                                                    class="float-right"><?php echo isset($student['state_of_origin']) && (!empty($student['state_of_origin'])) ? $student['state_name'] : "" ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>LGA of origin:</b> <a
-                                                    class="float-right"><?php echo isset($student['lga_of_origin']) && (!empty($student['lga_of_origin'])) ? $student['lga_of_origin'] : "" ?></a>
+                                                    class="float-right"><?php echo isset($student['city_name']) && (!empty($student['city_name'])) ? $student['city_name'] : "" ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Religion:</b> <a
                                                     class="float-right"><?php echo isset($student['religion']) && (!empty($student['religion'])) ? $student['religion'] : "" ?></a>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <b>Health Info:</b> <a class="float-right"></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -185,16 +182,16 @@
                     <div class="card card-primary">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Guardians</a>
-                                </li>
-                                <li class="nav-item">
-                                    <?php if($userdata['name'] == 'admin'): ?>
-                                        <a class="nav-link" href="<?php echo site_url('students/edit/') . $student['student_id']; ?>"
-                                                            data-href="<?php echo site_url('students/edit/') . $student['student_id'] ?>">Edit</a>
-                                    <?php endif; ?>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"
-                                                        data-target="#myModal">Change Password</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Guardians</a></li>
+                                <?php if($userdata['name'] == 'admin'): ?>
+                                    <li class="nav-item">
+                                         <a class="nav-link" id="student_edit_btn" href="javascript:void(0)"
+                                            data-href="<?php echo site_url('students/edit/') . $student['student_id']; ?>" >Edit</a>
+                                    </li>
+                                <?php endif; ?>
+                                <?php if(($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)): ?>
+                                    <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
+                                <?php endif; ?>
                                 <?php if($userdata['name'] == 'admin'): ?>
                                     <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
                                 <?php endif; ?>
@@ -469,7 +466,7 @@
                     <form id="change_pwd" method="post" role="form"
                           data-action="<?php echo site_url('students/change_pwd') ?>"
                           enctype="multipart/form-data">
-                        <input type="hidden" name="student_id" value="<?php echo $student['student_id']; ?>">
+                        <input type="hidden" name="student_id" value="<?php echo $student['username']; ?>">
                         <input type="hidden" name="email" value="<?php echo $student['email']; ?>">
                         <div class="row">
                             <div class="col-md-12">
@@ -483,7 +480,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="password" class="form-control" name="new_pwd"/>
+                                    <input type="password" class="form-control" name="new_pwd" required minlength="8"/>
                                 </div>
                             </div>
                         </div>
@@ -491,12 +488,12 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Password confirmation</label>
-                                    <input type="password" class="form-control" name="c_pwd"/>
+                                    <input type="password" class="form-control" name="c_pwd" required minlength="8"/>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" id="change_password" class="btn btn-primary">Save</button>
+                            <button type="submit" id="change_st_password" class="btn btn-primary">Save</button>
                             <button type="submit" class="btn btn-default" data-dismiss="modal">
                                 Close
                             </button>
@@ -565,7 +562,7 @@
         $('.datatables').DataTable();
     });
 
-    $(document.body).on('click', '#change_password', function () {
+    $(document.body).on('click', '#change_st_password', function () {
         $.ajax({
             url: $('#change_pwd').attr('data-action'),
             type: 'post',

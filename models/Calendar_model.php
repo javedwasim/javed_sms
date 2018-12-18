@@ -26,8 +26,8 @@ class Calendar_Model extends CI_Model
 
     public function delete_event($id)
     {
-        $this->db->where('id', $id)->delete('calendar_events');
         $this->db->where('event_id', $id)->delete('events_groups');
+        $this->db->where('id', $id)->delete('calendar_events');
         return $this->db->affected_rows();
     }
     

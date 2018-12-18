@@ -15,7 +15,6 @@
        </div><!-- .row ---->
      </div><!-- .container-fluid -->
    </div>
-
    <!-- /.content-header -->
    <section class="content">
      <div class="container-fluid">
@@ -33,7 +32,7 @@
                 </div>
               </div>
               <hr>
-              <table class="table table-bordered table-striped nowrap datatables" >
+              <table class="table table-bordered table-striped nowrap datatables dataTable" >
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -64,7 +63,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Create New Student Category</h4>
+                <h4 class="modal-title w-100 font-weight-bold">New Student Category</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -90,7 +89,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button id="save_cat" type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Create Student Category</button>
+                    <button id="save_cat" type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add Student Category</button>
                 </div>
             </form>
         </div>
@@ -98,43 +97,43 @@
 </div>
 </div>
 
-  <div class="container">
-        <div class="modal fade" id="updateCategoryForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <h4 class="modal-title w-100 font-weight-bold">Update Student Category</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+<div class="container">
+    <div class="modal fade" id="updateCategoryForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Update Student Category</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
 
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="student_error" style="display: none;" class="alert alert-danger alert-dismissible" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            </div>
-                            <div id="student_success" style="display: none;" class="alert alert-success alert-dismissible" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            </div>
-                        </div>
-
-                    </div>
-                    <form id="update_category_form" method="post" role="form" data-action="<?php echo site_url('student_setting/update_student_category') ?>" enctype="multipart/form-data">
-                        <input type="hidden" id="category_id" name="category_id" value="">
-                        <input type="hidden" id="data_action" name="data_action" value="<?php echo site_url('student_setting/update_student_category') ?>">
-                        <div class="modal-body mx-3">
-                            <div class="md-form mb-5">
-                                <input type="text" id="category_value" name="category" value="" class="form-control validate" placeholder="Category Name">
-                                <!--                        <label data-error="wrong" data-success="right" for="defaultForm-name"><code>*</code>Name</label>-->
-                            </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button id="update_cat" type="submit" class="btn btn-primary">
-                                <i class="fa fa-floppy-o"></i>Update Category</button>
-                        </div>
-                    </form>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="student_error" style="display: none;" class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        </div>
+                        <div id="student_success" style="display: none;" class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        </div>
+                    </div>
+
+                </div>
+                <form id="update_category_form" method="post" role="form" data-action="<?php echo site_url('student_setting/update_student_category') ?>" enctype="multipart/form-data">
+                    <input type="hidden" id="category_id" name="category_id" value="">
+                    <input type="hidden" id="data_action" name="data_action" value="<?php echo site_url('student_setting/update_student_category') ?>">
+                    <div class="modal-body mx-3">
+                        <div class="md-form mb-5">
+                            <input type="text" id="category_value" name="category" value="" class="form-control validate" placeholder="Category Name">
+                            <!--                        <label data-error="wrong" data-success="right" for="defaultForm-name"><code>*</code>Name</label>-->
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button id="update_cat" type="submit" class="btn btn-primary">
+                            <i class="fa fa-floppy-o"></i>Update Category</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>

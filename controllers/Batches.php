@@ -53,7 +53,7 @@ class Batches extends MY_Controller
                 $json['message'] = "Batch save successfully ";
             } else {
                 $json['error'] = true;
-                $json['message'] = "Seems to an error. Please try again.";
+                $json['message'] = "Seems to an error.";
 
             }
             $record['batches'] = $this->Batches_model->get_all_batches();
@@ -85,12 +85,20 @@ class Batches extends MY_Controller
             $json['success'] = true;
             $json['message'] = "Batch successfully deleted.";
             $record['batches'] = $this->Batches_model->get_all_batches();
+            $record['sessions'] = $this->Batches_model->get_all_sessions();
+            $record['classes'] = $this->Batches_model->get_all_classes();
+            $record['rights'] = $this->session->userdata('other_rights');
+            $record['userdata'] = $this->session->userdata('userdata');
             $json['batch_html'] = $this->load->view('batches/list', $record, true);
 
         } else {
             $json['error'] = true;
             $json['message'] = "Seems to an error";
             $record['batches'] = $this->Batches_model->get_all_batches();
+            $record['sessions'] = $this->Batches_model->get_all_sessions();
+            $record['classes'] = $this->Batches_model->get_all_classes();
+            $record['rights'] = $this->session->userdata('other_rights');
+            $record['userdata'] = $this->session->userdata('userdata');
             $json['batch_html'] = $this->load->view('batches/list', $record, true);
         }
         if($this->input->is_ajax_request()) {
@@ -105,9 +113,13 @@ class Batches extends MY_Controller
         $data['current_batch_info']=$this->Batches_model->get_all_batches_by_id($id);
         $data['scales']=$this->Batches_model->get_grade_scale_level(2);
         $data['domain_indicators']=$this->Batches_model->get_domain_indicators($id);
+        $data['batches'] = $this->Batches_model->get_all_batches();
         $data['batch_id']=$id;
         $data['screen'] = 'batch_students';
-        $this->load->view('batches/demographics', $data);
+        $json['result_html'] = $this->load->view('batches/batch_students', $data,true);
+        if($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
     }
     public function assign_employees(){
 

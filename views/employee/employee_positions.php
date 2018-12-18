@@ -139,7 +139,6 @@
                     <div class="md-form mb-6">
                         <input type="text" id="position_name_update" name="name" class="form-control validate" placeholder="position Name">
                     </div>
-                    <hr>
                     <div class="md-form mb-6">
                         <input type="text" id="position_abbreviation" name="abbrevation" class="form-control validate" placeholder="position Abbrevation">
                     </div>

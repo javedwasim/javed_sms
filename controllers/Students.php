@@ -154,10 +154,17 @@ class Students extends MY_Controller
         $this->form_validation->set_rules('email', 'Email', 'required|is_unique[students.email]|xss_clean');
         //if validation passed
         if ($this->form_validation->run() == FALSE) {
-            $data['error'] = true;
-            $validation_errors = validation_errors();
-            $this->session->set_flashdata('errors', $validation_errors);
-            redirect('students/add_student_form');
+            $json['error'] = true;
+            $json['message'] = validation_errors();
+            $data['form_data'] = $this->input->post();
+            $data['batches'] = $this->Student_model->get_all_batches();
+            $data['countries'] = $this->Student_model->get_all_countries();
+            $data['categories'] = $this->Student_model->get_all_student_categories();
+            $data['states'] = $this->Student_model->get_all_states();
+            $fields = $this->get_fields_setting();
+            $data['student_fields'] = $fields;
+            $json['result_html']=$this->load->view('student/add_student', $data,true);
+
         } else {
             $student_data = $this->input->post();
             if (!empty($_FILES['photo']['name'])) {
@@ -190,11 +197,22 @@ class Students extends MY_Controller
             $result = $this->Student_model->add_new_student($student_data);
 
             if ($result) {
-                $this->session->set_flashdata('message', 'Student Successfully saved');
-                redirect('students/student_guardian_list/' . $result);
+                $guardian_fields = $this->Student_model->get_form_fields(4);
+                $fields = array();
+                foreach ($guardian_fields as $field) {
+                    $fields[$field['field_name']] = $field['add_view'];
+                }
+                $data['guardian_fields'] = $fields;
+                $data['student_id'] = $result;
+                $data['countries'] = $this->Student_model->get_all_countries();
+                $data['guardians'] = $this->Student_model->get_all_student_guardian($result);
+                $data['states'] = $this->Student_model->get_all_states();
+                $json['success'] = true;
+                $json['message'] = 'Student Successfully saved';
+                $json['result_html'] = $this->load->view('student/student_guardian_listing', $data,true);
             } else {
-                $this->session->set_flashdata('error', 'Seem to be an error while saving student!');
-                redirect('students/add_new_student/');
+                $json['error']=true;
+                $json['message']='Seem to be an error';
             }
         }
 
@@ -256,14 +274,10 @@ class Students extends MY_Controller
         $record['student_fields'] = $fields;
         if ($record['student']) {
             $json['success'] = true;
-            $this->load->view('parts/header');
-            $this->load->view('parts/topbar');
-            $this->load->view('parts/sidebar');
-            $json['student_html'] = $this->load->view('student/edit_student', $record);
-            $this->load->view('parts/footer');
+            $json['student_html'] = $this->load->view('student/edit_student', $record,true);
         } else {
             $json['error'] = true;
-            $json['message'] = "No record found for this student.";
+            $json['message'] = "Seem to be an error.";
         }
 
         if ($this->input->is_ajax_request()) {
@@ -294,7 +308,7 @@ class Students extends MY_Controller
                 $data['guardians'] = $this->Student_model->get_all_student_guardian($data['student_id']);
                 $json['guardian_html'] = $this->load->view('student/student_guardian_table', $data, true);
                 $json['error'] = true;
-                $json['message'] = "Seems to an error while assigning guardian.";
+                $json['message'] = "Seems to an error.";
             }
 
         }
@@ -425,11 +439,22 @@ class Students extends MY_Controller
             unset($student_data['guardian_length']);
             $result = $this->Student_model->update_student($student_data, $student_id);
             if ($result) {
-                $this->session->set_flashdata('message', 'Student Successfully saved');
-                redirect('students/student_guardian_list/' . $result);
+                $guardian_fields = $this->Student_model->get_form_fields(4);
+                $fields = array();
+                foreach ($guardian_fields as $field) {
+                    $fields[$field['field_name']] = $field['add_view'];
+                }
+                $data['guardian_fields'] = $fields;
+                $data['student_id'] = $result;
+                $data['countries'] = $this->Student_model->get_all_countries();
+                $data['guardians'] = $this->Student_model->get_all_student_guardian($result);
+                $data['states'] = $this->Student_model->get_all_states();
+                $json['success'] = true;
+                $json['message'] = 'Student Updated Successfully';
+                $json['result_html'] = $this->load->view('student/student_guardian_listing', $data,true);
             } else {
-                $this->session->set_flashdata('error', 'Seem to be an error.');
-                redirect('students/add_new_student/');
+                $json['error']=true;
+                $json['message']='Seem to be an error';
             }
         }
         if ($this->input->is_ajax_request()) {
@@ -483,6 +508,7 @@ class Students extends MY_Controller
         $record['guardians'] = $this->Student_model->get_all_student_guardian($student_id);
         $record['student'] = $data;
         $record['student_id'] = $student_id;
+        $record['user'] = $this->Student_model->logged_user_info();
         $json['result_html'] = $this->load->view('student/student_profile', $record, true);
          if ($this->input->is_ajax_request()) {
              set_content_type($json);
@@ -493,6 +519,8 @@ class Students extends MY_Controller
     {
         $data = $this->Student_model->get_student_by_id($student_id);
         $record['guardians'] = $this->Student_model->get_all_student_guardian($student_id);
+        //check if logged user is student.
+        $record['user'] = $this->Student_model->logged_user_info();
         $record['student'] = $data;
         $record['student_id'] = $student_id;
         $record['screen'] = 'student_profile';
@@ -575,8 +603,8 @@ class Students extends MY_Controller
         $this->load->library('form_validation');
         $this->load->helper('security');
         $this->form_validation->set_rules('current_pwd', 'current password', 'required|xss_clean');
-        $this->form_validation->set_rules('new_pwd', 'new password', 'required|xss_clean');
-        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|xss_clean');
+        $this->form_validation->set_rules('new_pwd', 'new password', 'required|min_length[8]|xss_clean');
+        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|min_length[8]|matches[new_pwd]');
 
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
@@ -676,7 +704,7 @@ class Students extends MY_Controller
     public function student_paid_fees(){
         $id = $this->input->post('id');
         $student_id = $this->input->post('user_id');
-        $result['fee'] = $this->Student_model->get_student_fee($id);
+        $result['fee'] = $this->Student_model->get_student_fee($id,$student_id);
         $result['student_id'] = $student_id;
         $result['fee_management_id'] = $id;
         if ($result) {
@@ -692,14 +720,72 @@ class Students extends MY_Controller
 
     public function create_payment(){
         $data = $this->input->post();
-        $result = $this->Student_model->create_payment($data);
+        if($data['amount']>$data['due_balance']){
+            $json['error'] = true;
+            $json['message'] = "Please enter amount equal to due balance";
+            if ($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+            exit();
+        }
+        //check whether stripe token is not empty
+        if(!empty($_POST['stripeToken']))
+        {
+            $data = $this->input->post();
+            //get token, card and user info from the form
+            $token  = $data['stripeToken'];
+            $email = $data['email'];
+            //include Stripe PHP library
+            require_once APPPATH."third_party/stripe/init.php";
+            //set api key
+            $stripe = array(
+                "secret_key"      => "sk_test_NU8gMdBYyZj96ilvbdwix5ir",
+                "publishable_key" => "pk_test_GJTsu9uDvyFCkc2GFAvubaI6"
+            );
 
+            \Stripe\Stripe::setApiKey($stripe['secret_key']);
+            //add customer to stripe
+            $customer = \Stripe\Customer::create(array(
+                'email' => $email,
+                'source'  => $token
+            ));
+            //item information
+            $itemName = "Student Fee";
+            $itemNumber = "PS123456";
+            $itemPrice = $data['amount_paid']*100;
+            $currency = "usd";
+            $orderID = "SKA92712382139";
+
+            //charge a credit or a debit card
+            $charge = \Stripe\Charge::create(array(
+                'customer' => $customer->id,
+                'amount'   => $itemPrice,
+                'currency' => $currency,
+                'description' => $itemNumber,
+                'metadata' => array(
+                    'item_id' => $itemNumber
+                )
+            ));
+
+            //retrieve charge details
+            $chargeJson = $charge->jsonSerialize();
+            //check whether the charge is successful
+            if($chargeJson['amount_refunded'] == 0 && empty($chargeJson['failure_code']) && $chargeJson['paid'] == 1 && $chargeJson['captured'] == 1)
+            {
+                $result =$this->Student_model->create_online_payment($chargeJson,$data);
+                $this->session->set_flashdata('error', array('insertID' => "Payment Successful # ".$result['order_id'],'class' => 'success'));
+                redirect('/online_test/payment_success');
+                exit();
+            }
+
+        }else{
+
+            $result = $this->Student_model->create_payment($data);
+        }
         if ($result) {
-
             $data['fees'] = $this->Student_model->get_student_fees();
             $student = $this->Student_model->logged_user_info();
             $data['student_id'] = $student['student_id'];
-
             $json['success'] = true;
             $json['message'] = "Fee paid successfully.";
             $json['result_html'] = $this->load->view('student/fee', $data, true);

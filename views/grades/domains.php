@@ -38,8 +38,9 @@
                         <div class="card-body">  
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="<?php echo site_url('domains/add_domain_group_view/'); ?>" class="btn btn-primary btn-rounded mb-4">
-                                        <i class="fa fa-plus"></i> Add Behavioural Domain Group</a>
+                                    <a data-href="<?php echo site_url('domains/add_domain_group_view/'); ?>" id="add_domain_group"
+                                      href="javascript:void(0)" class="btn btn-primary btn-rounded mb-4">
+                                      <i class="fa fa-plus"></i>Add Behavioural Domain Group</a>
                                 </div>
                             </div>
                             <table id="account-table" class="table table-bordered table-striped">
@@ -60,8 +61,8 @@
                                             <td><?php echo $domain['description']; ?></td>
                                             <td><?php echo 'active' ?></td>
                                             <td>
-                                                <a class="btn btn-info btn-xs"
-                                                   href="<?php echo site_url('domains/edit_domain_group_view/').$domain['id']; ?>">
+                                                <a class="btn btn-info btn-xs" id="edit_domain_group" href="javascript:void(0)"
+                                                   data-href="<?php echo site_url('domains/edit_domain_group_view/').$domain['id']; ?>">
                                                    <i class="fa fa-edit icon-margin" title="Edit"></i>
                                                 </a>
                                                 <a class="delete-domain-group btn btn-danger btn-xs" href="#"
@@ -80,13 +81,22 @@
     </section>
     <?php
         $message = $this->session->flashdata('success');
+        $err_message = $this->session->flashdata('error');
         if(isset($message)):?>
             <script>
                 $(document).ready(function() {
                     toastr["success"]("<?php echo $message; ?>");
                 });
             </script>
-    <?php endif; ?>
+        <?php endif; ?>
+        <?php
+            if(isset($err_message)):?>
+            <script>
+                $(document).ready(function() {
+                    toastr["error"]('<?php echo $err_message; ?>');
+                });
+            </script>
+        <?php endif; ?>
 </div>
 <!-- /.content -->
 <div class="modal fade" id="add_domain_group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -161,7 +171,7 @@
                 <input type="hidden" name="assessment_category_id" id="assessment_category_id">
                 <div class="modal-body mx-3">
                     <div class="form-group">
-                        <label for="category_name" class="col-form-label">Description:</label>
+                        <label for="category_name" class="col-form-label">Name:</label>
                         <input type="text" id="assessment_category_name" name="name" class="form-control validate">
 
                     </div>

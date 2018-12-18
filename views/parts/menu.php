@@ -193,6 +193,14 @@
        get_report_card($(this).attr('data-func-call'));
    });
 
+   $('#list_itmes_student_assessments').click(function(){
+       get_student_assessment($(this).attr('data-func-call'));
+   });
+
+   $('#list_itmes_student_subject_assessment').click(function(){
+       get_student_subject_assessment($(this).attr('data-func-call'));
+   });
+
    $(document).ready(function()
    {
 

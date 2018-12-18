@@ -42,8 +42,8 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="employee_form" method="post" role="form" action="<?php echo isset($form_action) ? $form_action : site_url('employee/add_new_employee') ?>"
-                              data-action="<?php echo isset($form_action) ? $form_action : site_url('employee/add_new_employee') ?>" enctype="multipart/form-data">
+                        <form id="employee_form" method="post" role="form" enctype="multipart/form-data"
+                              data-action="<?php echo isset($form_action) ? $form_action : site_url('employee/add_new_employee') ?>">
                             <div class="card-body">
                                 <!-- text input -->
                                 <div class="row">
@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Middle name</label>
+                                            <label>Last name</label>
                                             <input type="text" class="form-control" name="middle_name"
                                                    value="<?php  if(isset($employee['middle_name'])) {echo $employee['middle_name'];}  elseif(isset($form_data['middle_name'])){ echo $form_data['middle_name']; } ?>" maxlength="100" />
                                         </div>
@@ -363,7 +363,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Next of kin phone</label>
-                                                    <input type="text" class="form-control" name="next_of_kin_phone" maxlength="100"
+                                                    <input type="number" class="form-control" name="next_of_kin_phone" maxlength="15"
                                                            value="<?php  if(isset($employee['next_of_kin_phone'])) {echo $employee['next_of_kin_phone'];}  elseif(isset($form_data['next_of_kin_phone'])){ echo $form_data['next_of_kin_phone']; } ?>"/>
                                                 </div>
                                             </div>
@@ -372,7 +372,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Next of kin mobile phone</label>
-                                                    <input type="text" class="form-control" name="next_of_kin_mobile" maxlength="100"
+                                                    <input type="number" class="form-control" name="next_of_kin_mobile" maxlength="15"
                                                            value="<?php  if(isset($employee['next_of_kin_mobile'])) {echo $employee['next_of_kin_mobile'];}  elseif(isset($form_data['next_of_kin_mobile'])){ echo $form_data['next_of_kin_mobile']; } ?>"/>
                                                 </div>
                                             </div>
@@ -400,27 +400,9 @@
                                                 <label>Bank</label>
                                                 <select class="form-control" name="bank_name">
                                                     <option value="">Please Select</option>
-                                                    <option value="1"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '1' ? 'selected' : ''; ?>>Access Bank Plc</option>
-                                                    <option value="2"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '2' ? 'selected' : ''; ?>>Citibank Nigeria Limited</option>
-                                                    <option value="3"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '3' ? 'selected' : ''; ?>>Diamond Bank Plc</option>
-                                                    <option value="4"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '4' ? 'selected' : ''; ?>>Ecobank Nigeria Plc</option>
-                                                    <option value="5"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '5' ? 'selected' : ''; ?>>Enterprise Bank</option>
-                                                    <option value="6"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '6' ? 'selected' : ''; ?>>Fidelity Bank Plc</option>
-                                                    <option value="7"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '7' ? 'selected' : ''; ?>>First Bank of Nigeria Plc</option>
-                                                    <option value="8"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '8' ? 'selected' : ''; ?>>First City Monument Bank Plc</option>
-                                                    <option value="9"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '9' ? 'selected' : ''; ?>>Guaranty Trust Bank Plc</option>
-                                                    <option value="10"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '10' ? 'selected' : ''; ?>>Heritage Banking Company Ltd.</option>
-                                                    <option value="11"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '11' ? 'selected' : ''; ?>>Key Stone Bank</option>
-                                                    <option value="12"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '12' ? 'selected' : ''; ?>>MainStreet Bank</option>
-                                                    <option value="13"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '13' ? 'selected' : ''; ?>>Skye Bank Plc</option>
-                                                    <option value="14"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '14' ? 'selected' : ''; ?>>Stanbic IBTC Bank Ltd.</option>
-                                                    <option value="15"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '15' ? 'selected' : ''; ?>>Standard Chartered Bank Nigeria Ltd.</option>
-                                                    <option value="16"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '16' ? 'selected' : ''; ?>>Sterling Bank Plc</option>
-                                                    <option value="17"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '17' ? 'selected' : ''; ?>>Union Bank of Nigeria Plc</option>
-                                                    <option value="18"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '18' ? 'selected' : ''; ?>>United Bank For Africa Plc</option>
-                                                    <option value="19"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '19' ? 'selected' : ''; ?>>Unity Bank Plc</option>
-                                                    <option value="20"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '20' ? 'selected' : ''; ?>>Wema Bank Plc</option>
-                                                    <option value="21"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == '21' ? 'selected' : ''; ?>Zenith Bank Plc</option>
+                                                    <?php foreach ($banks as $bank): ?>
+                                                        <option value="<?php echo $bank['id']; ?>"<?php echo isset($employee['bank_name']) && $employee['bank_name'] == $bank['id'] ? 'selected' : ''; ?>><?php echo $bank['name']; ?></option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -434,7 +416,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Account number</label>
-                                                <input type="text" class="form-control" name="account_number" maxlength="100"
+                                                <input type="number" class="form-control" name="account_number" maxlength="20"
                                                        value="<?php  if(isset($employee['account_number'])) {echo $employee['account_number'];}  elseif(isset($form_data['account_number'])){ echo $form_data['account_number']; } ?>" />
                                             </div>
                                         </div>
@@ -465,11 +447,11 @@
         $('#date_of_join').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true
-        });
+        }).datepicker("setDate", new Date());
         $('#date_of_birth').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true
-        });
+        }).datepicker("setDate", new Date());
 
         $("#nationality").change(function () {
             var country = $('#nationality').val();

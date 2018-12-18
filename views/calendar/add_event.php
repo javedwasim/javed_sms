@@ -34,11 +34,9 @@
                             <input type="hidden" name="event_id" value="<?php echo isset($event['id'])?$event['id']:''; ?>" >
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="card">
-                                            <div class="card-header">
-                                              <h3 class="card-title">Event Form</h3>
-                                            </div>
+
                                             <div class="card-body">
                                               <div class="form-group row">
                                                 <label for="title" class="col-sm-4 col-form-label">Title<span style="color: red;">*</span></label>
@@ -51,14 +49,14 @@
                                                 <label for="start" class="col-sm-4 col-form-label">Event Start<span style="color: red;">*</span></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="start" value="<?php echo isset($event['start'])?date('Y-m-d',strtotime($event['start'])):''; ?>"
-                                                           name="start" placeholder="Start Time" required="" autocomplete="off">
+                                                           name="start" placeholder="Start Start" required="" autocomplete="off">
                                                 </div>  
                                               </div>
                                               <div class="form-group row">
                                                 <label for="end" class="col-sm-4 col-form-label">Event End<span style="color: red;">*</span></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="end" value="<?php echo isset($event['end'])?date('Y-m-d',strtotime($event['end'])):''; ?>"
-                                                           name="end" placeholder="End Time" autocomplete="off" required >
+                                                           name="end" placeholder="End End" autocomplete="off" required >
                                                 </div>  
                                               </div>
                                               <div class="form-group row">
@@ -180,10 +178,10 @@
           $('#start').datepicker({
               format: 'yyyy-mm-dd',
               autoclose:true
-          });
+          }).datepicker("setDate", new Date());
           $('#end').datepicker({
               format: 'yyyy-mm-dd',
               autoclose:true
-          });
+          }).datepicker("setDate", new Date());
     });      
 </script>        

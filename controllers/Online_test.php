@@ -158,12 +158,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             } else {
                 if(isset($data['exam_id'])){
                     $result = $this->Test_model->update_exam($data);
+                    $json['message'] = "Exam successfully updated.";
                 }else{
                     $result = $this->Test_model->add_exam($data);
+                    $json['message'] = "Exam successfully added.";
                 }
                 if ($result) {
                     $json['success'] = true;
-                    $json['message'] = "Exam successfully added.";
                     $data['subjects'] = $this->Test_model->get_subject_detail();
                     $data['examinations'] = $this->Test_model->get_examination();
                     $json['result_html'] = $this->load->view('online/exam', $data, true);
@@ -234,18 +235,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             } else {
                 if(isset($data['question_id'])){
                     $result = $this->Test_model->update_exam_question($data);
+                    $json['message'] = "Question successfully updated.";
                 }else{
                     $result = $this->Test_model->add_exam_question($data);
+                    $json['message'] = "Question successfully added.";
                 }
                 if ($result) {
                     $json['success'] = true;
-                    $json['message'] = "Question successfully added.";
                     $data['examinations'] = $this->Test_model->get_examination();
                     $data['questions'] = $this->Test_model->get_exam_questions();
                     $json['result_html'] = $this->load->view('online/exam_question', $data, true);
                 } else {
                     $json['error'] = true;
-                    $json['message'] = "Seems to an error.";
+                    $json['message'] = "Question limit exceeded.";
                 }
             }
             if($this->input->is_ajax_request()) {

@@ -20,11 +20,11 @@
                data-code="<?php echo $indicator['code'] ?>"
                data-description="<?php echo $indicator['description'] ?>"
                data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
-               data-href="<?php echo $indicator['id']; ?>">Edit  <i class="fa fa-edit" title="Edit"></i></a>
+               data-href="<?php echo $indicator['id']; ?>"><i class="fa fa-edit icon-margin" title="Edit"></i></a>
             <a class="delete-domain-group-indicator btn btn-danger btn-xs" href="javascript:void(0)"
                data-domain-id="<?php echo isset($domain_id)?$domain_id:''; ?>"
                data-delete-id="<?php echo $indicator['id']; ?>"
-               data-href="<?php echo site_url('domains/delete_domain_indicator') ?>">Delete  <i class="fa fa-trash" title="Delete"></i></a>
+               data-href="<?php echo site_url('domains/delete_domain_indicator') ?>"><i class="fa fa-trash icon-margin" title="Delete"></i></a>
         </td>
     </tr>
     <?php } ?>

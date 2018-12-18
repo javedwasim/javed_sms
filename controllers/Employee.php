@@ -43,6 +43,7 @@ class Employee extends MY_Controller {
         $data['departments'] = $this->Employee_model->get_employee_departments();
         $data['positions'] = $this->Employee_model->get_employee_positions();
         $data['categories'] = $this->Employee_model->get_employee_categories();
+        $data['banks'] = $this->Employee_model->get_bank_detail();
         $data['form_data'] = array();
         $json['employee_html'] = $this->load->view('employee/add_employee', $data, true);
         if ($this->input->is_ajax_request()) {
@@ -68,6 +69,7 @@ class Employee extends MY_Controller {
         $data['student_view'] = $this->config->item('student_view');
         $data['student_attendance_register'] = $this->config->item('student_attendance_register');
         $data['student_attendance_view'] = $this->config->item('student_attendance_view');
+        $data['banks'] = $this->Employee_model->get_bank_detail();
         //print_r($data['menu_detail']); die();
         $data['screen'] = 'profile';
         $json['employee_html'] = $this->load->view('employee/employee_profile', $data, true);
@@ -120,19 +122,19 @@ class Employee extends MY_Controller {
         //if validation passed
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;
+            $json['message'] = validation_errors();
             $data['screen'] = 'add_employee';
             $data['countries'] = $this->Employee_model->get_all_countries();
             $data['employee_fields'] = $this->get_employee_setting_fields();
             $data['departments'] = $this->Employee_model->get_employee_departments();
             $data['positions'] = $this->Employee_model->get_employee_positions();
             $data['categories'] = $this->Employee_model->get_employee_categories();
-            $data['validation_errors'] = validation_errors();
             $data['form_data'] = $this->input->post();
-            $this->load->view('employee/index', $data);
+            $json['result_html'] = $this->load->view('employee/add_employee', $data,true);
         } else {
             $employee_data = $this->input->post();
             if (!empty($_FILES['photo']['name'])) {
-                $upload_path = 'assets/uploads/student_images';
+                $upload_path = 'assets/uploads/employee_images';
                 $config = array(
                     'upload_path' => $upload_path,
                     'allowed_types' => "gif|jpg|png|jpeg",
@@ -158,11 +160,17 @@ class Employee extends MY_Controller {
             $employee_data['status'] = 1; //by default user is active
             $result = $this->Employee_model->add_new_employee($employee_data);
             if ($result) {
-                $this->session->set_flashdata('success', 'Employee successfully added.');
-                redirect('employee/');
+                $json['success'] = true;
+                $json['message'] = "Employee save successfully";
+                $data['departments'] = $this->Employee_model->get_employee_departments();
+                $data['positions'] = $this->Employee_model->get_employee_positions();
+                $data['categories'] = $this->Employee_model->get_employee_categories();
+                $data['employees'] = $this->Employee_model->get_all_employees();
+                $json['result_html'] = $this->load->view('employee/employee_listing', $data, true);
+
             } else {
-                $this->session->set_flashdata('error', 'Seems to an error in update student record.');
-                redirect('employee/');
+                $json['error'] = true;
+                $json['message'] = "Seem to be an error";
             }
         }
 
@@ -182,6 +190,7 @@ class Employee extends MY_Controller {
         $record['countries'] = $this->Employee_model->get_all_countries();
         $record['states'] = $this->Employee_model->get_all_states();
         $record['origins'] = $this->Employee_model->get_origin_by_id($record['employee']['lga_of_origin']);
+        $record['banks'] = $this->Employee_model->get_bank_detail();
         $record['form_data'] = array();
         $record['update_employee_button'] = 'update_employee';
         //print_r($record);
@@ -190,12 +199,7 @@ class Employee extends MY_Controller {
         } else {
             $json['error'] = true;
         }
-        $this->load->view('parts/header');
-        $this->load->view('parts/topbar');
-        $this->load->view('parts/sidebar');
-        $json['student_html'] = $this->load->view('employee/add_employee', $record);
-        $this->load->view('parts/footer');
-
+        $json['result_html'] = $this->load->view('employee/add_employee', $record,true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
         }
@@ -239,12 +243,16 @@ class Employee extends MY_Controller {
             //unset($employee_data['guardian_length']);
             $result = $this->Employee_model->update_employee($employee_data, $id);
             if ($result) {
-                $this->session->set_flashdata('success', 'Employee successfully updated.');
-                redirect('employee/');
+                $json['success'] = true;
+                $json['message'] = "Employee updated successfully";
+                $data['departments'] = $this->Employee_model->get_employee_departments();
+                $data['positions'] = $this->Employee_model->get_employee_positions();
+                $data['categories'] = $this->Employee_model->get_employee_categories();
+                $data['employees'] = $this->Employee_model->get_all_employees();
+                $json['result_html'] = $this->load->view('employee/employee_listing', $data, true);
             } else {
-                $this->session->set_flashdata('error', 'Seems to an error in update student record.');
-                $json['message'] = "Seems to an error in update student record.";
-                redirect('employee/');
+                $json['error'] = true;
+                $json['message'] = "Seem to be an error";
             }
         }
         if ($this->input->is_ajax_request()) {
@@ -269,8 +277,8 @@ class Employee extends MY_Controller {
         $this->load->library('form_validation');
         $this->load->helper('security');
         $this->form_validation->set_rules('current_pwd', 'current password', 'required|xss_clean');
-        $this->form_validation->set_rules('new_pwd', 'new password', 'required|xss_clean');
-        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|xss_clean');
+        $this->form_validation->set_rules('new_pwd', 'new password', 'required|min_length[8]|xss_clean');
+        $this->form_validation->set_rules('c_pwd', 'confirm password', 'required|min_length[8]|matches[new_pwd]');
 
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;

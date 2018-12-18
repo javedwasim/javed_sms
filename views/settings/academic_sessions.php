@@ -256,3 +256,13 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose:true
+        }).datepicker("setDate", new Date());
+
+    });
+</script>

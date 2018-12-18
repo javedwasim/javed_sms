@@ -1,6 +1,7 @@
 <?php
 $user_data = $this->session->userdata('userdata');
 $user_name = $user_data['name'];
+$role = $user_data['role'];
 ?>
 <div class="content-wrapper" style="clear: both;">
     <!-- Content Header (Page header) -->
@@ -35,12 +36,11 @@ $user_name = $user_data['name'];
                         <div class="card-body">
                             <div class="tab-content">
                                 <div class="tab-pane active show" id="invoices">
-                                    <?php if($user_name == 'admin'): ?>
-                                        <form class="form-inline ml-3" data-action="<?php echo site_url('fee_management/student_fee_status') ?>"
+                                    <?php if(($user_name == 'admin') || ($role == 'Finance')): ?>
+                                        <form data-action="<?php echo site_url('fee_management/student_fee_status') ?>"
                                               id="student_fee_form" method="post" role="form"enctype="multipart/form-data">
                                             <div class="row">
-                                                <div class="col-md-3">
-                                                    <!-- SEARCH FORM -->
+                                                <div class="col-md-3" style="margin-top: 20px">
                                                     <div class="form-group">
                                                         <select prompt="Select Batch" class="form-control" required="required"
                                                                id="batch_no" name="batch_no">
@@ -61,6 +61,7 @@ $user_name = $user_data['name'];
                                                         </select>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="fee_from">&nbsp;</label>
@@ -85,7 +86,7 @@ $user_name = $user_data['name'];
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3" style="margin-top: 10px">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="fee_status"></label>
                                                         <div class="input-group mb-3">
@@ -102,7 +103,7 @@ $user_name = $user_data['name'];
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3" style="margin-top: 10px">
+                                                <div class="col-md-3" >
                                                     <div class="input-group input-group-sm">
                                                         <div class="input-group-append">
                                                             <button class="btn btn-primary" type="submit" id="student_fee_search" style="padding: 7px 15px;">
@@ -114,20 +115,20 @@ $user_name = $user_data['name'];
                                             </div>
                                         </form>
                                     <?php endif; ?>
-                                    <?php if($user_name == 'admin'): ?>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <form id="create_student_fee_pdf_form" method="post" role="form" target="_blank" action="<?php echo site_url('fee_management/createPdf') ?>" enctype="multipart/form-data">
-                                                <input type="hidden" name="batch_no" id="pdf_batch_no">
-                                                <input type="hidden" name="fee_from" id="pdf_fee_from">
-                                                <input type="hidden" name="fee_to" id="pdf_fee_to">
-                                                <input type="hidden" name="fee_status" id="pdf_fee_status">
-                                                <input type="hidden" name="fee_paid" id="pdf_fee_paid">
-                                                <input type="hidden" name="fee_paid_filter" id="pdf_fee_paid_filter">
-                                                <button type="button" id="create_pdf" class="btn btn-primary" data-toggle="modal"><i class="fa fa-print"></i>Print PDF</button>
-                                            </form>
+                                    <?php if(($user_name == 'admin') || ($role == 'Finance')): ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form id="create_student_fee_pdf_form" method="post" role="form" target="_blank" action="<?php echo site_url('fee_management/createPdf') ?>" enctype="multipart/form-data">
+                                                    <input type="hidden" name="batch_no" id="pdf_batch_no">
+                                                    <input type="hidden" name="fee_from" id="pdf_fee_from">
+                                                    <input type="hidden" name="fee_to" id="pdf_fee_to">
+                                                    <input type="hidden" name="fee_status" id="pdf_fee_status">
+                                                    <input type="hidden" name="fee_paid" id="pdf_fee_paid">
+                                                    <input type="hidden" name="fee_paid_filter" id="pdf_fee_paid_filter">
+                                                    <button type="button" id="create_pdf" class="btn btn-primary" data-toggle="modal"><i class="fa fa-print"></i>Print PDF</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                    </div>
                                     <?php endif; ?>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -139,11 +140,8 @@ $user_name = $user_data['name'];
                                                     <th>Batch</th>
                                                     <th>Title</th>
                                                     <th>Amount</th>
-                                                    <th>Paid</th>
-                                                    <th>Type</th>
-                                                    <th>Status</th>
                                                     <th>Date</th>
-                                                    <?php if($user_name == 'admin'): ?>
+                                                    <?php if(($user_name == 'admin') || ($role == 'Finance')): ?>
                                                         <th>Actions</th>
                                                     <?php endif; ?>
                                                 </tr>
@@ -155,15 +153,8 @@ $user_name = $user_data['name'];
                                                         <td><?php echo $payment['code']. ' '.$payment['arm']."($session)"; ?></td>
                                                         <td><?php echo $payment['title']; ?></td>
                                                         <td><?php echo $payment['amount']; ?></td>
-                                                        <td><?php echo $payment['amount_paid']; ?></td>
-                                                        <td><?php echo $payment['fee_type']; ?></td>
-                                                        <td>
-                                                            <?php echo $payment['status']=='1'?'<span class="badge badge-danger">pending</span>':''; ?>
-                                                            <?php echo $payment['status']=='2'?'<span class="badge badge-success">completed</span>':'';?>
-                                                            <?php echo $payment['status']==''?'<span class="badge badge-warning">fee due</span>':'';?>
-                                                        </td>
-                                                        <td><?php echo $payment['date']; ?></td>
-                                                        <?php if($user_name == 'admin'): ?>
+                                                        <td><?php echo $payment['date']!='0000-00-00'?$payment['date']:''; ?></td>
+                                                        <?php if(($user_name == 'admin') || ($role == 'Finance')): ?>
                                                             <td>
                                                                 <a class="edit-fee-payment-btn btn btn-info btn-xs" href="javascript:void(0)"
                                                                    data-action="<?php echo site_url('fee_management/edit_payment_view'); ?>"
@@ -214,7 +205,7 @@ $user_name = $user_data['name'];
                                                         <td><?php echo $payment['description']; ?></td>
                                                         <td><?php echo $payment['method']; ?></td>
                                                         <td><?php echo $payment['amount']; ?></td>
-                                                        <td><?php echo $payment['date']; ?></td>
+                                                        <td><?php echo $payment['date']!='0000-00-00'?$payment['date']:''; ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                                 </tbody>

@@ -28,7 +28,9 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-
+                            <?php if($this->session->flashdata('error')) { $message = $this->session->flashdata('error'); ?>
+                                <h4 class="card-title "><?php echo $message['insertID']; ?></h4>
+                            <?php    }  ?>
                             <div class="row">
                                 <div class="col-md-12">
                                     <form id="create_student_fee_pdf_form" method="post" role="form" target="_blank" action="<?php echo site_url('students/unpaid_fee_pdf') ?>" enctype="multipart/form-data">
@@ -36,7 +38,6 @@
                                     </form>
                                 </div>
                             </div>
-
                             <table id="fee_management_table" class="display responsive no-wrap table-bordered table-striped" style="width: 100%;">
                                 <thead>
                                 <tr>
@@ -51,7 +52,9 @@
                                     <th>Discount</th>
                                     <th>Paid</th>
                                     <th>Balance</th>
-                                    <th>Action</th>
+                                    <?php if(isset($student_id) && !empty($student_id)): ?>
+                                        <th>Action</th>
+                                    <?php endif; ?>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -61,20 +64,23 @@
                                             <td><?php echo $fee['description']; ?></td>
                                             <td><?php echo date('F j, Y',strtotime($fee['start_date'])); ?></td>
                                             <td><?php echo date('F j, Y',strtotime($fee['due_date'])); ?></td>
-                                            <td><?php echo $fee['status']==1?'Actve':''; ?></td>
+                                            <td><?php echo $fee['status']==1?'Active':''; ?></td>
                                             <td><?php echo $fee['code'] . '-' . $fee['arm'] . '(' . $fee['session'] . ')' ?></td>
                                             <td><?php echo date('F j, Y',strtotime($fee['created_at'])); ?></td>
                                             <td><?php echo $fee['amount']; ?></td>
                                             <td><?php echo $fee['discount']; ?></td>
                                             <td><?php echo $fee['amount_paid']; ?></td>
                                             <td><?php echo $fee['amount']- $fee['amount_paid']; ?></td>
-                                            <td>
-                                                <a class="fee-payment-btn btn btn-success btn-xs"
-                                                   data-href="<?php echo site_url('students/student_paid_fees/').$fee['id'] ?>"
-                                                   data-value="<?php echo $fee['id']; ?>"
-                                                   user-id="<?php echo $student_id; ?>">
-                                                   <i class="fa fa-dollar icon-margin" title="Pay"></i>Pay</a>
-                                            </td>
+                                            <?php if(isset($student_id) && !empty($student_id)): ?>
+                                                <td>
+                                                    <a class="fee-payment-btn btn btn-success btn-xs
+                                                       <?php echo $fee['amount']-$fee['amount_paid']==0?'disabled':''; ?>"
+                                                       data-href="<?php echo site_url('students/student_paid_fees/').$fee['id'] ?>"
+                                                       data-value="<?php echo $fee['id']; ?>"
+                                                       user-id="<?php echo $student_id; ?>">
+                                                       <i class="fa fa-dollar icon-margin" title="Pay"></i>Pay</a>
+                                                </td>
+                                            <?php endif; ?>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -93,13 +99,12 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Pay Fee</h5>
+                        <h4 class="modal-title w-100 font-weight-bold" style="text-align: center">Pay Fee</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div id="paid_fee_container"></div>
-
                 </div>
             </div>
         </div>

@@ -206,10 +206,33 @@ class Reportcard extends MY_Controller
             $json['message'] = "Seems to an error.";
         }
 
-//        $this->load->library('Pdf');
-//        $form_data = $this->input->post();
-//        $data['payments'] = $this->Fee_model->get_student_fee_status($form_data);
-//        $this->load->view('fee/pdf_fee', $data);
+    }
+
+    public function get_guardian_student(){
+        $data = $this->input->post();
+        $class_set_id = $data['class_set_id'];
+        $user_name = $data['user_name'];
+        if($data['term_id']=='first_term'){
+            $term_id = 1;
+        }elseif($data['term_id']=='second_term'){
+            $term_id = 2;
+        }elseif($data['term_id']=='third_term'){
+            $term_id = 3;
+        }
+        $result = $this->Reportcard_model->get_guardian_student($class_set_id,$user_name);
+        if ($result) {
+            $record['students'] = $result['students'];
+            $record['batch'] = $result['batch'];
+            $record['term_id'] = $term_id;
+            $json['result_html'] = $this->load->view('reports/student_report', $record, true);
+        } else {
+            $json['error'] = true;
+            $json['message'] = "Seems to an error.";
+        }
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
+
     }
 
 }

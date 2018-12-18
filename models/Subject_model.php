@@ -5,23 +5,29 @@ Class Subject_model extends CI_Model {
 
     public function get_subjects_detail(){
 
-        $elective = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count
+        $elective = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count,
+                        batches.arm,batches.session,classes.code AS c_name
                         FROM subjects_detail sd  
                         LEFT JOIN subjects s on s.id = sd.subject_id
                         LEFT JOIN (
                             select id as emp_id,subject_detail_id FROM subject_assign_employee 
                             GROUP by id
                         )ae on ae.subject_detail_id = sd.id
+                        LEFT JOIN batches ON batches.id = sd. batch_id
+	                    LEFT JOIN classes ON classes.id = batches. course_id
                         WHERE elective_group_id>0
                         GROUP By sd.id";
 
-        $core = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count
+        $core = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count,
+                        batches.arm,batches.session,classes.code AS c_name
                         FROM subjects_detail sd  
                         LEFT JOIN subjects s on s.id = sd.subject_id
                         LEFT JOIN (
                             select id as emp_id,subject_detail_id FROM subject_assign_employee 
                             GROUP by id
                         )ae on ae.subject_detail_id = sd.id
+                        LEFT JOIN batches ON batches.id = sd. batch_id
+	                    LEFT JOIN classes ON classes.id = batches. course_id
                         WHERE elective_group_id=0
                         GROUP By sd.id";
 
@@ -44,23 +50,29 @@ Class Subject_model extends CI_Model {
             $where .= "AND batch_id = $batch_no";
         }
 
-        $elective = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count
+        $elective = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count,
+                        batches.arm,batches.session,classes.code AS c_name
                         FROM subjects_detail sd  
                         LEFT JOIN subjects s on s.id = sd.subject_id
                         LEFT JOIN (
                             select id as emp_id,subject_detail_id FROM subject_assign_employee 
                             GROUP by id
                         )ae on ae.subject_detail_id = sd.id
+                        LEFT JOIN batches ON batches.id = sd. batch_id
+	                    LEFT JOIN classes ON classes.id = batches. course_id
                         WHERE elective_group_id>0 $where
                         GROUP By sd.id";
 
-        $core = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count
+        $core = "SELECT sd.*, s.name as subject_name,count(ae.emp_id) as emp_count,
+                        batches.arm,batches.session,classes.code AS c_name
                         FROM subjects_detail sd  
                         LEFT JOIN subjects s on s.id = sd.subject_id
                         LEFT JOIN (
                             select id as emp_id,subject_detail_id FROM subject_assign_employee 
                             GROUP by id
                         )ae on ae.subject_detail_id = sd.id
+                        LEFT JOIN batches ON batches.id = sd. batch_id
+	                    LEFT JOIN classes ON classes.id = batches. course_id
                         WHERE elective_group_id=0 $where
                         GROUP By sd.id";
 
@@ -257,12 +269,14 @@ Class Subject_model extends CI_Model {
 
     public function get_subject_assessments($id){
         $query = "SELECT sa.*, ac.name as cate_name, ases.name as session_name,sd.batch_id,batches.session
+                    ,sbj.name as sbj_name
                     FROM subject_assessments sa
                     LEFT JOIN assessment_categories ac ON ac.id=sa.assessment_category_id 
                     LEFT JOIN acadamic_sessions ases ON sa.due_date >=ases.first_term_start
                     AND sa.due_date BETWEEN ases.first_term_start AND ases.first_term_end
                     LEFT JOIN subjects_detail sd on sd.id = sa.subject_detail_id
                     LEFT JOIN batches on batches.id = sd.batch_id and batches.session = ases.name
+                    LEFT JOIN subjects sbj on sbj.id=sd.subject_id
                     WHERE subject_detail_id = $id 
                     GROUP BY sa.id";
         $result = $query = $this->db->query($query);
@@ -308,7 +322,9 @@ Class Subject_model extends CI_Model {
 
     public function delete_subject_assessment($id) {
         $this->db->where('id', $id)->delete('subject_assessments');
-        return $this->db->affected_rows();
+        //delete assessment score
+        $this->db->where('asses_id', $id)->delete('student_score_sheet');
+        return true;
     }
 
     public function get_score_sheet($id){
@@ -316,10 +332,11 @@ Class Subject_model extends CI_Model {
                     batches.session,sd.id as subj_detail_id,s.first_name,s.last_name,s.surname,
                     GROUP_CONCAT(sas.abbreviation ORDER BY sas.id ASC) as score_term,
                     GROUP_CONCAT(sas.points ORDER BY sas.id ASC) as score_points,
+                    GROUP_CONCAT(sas.id ORDER BY sas.id ASC) AS asses_id,
                     SUBSTRING_INDEX(sc.obtain_score,',', 1) AS first_value,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 2),',','-1') as second_value,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 3),',','-1') as third_value,
-                    sc.term_id
+                    sc.term_id,sc.obtain_score
                     FROM students s
                     LEFT JOIN batches on batches.id  = s.batch_no
                     LEFT JOIN acadamic_sessions acs on acs.id=s.batch_no
@@ -380,14 +397,22 @@ Class Subject_model extends CI_Model {
     }
 
     public function get_term_score_sheet($id,$term_id){
+        if($term_id == 1){
+            $due_date = " AND sa.due_date BETWEEN ases.first_term_start AND ases.first_term_end ";
+        }elseif($term_id == 2){
+            $due_date = " AND sa.due_date BETWEEN ases.second_term_start AND ases.second_term_end  ";
+        }else{
+            $due_date = " AND sa.due_date BETWEEN ases.third_term_start AND ases.third_term_end  ";
+        }
         $query = "SELECT s.student_id, batches.id as bacth_id,acs.id as session_id,
                     batches.session,sd.id as subj_detail_id,s.first_name,s.last_name,s.surname,
                     GROUP_CONCAT(sas.abbreviation ORDER BY sas.id ASC) as score_term,
                     GROUP_CONCAT(sas.points ORDER BY sas.id ASC) as score_points,
+                    GROUP_CONCAT(sas.id ORDER BY sas.id ASC) AS asses_id,
                     SUBSTRING_INDEX(sc.obtain_score,',', 1) AS first_value,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 2),',','-1') as second_value,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(sc.obtain_score,',', 3),',','-1') as third_value,
-                    sc.term_id
+                    sc.term_id,sc.obtain_score
                     FROM students s
                     LEFT JOIN batches on batches.id  = s.batch_no
                     LEFT JOIN acadamic_sessions acs on acs.id=s.batch_no
@@ -397,7 +422,7 @@ Class Subject_model extends CI_Model {
                          SELECT sa.*,batches.session as sess 
                          FROM subject_assessments sa
                          LEFT JOIN acadamic_sessions ases ON sa.due_date >=ases.first_term_start
-                         AND sa.due_date BETWEEN ases.first_term_start AND ases.first_term_end
+                         $due_date
                          LEFT JOIN subjects_detail sd on sd.id = sa.subject_detail_id
                          LEFT JOIN batches on batches.id = sd.batch_id and batches.session = ases.name
                          WHERE sd.id = $id AND batches.session IS NOT NULL
@@ -412,6 +437,91 @@ Class Subject_model extends CI_Model {
                     )sc on sc.student_id = s.student_id
                     WHERE (sd.id=$id)
                     GROUP BY s.student_id";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_student_assessments($id,$filter){
+
+        if(isset($filter) && !empty($filter['subject'])){
+            $subject = $filter['subject'];
+        }else{
+            $subject = 0;
+        }
+        if(isset($filter) && !empty($filter['session'])){
+            $session = $filter['session'];
+        }else{
+            $session = 0;
+        }
+
+        if(isset($filter) && !empty($filter['term'])){
+            $term  = $filter['term'];
+        }else{
+            $term = 0;
+        }
+
+        $query = "SELECT sa.id,sa.points,sa.assessment_name,sa.due_date,ac.name AS cate_name, 
+                    sd.batch_id,sbj.name,score.score,score.student_id,score.id,
+                    score.asses_id,students.surname,sbj.id AS subject_id,batches.session,score.term_id
+                    FROM subject_assessments sa
+                    LEFT JOIN assessment_categories ac ON ac.id=sa.assessment_category_id
+                    LEFT JOIN subjects_detail sd ON sd.id = sa.subject_detail_id
+                    LEFT JOIN subjects sbj ON sbj.id=sd.subject_id
+                    LEFT JOIN student_score_sheet score ON score.subject_detail_id = sa.subject_detail_id 
+                    AND sa.id = score.asses_id
+                    LEFT JOIN students ON students.student_id = score.student_id 
+                    LEFT JOIN batches ON batches.id = students.batch_no
+                    WHERE score.student_id IS NOT NULL AND score.student_id IN ($id)
+                    AND($subject=0 OR sbj.id = $subject)
+                    AND($session=0 OR batches.session = '$session')
+                    AND($term=0 OR score.term_id = $term)
+                    GROUP BY score.id
+                    ORDER BY score.id ASC";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_student_subject_assessments($id,$filter){
+
+        if(isset($filter) && !empty($filter['session'])){
+            $session = $filter['session'];
+        }else{
+            $session = 0;
+        }
+
+        if(isset($filter) && !empty($filter['term'])){
+            $term  = $filter['term'];
+        }else{
+            $term = 0;
+        }
+
+        $query = "SELECT sbj.id,sbj.name,GROUP_CONCAT(score.term_id) AS subject_term,
+                    GROUP_CONCAT(CONCAT(score.assessment_name,'/',score.due_date,'/',score.score,'/',
+                    score.points,'/',score.surname))  AS subject_score,GROUP_CONCAT(score.session) AS b_session
+                    FROM subjects sbj
+                    LEFT JOIN (
+                        SELECT sa.id,sa.points,sa.assessment_name,sa.due_date,score.term_id,
+                            sd.batch_id,score.score,score.student_id,score.id AS score_id,
+                            score.asses_id,sd.subject_id,students.surname,batches.session
+                        FROM subject_assessments sa 
+                        LEFT JOIN subjects_detail sd ON sd.id = sa.subject_detail_id
+                        LEFT JOIN student_score_sheet score ON score.subject_detail_id = sa.subject_detail_id AND sa.id = score.asses_id
+                        LEFT JOIN students ON students.student_id = score.student_id 	
+                        LEFT JOIN batches ON batches.id = students.batch_no 
+                        WHERE 1 
+                        AND ($session=0 OR batches.session = '$session')
+                        AND ($term=0 OR score.term_id = $term)
+                    )score ON score.subject_id = sbj.id
+                    WHERE student_id IN ($id)
+                    GROUP BY sbj.id";
         $result = $query = $this->db->query($query);
         if($result) {
             return $result->result_array();

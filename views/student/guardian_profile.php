@@ -1,3 +1,4 @@
+<?php $user_data = $this->session->userdata('userdata'); $role = $user_data['role']; ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -77,6 +78,10 @@
                                                     class="float-right"><?php echo isset($guardian['first_name']) ? $guardian['first_name'] : ''; ?></a>
                                         </li>
                                         <li class="list-group-item">
+                                            <b>Middle Name:</b> <a
+                                                    class="float-right"><?php echo isset($guardian['middle_name']) ? $guardian['middle_name'] : ''; ?></a>
+                                        </li>
+                                        <li class="list-group-item">
                                             <b>Surname:</b> <a
                                                     class="float-right"><?php echo isset($guardian['surname']) ? $guardian['surname'] : ''; ?></a>
                                         </li>
@@ -86,7 +91,7 @@
                                         </li>
                                         <li class="list-group-item">
                                             <b>Activated at:</b> <a
-                                                    class="float-right"><?php echo isset($guardian['created']) ? date('F d, Y', strtotime($guardian['created'])) : ''; ?></a>
+                                                    class="float-right"><?php echo isset($guardian['created']) ? date('F d, Y h:i:a', strtotime($guardian['created'])) : ''; ?></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Mobile Phone:</b> <a
@@ -142,13 +147,14 @@
                     <div class="card card-primary">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#activity"
-                                                        data-toggle="tab">Wards</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Edit</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"
-                                                        data-target="#myModal">Change Password</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a>
+                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Wards</a></li>
+<!--                                if(!isset($guardian_id) && empty($guardian_id)):-->
+
+                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Change Password</a></li>
+                                <?php if($user_data['name']=='admin'): ?>
+                                    <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Edit</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a>
+                                <?php endif; ?>
                                 </li>
                             </ul>
                         </div><!-- /.card-header -->
@@ -226,7 +232,7 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label>Middle name</label>
+                                                            <label>Last name</label>
                                                             <input type="text" class="form-control"  name="last_name"
                                                                    value="<?php echo isset($guardian['last_name']) ? $guardian['last_name'] : ''; ?>"/>
                                                         </div>
@@ -268,7 +274,7 @@
                                                                     <span class="input-group-text"><i
                                                                                 class="fa fa-envelope"></i></span>
                                                                 </div>
-                                                                <input type="text" class="form-control"  name="email"
+                                                                <input type="text" class="form-control"  name="email" readonly
                                                                        value="<?php echo isset($guardian['email']) ? $guardian['email'] : ''; ?>"/>
                                                             </div>
                                                         </div>
@@ -443,7 +449,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Current password</label>
-                                    <input type="password" class="form-control" name="current_pwd" required maxlength="10"/>
+                                    <input type="password" class="form-control" name="current_pwd" required minlength="8"/>
                                 </div>
                             </div>
                         </div>
@@ -451,7 +457,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="password" class="form-control" name="new_pwd" required maxlength="10"/>
+                                    <input type="password" class="form-control" name="new_pwd" required minlength="8"/>
                                 </div>
                             </div>
                         </div>
@@ -459,7 +465,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Password confirmation</label>
-                                    <input type="password" class="form-control" name="c_pwd" required maxlength="10"/>
+                                    <input type="password" class="form-control" name="c_pwd" required minlength="8"/>
                                 </div>
                             </div>
                         </div>

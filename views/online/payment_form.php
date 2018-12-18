@@ -154,7 +154,7 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-                                    <button type="submit" id="payBtn" class="btn btn-success">
+                                    <button type="submit" id="payBtn" class="btn btn-primary">
                                         <i class="far fa-money-bill-alt"></i><?php echo isset($payment_id)?'Update invoice':'Create invoice'; ?></button>
                                 </div>
                             </div>
