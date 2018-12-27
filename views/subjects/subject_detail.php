@@ -112,7 +112,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="table-responsive">
-                                                        <?php //print_r($score_sheet); ?>
+                                                        <?php //print_r($score_points); ?>
                                                         <table class="table table-bordered nowrap responsive table-info">
                                                             <thead>
                                                                 <tr>
@@ -152,7 +152,6 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -370,24 +369,33 @@
         $(editableObj).css("color", "#FFF");
     }
     function saveToDatabase(editableObj, student_id, subject_detail_id,batch_id,term,points,asses_id) {
-        var term_id = $('#term').val();
-        $(".table-info td").css("background-color", "#bee5eb");
-        $.ajax({
-            url: "<?php echo base_url() . 'Subjects/saveStudentScoreSheet' ?>",
-            type: "POST",
-            data: 'student_id=' + student_id +
-                  '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+'&term_id='+term_id+'&asses_id=' + asses_id+
-                  '&subject_detail_id=' + subject_detail_id+'&assessment_term='+term+'&points='+points,
-            success: function (response) {
-                $(editableObj).css("background", "#FDFDFD");
-                if (response.success) {
-                    toastr["success"](response.message);
-                }else{
-                    toastr["error"](response.message);
+        if(isNaN(editableObj.innerHTML)){
+            toastr["error"]('Cell value unknown quick entry key'+editableObj.innerHTML);
+            return false;
+        }
+        if(editableObj.innerHTML){
+            var term_id = $('#term').val();
+            $(".table-info td").css("background-color", "#bee5eb");
+            $.ajax({
+                url: "<?php echo base_url() . 'Subjects/saveStudentScoreSheet' ?>",
+                type: "POST",
+                data: 'student_id=' + student_id +
+                '&score=' + editableObj.innerHTML +'&batch_id='+batch_id+'&term_id='+term_id+'&asses_id=' + asses_id+
+                '&subject_detail_id=' + subject_detail_id+'&assessment_term='+term+'&points='+points,
+                success: function (response) {
+                    $(editableObj).css("background", "#FDFDFD");
+                    if (response.success) {
+                        toastr["success"](response.message);
+                    }else{
+                        toastr["error"](response.message);
+                    }
                 }
-            }
-        });
+            });
+
+        }
+
         $(editableObj).css("color", "#212529");
+
     }
 
 </script>

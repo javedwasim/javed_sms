@@ -8,6 +8,7 @@ class Test_model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->model('Dashboard_model');
+        $this->load->model('Batches_model');
     }
 
     public function get_subjects(){
@@ -30,14 +31,29 @@ class Test_model extends CI_Model {
                     ->join('subjects','subjects.id = sd.subject_id','left')
                     ->join('batches','batches.id = sd.batch_id','left')
                     ->join('classes','classes.id = batches.course_id','left')
+                    ->group_by('sd.subject_id')
                     ->get();
-
         if ($result) {
             return $result->result_array();
         } else {
             return array();
         }
+    }
 
+    public function get_subject_details($id){
+        $result = $this->db->select('sd.*,subjects.name')
+            ->from('subjects_detail sd')
+            ->join('subjects','subjects.id = sd.subject_id','left')
+            ->join('batches','batches.id = sd.batch_id','left')
+            ->join('classes','classes.id = batches.course_id','left')
+            ->where("sd.subject_id IN ($id)")
+            ->group_by('sd.subject_id')
+            ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
     }
 
     public function get_course_subjects($filter){
@@ -129,7 +145,9 @@ class Test_model extends CI_Model {
                         ->join('subjects_detail sd','sd.id=examination.subject_id','left')
                         ->join('subjects','subjects.id=sd.subject_id','left')
                         ->get();
-        }elseif($query->num_rows()>0){
+        }
+        //student examination
+        elseif($query->num_rows()>0){
             $student = $query->row_array();
             $result = $this->db->select('examination.*,classes.name as class_name, subjects.name as subject_name')
                         ->from('examination')
@@ -140,12 +158,31 @@ class Test_model extends CI_Model {
                         ->where('examination.exam_date',date("Y-m-d"))
                         ->get();
         }
-        //echo $this->db->last_query();
         if ($result) {
             return $result->result_array();
         } else {
             return array();
         }
+    }
+
+    public function get_class_teacher_exam(){
+        $batch = $this->Batches_model->get_class_teacher_subject();
+        $batch_no = $batch['batch_id'];
+        $result = $this->db->select('examination.*,classes.name as class_name, subjects.name as subject_name')
+                ->from('examination')
+                ->join('classes','classes.id=examination.course_id','left')
+                ->join('subjects_detail sd','sd.id=examination.subject_id','left')
+                ->join('subjects','subjects.id=sd.subject_id','left')
+                ->where("examination.batch_no IN ($batch_no)")
+                ->where('examination.exam_date',date("Y-m-d"))
+                ->get();
+       // echo $this->db->last_query();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
     }
 
     public function get_subject_detail_by_id($id){
@@ -231,7 +268,8 @@ class Test_model extends CI_Model {
                         FROM exam_question_options
                         GROUP BY exam_question_options.exam_question_id                    
                     )q_option ON q_option.exam_question_id = exam_question.id
-                    LEFT JOIN examination on examination.id = exam_question.exam_id";
+                    LEFT JOIN examination on examination.id = exam_question.exam_id                    
+                    ";
         $result = $query = $this->db->query($query);
         if ($result) {
             return $result->result_array();
@@ -458,6 +496,48 @@ class Test_model extends CI_Model {
 
     }
 
+    public function get_teacher_exam_id(){
+        $batch = $this->Batches_model->get_class_teacher_subject();
+        $batch_id = $batch['batch_id'];
+        $result = $this->db->select('examination.*,GROUP_CONCAT(examination.id) as exam_id,
+                    classes.name as class_name, subjects.name as subject_name')
+                    ->from('examination')
+                    ->join('classes','classes.id=examination.course_id','left')
+                    ->join('subjects_detail sd','sd.id=examination.subject_id','left')
+                    ->join('subjects','subjects.id=sd.subject_id','left')
+                    ->where("examination.batch_no IN ($batch_id)")
+                    ->where('examination.exam_date',date("Y-m-d"))
+                    ->get();
+        //echo $this->db->last_query();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_teacher_exam_questions($exam_id){
+        $query = "SELECT exam_question.* ,q_option.answer_options,q_option.correct_answer,q_option.correct_answer_value,
+                    examination.exam_name
+                    FROM exam_question 
+                    LEFT JOIN(
+                        SELECT exam_question_options.*,GROUP_CONCAT(answer_option) as answer_options,
+                        GROUP_CONCAT(CONCAT(answer_option,'-',correct_ans)) as correct_answer,
+                        GROUP_CONCAT(CASE WHEN correct_ans>0 THEN answer_option END)  as correct_answer_value
+                        FROM exam_question_options
+                        GROUP BY exam_question_options.exam_question_id                    
+                    )q_option ON q_option.exam_question_id = exam_question.id
+                    LEFT JOIN examination on examination.id = exam_question.exam_id   
+                    WHERE exam_id IN ($exam_id) 
+                    ";
+        $result = $query = $this->db->query($query);
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
 
 }
 

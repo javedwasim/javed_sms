@@ -361,8 +361,11 @@ class Employee extends MY_Controller {
         $priviliges = $this->input->post();
         $id = $priviliges['employee_id'];
         $this->Employee_model->update_priviliges($priviliges);
-        $this->session->set_flashdata('success', 'Priviliges assigned to employee successfully');
-        redirect('employee/emp_profile/'.$id);
+        $json['success'] = true;
+        $json['message'] = "Privileges assigned successfully.";
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
     }
 
     public function get_origin($state_id)

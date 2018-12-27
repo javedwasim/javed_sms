@@ -3,15 +3,33 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 Class Grade_model extends CI_Model {
 
-    public function get_scales(){
-        $result = $this->db->select('*')
-                    ->from('grade_scales')
-                    ->get();
+    public function get_scales($filter){
+
+        if(isset($filter['grade_scale_status']) && !empty($filter['grade_scale_status'])){
+            $status = $filter['grade_scale_status'];
+        }else{
+            $status = '';
+        }
+
+        if(isset($filter['grade_scale_type']) && !empty($filter['grade_scale_type'])){
+            $type = $filter['grade_scale_type'];
+        }else{
+            $type = '';
+        }
+
+        $query = "SELECT gs.*
+                  FROM grade_scales gs                    
+                  WHERE 1 AND ('$status' = '' OR gs.status = '$status')
+                  AND ('$type' = '' OR gs.type = '$type')
+                  ";
+        $result = $query = $this->db->query($query);
         if ($result) {
             return $result->result_array();
         } else {
             return array();
         }
+
+
 
     }
 

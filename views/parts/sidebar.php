@@ -6,7 +6,7 @@
             <a href="<?php echo base_url('students'); ?>" class="brand-link">
               <img src="<?php echo base_url()."assets/uploads/institution/".$photo['logo']; ?>"
                    alt="EILIT Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-              <span class="brand-text font-weight-light">Fabcon School</span>
+              <span class="brand-text font-weight-light"><?php echo isset($photo['name'])?$photo['name']:''; ?></span>
             </a>
         <?php endif; ?>
     <div class="sidebar">

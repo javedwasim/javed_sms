@@ -700,8 +700,27 @@ Class Student_model extends CI_Model {
         $result = $this->db->select('*')->from('students')->where('username',$user['name'])->limit(1)->get();
         $student = $result->row_array();
         $batch_no = $student['batch_no'];
-        $result = $result = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session,
-                            c.code,SUM(sf.amount) as amount_paid')
+        $student_list = array();
+        if(empty($student)){
+            $query  = $this->db->select('grd.*, st.batch_no,GROUP_CONCAT(st.batch_no) as batch_no,
+                        GROUP_CONCAT(st.student_id) as st_id')
+                        ->from('guardians grd')
+                        ->join('student_guardians stg','stg.guardian_id=grd.guardian_id','left')
+                        ->join('students st','stg.student_id=st.student_id','left')
+                        ->where('grd.username',$user['name'])
+                        ->group_by('grd.guardian_id')
+                        ->get();
+            $student_ids = $query->row_array();
+            $student_ids = $student_ids['st_id'];
+
+            $stdQry  = $this->db->select('std.student_id,std.first_name')
+                        ->from('students std')
+                        ->where("std.student_id IN ($student_ids)")
+                        ->get();
+            $student_list  = $stdQry->result_array();
+
+        }
+        $result = $result = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session, c.code,SUM(sf.amount) as amount_paid')
                             ->from('fee_management fm')
                             ->join('fee_type ft','ft.id=fm.fee_type_id','left')
                             ->join('batches b','b.id=fm.batch_id','left')
@@ -711,9 +730,12 @@ Class Student_model extends CI_Model {
                             ->where('sf.student_id',$student_id)
                             ->limit(1)
                             ->get();
+
         //echo $this->db->last_query();
         if ($result) {
-            return $result->row_array();
+            $data['fee'] = $result->row_array();
+            $data['student_list'] = $student_list;
+            return $data;
         } else {
             return array();
         }

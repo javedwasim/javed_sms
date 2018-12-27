@@ -232,8 +232,7 @@
                                 <!-- /.tab-pane -->
                                 <div class="tab-pane" id="timeline">
                                     <h3 class="heading mb-4">Privileges for</h3>
-                                    <form id="employee_form" method="post" role="form" action="<?php echo isset($form_action) ? $form_action : site_url('employee/update_priviliges') ?>"
-                                          data-action="<?php echo isset($form_action) ? $form_action : site_url('employee/add_new_employee') ?>" enctype="multipart/form-data">
+                                    <form id="employee_privileg_form" method="post" role="form"  data-action="<?php echo isset($form_action) ? $form_action : site_url('employee/update_priviliges') ?>" enctype="multipart/form-data">
                                         <input type="hidden" name="employee_id" value="<?php echo $Emp_profile['employee_id']; ?>">
                                         <input type="hidden" name="admin[]" value="<?php echo $default_menu_list.','; ?>">
                                         <input type="hidden" name="menu_group_id" value="<?php echo $Emp_profile['menu_group_id']; ?>">

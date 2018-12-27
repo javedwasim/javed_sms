@@ -1,3 +1,4 @@
+<?php $user_data = $this->session->userdata('userdata'); $role = $user_data['role'];?>
 <div class="content-wrapper" style="clear: both;">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -25,7 +26,9 @@
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link <?php echo isset($active_tab)&&($active_tab=='student_attendance')?'active':''; ?>" href="#student" data-toggle="tab">Student</a></li>
-                                <li class="nav-item"><a class="nav-link <?php echo isset($active_tab)&&($active_tab=='employee_attendance')?'active':''; ?>" href="#teacher" data-toggle="tab">Teacher</a></li>
+                                <?php if($role != 'Class Teacher'): ?>
+                                    <li class="nav-item"><a class="nav-link <?php echo isset($active_tab)&&($active_tab=='employee_attendance')?'active':''; ?>" href="#teacher" data-toggle="tab">Teacher</a></li>
+                                <?php endif; ?>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">

@@ -12,7 +12,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		}
 
         public function grade_scales(){
-            $data['scales'] = $this->Grade_model->get_scales();
+		    $filter = $this->input->post();
+            $data['scales'] = $this->Grade_model->get_scales($filter);
+            $data['filter'] = $filter;
             $json['scale_html'] = $this->load->view('grades/scales', $data, true);
             if($this->input->is_ajax_request()) {
               set_content_type($json);

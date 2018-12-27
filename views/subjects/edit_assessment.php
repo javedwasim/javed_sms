@@ -81,6 +81,19 @@
         </div>
     </div>
     <div class="form-group row">
+        <label for="publish" class="col-sm-2 col-form-label">Assessment Term</label>
+        <div class="col-sm-10">
+            <select name="term_id" id="term_id" class="form-control">
+                <option selected="selected" value="1"
+                    <?php echo ($assessment['term_id']=='1')?'selected':''; ?>>First Term</option>
+                <option value="2"
+                    <?php echo ($assessment['term_id']=='2')?'selected':''; ?>>Second Term</option>
+                <option value="3"
+                    <?php echo ($assessment['term_id']=='3')?'selected':''; ?>>Third Term</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
         <label for="publish_score" class="col-sm-2 col-form-label">Publish score?</label>
         <div class="col-sm-10">
             <input type="checkbox" class="form-check-input" id="publish_score"

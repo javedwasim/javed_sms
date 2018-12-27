@@ -1,7 +1,9 @@
 <form role="form" id="fee_paid_form" method="post" class="form-horizontal"
      action="<?php echo site_url('students/create_payment'); ?>"
      data-action="<?php echo site_url('students/create_payment'); ?>" enctype="multipart/form-data">
-    <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
+    <?php if(!empty($student_id)): ?>
+        <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
+    <?php endif; ?>
     <input type="hidden" name="fee_management_id" value="<?php echo $fee_management_id; ?>">
     <input type="hidden" name="due_balance" value="<?php echo $fee['amount']-$fee['amount_paid']; ?>">
     <input type="hidden" name="fee_type_id" value="<?php echo $fee['fee_type_id']; ?>">
@@ -50,7 +52,19 @@
                                         <label for="amount_paid" class="">Total Fee to pay<span style="color: red">*</span></label>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <?php if(empty($student_id)): ?>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <select name="student_id" class="form-control" required>
+                                                <option value="">Select a student</option>
+                                                <?php foreach ($student_list as $std): ?>
+                                                    <option value="<?php echo $std['student_id']; ?>"><?php echo $std['first_name']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <input type="text" class="form-control" id="amount_paid" name="amount" value="">
                                     </div>

@@ -23,6 +23,7 @@ class Reportcard extends MY_Controller
         $record['student'] = $this->Student_model->logged_user_info();
         $record['class_set'] = $this->Reportcard_model->get_class_set();
         $record['reports'] = $this->Reportcard_model->get_report_card_group();
+        $record['report'] = '';
         $json['result_html'] = $this->load->view('reports/list', $record, true);
         if ($this->input->is_ajax_request()) {
             set_content_type($json);
@@ -165,6 +166,7 @@ class Reportcard extends MY_Controller
                 $json['success'] = true;
                 $json['message'] = "Comment save successfully.";
                 $json['result_html'] = $data['comment'];
+                $json['comment_by'] = $data['commented_by'];
             } else {
                 $json['error'] = true;
                 $json['message'] = "Seem to be an error.";

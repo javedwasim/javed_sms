@@ -371,27 +371,58 @@ Class Subject_model extends CI_Model {
     }
 
     public function saveStudentScore($data){
+        $points = $data['points'];
+        $score = $data['score'];
+        $assessment_id = $data['asses_id'];
+        //insert score
+        unset($data['points']);
+        $assments = $this->db->select('*')->from('subject_assessments')
+                    ->where('subject_detail_id',$data['subject_detail_id'])
+                    ->get();
+        $assments = $assments->result_array();
         $query = $this->db->select('*')->from('student_score_sheet')
-                ->where('student_id',$data['student_id'])
-                ->where('subject_detail_id',$data['subject_detail_id'])
-                ->where('assessment_term',$data['assessment_term'])
-                ->where('batch_id',$data['batch_id'])
-                ->where('term_id',$data['term_id'])
-                ->limit(1)
-                ->get();
+                    ->where('student_id',$data['student_id'])
+                    ->where('subject_detail_id',$data['subject_detail_id'])
+                    ->where('assessment_term',$data['assessment_term'])
+                    ->where('batch_id',$data['batch_id'])
+                    ->where('term_id',$data['term_id'])
+                    ->limit(1)
+                    ->get();
 
-        if($query->num_rows()>0){
-            //update score
-            unset($data['points']);
-            $result = $query->row_array();
-            $this->db->where('id', $result['id'])->update('student_score_sheet', $data);
-            return $this->db->affected_rows();
-        }else{
-            //insert score
-            unset($data['points']);
-            $this->db->insert('student_score_sheet', $data);
-            return $this->db->insert_id();
-        }
+         if($query->num_rows() == 0){
+           foreach ($assments as $assment){
+               if($assment['id'] == "$assessment_id"){
+                   $data['score'] = $score;
+                   $data['asses_id'] = $assessment_id;
+                   $data['assessment_term'] = $assment['abbreviation'];
+                   $data['term_id'] = $assment['term_id'];
+                   $this->db->insert('student_score_sheet', $data);
+               }else{
+                   $data['score'] = 0;
+                   $data['asses_id'] = $assment['id'];
+                   $data['assessment_term'] = $assment['abbreviation'];
+                   $data['term_id'] = $assment['term_id'];
+                   $this->db->insert('student_score_sheet', $data);
+               }
+           }
+           return $this->db->insert_id();
+       }else{
+           $result = $query->row_array();
+           $this->db->where('id', $result['id'])->update('student_score_sheet', $data);
+           return $this->db->affected_rows();
+       }
+
+//        $data['points'] = $points;
+//        if($query->num_rows()>0){
+//            //update score
+//            unset($data['points']);
+//            $result = $query->row_array();
+//            $this->db->where('id', $result['id'])->update('student_score_sheet', $data);
+//            return $this->db->affected_rows();
+//        }else{
+//            $this->db->insert('student_score_sheet', $data);
+//            return $this->db->insert_id();
+//        }
 
 
     }

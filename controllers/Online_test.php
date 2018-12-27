@@ -118,11 +118,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
 
         public function manage_exam(){
-            //$data['subjects'] = $this->Test_model->get_subjects();
-            $data['subjects'] = $this->Test_model->get_subject_detail();
-            $data['examinations'] = $this->Test_model->get_examination();
-            $data['batches'] = $this->Batches_model->get_all_batches();
-            //print_r($data['examinations']); die();
+            $employee = $this->Batches_model->get_employee_id();
+            //for class teacher
+            if($employee){
+                $subject = $this->Batches_model->get_class_teacher_subject();
+                $data['subjects'] = $this->Test_model->get_subject_details($subject['subject_id']);
+                $data['batches'] = $this->Batches_model->get_all_batches();
+                $data['examinations'] = $this->Test_model->get_class_teacher_exam();
+            }
+            //for admin
+            else{
+                $data['subjects'] = $this->Test_model->get_subject_detail();
+                $data['batches'] = $this->Batches_model->get_all_batches();
+                $data['examinations'] = $this->Test_model->get_examination();
+            }
             $json['result_html'] = $this->load->view('online/exam', $data, true);
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
@@ -158,15 +167,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             } else {
                 if(isset($data['exam_id'])){
                     $result = $this->Test_model->update_exam($data);
+                    $json['success'] = true;
                     $json['message'] = "Exam successfully updated.";
                 }else{
                     $result = $this->Test_model->add_exam($data);
+                    $json['success'] = true;
                     $json['message'] = "Exam successfully added.";
                 }
                 if ($result) {
-                    $json['success'] = true;
-                    $data['subjects'] = $this->Test_model->get_subject_detail();
-                    $data['examinations'] = $this->Test_model->get_examination();
+                    $employee = $this->Batches_model->get_employee_id();
+                    //for class teacher
+                    if($employee){
+                        $subject = $this->Batches_model->get_class_teacher_subject();
+                        $data['subjects'] = $this->Test_model->get_subject_details($subject['subject_id']);
+                        $data['batches'] = $this->Batches_model->get_all_batches();
+                        $data['examinations'] = $this->Test_model->get_class_teacher_exam();
+                    }
+                    //for admin
+                    else{
+                        $data['subjects'] = $this->Test_model->get_subject_detail();
+                        $data['batches'] = $this->Batches_model->get_all_batches();
+                        $data['examinations'] = $this->Test_model->get_examination();
+                    }
                     $json['result_html'] = $this->load->view('online/exam', $data, true);
                 } else {
                     $json['error'] = true;
@@ -182,7 +204,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         public function edit_exam(){
             $filter = $this->input->post();
             $data['exam'] = $this->Test_model->get_exams($filter);
-            $data['subjects'] = $this->Test_model->get_subject_detail();
+            $employee = $this->Batches_model->get_employee_id();
+            //for class teacher
+            if($employee){
+                $subject = $this->Batches_model->get_class_teacher_subject();
+                $data['subjects'] = $this->Test_model->get_subject_details($subject['subject_id']);
+            }
+            //for admin
+            else{
+                $data['subjects'] = $this->Test_model->get_subject_detail();
+            }
             $data['classes'] = $this->Test_model->get_classes();
             $data['class_id'] = $filter['course_id'];
             $data['subject_id'] = $filter['subject_id'];
@@ -198,9 +229,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $json['success'] = true;
                 $json['message'] = "Exam successfully deleted.";
 
-                $data['subjects'] = $this->Test_model->get_subjects();
-                $data['classes'] = $this->Test_model->get_classes();
-                $data['examinations'] = $this->Test_model->get_examination();
+                $employee = $this->Batches_model->get_employee_id();
+                //for class teacher
+                if($employee){
+                    $subject = $this->Batches_model->get_class_teacher_subject();
+                    $data['subjects'] = $this->Test_model->get_subject_details($subject['subject_id']);
+                    $data['batches'] = $this->Batches_model->get_all_batches();
+                    $data['examinations'] = $this->Test_model->get_class_teacher_exam();
+                }
+                //for admin
+                else{
+                    $data['subjects'] = $this->Test_model->get_subject_detail();
+                    $data['batches'] = $this->Batches_model->get_all_batches();
+                    $data['examinations'] = $this->Test_model->get_examination();
+                }
                 $json['result_html'] = $this->load->view('online/exam', $data, true);
             } else {
                 $json['error'] = true;
@@ -212,8 +254,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
 
         public function manage_que_ans(){
-            $data['examinations'] = $this->Test_model->get_examination();
-            $data['questions'] = $this->Test_model->get_exam_questions();
+            $employee = $this->Batches_model->get_employee_id();
+            if($employee) {
+                $subject = $this->Batches_model->get_class_teacher_subject();
+                $data['subjects'] = $this->Test_model->get_subject_details($subject['subject_id']);
+                $data['batches'] = $this->Batches_model->get_all_batches();
+                $data['examinations'] = $this->Test_model->get_class_teacher_exam();
+                $exam = $this->Test_model->get_teacher_exam_id();
+                $data['questions'] = $this->Test_model->get_teacher_exam_questions($exam['exam_id']);
+            }else{
+                $data['examinations'] = $this->Test_model->get_examination();
+                $data['questions'] = $this->Test_model->get_exam_questions();
+            }
             $json['result_html'] = $this->load->view('online/exam_question', $data, true);
             if($this->input->is_ajax_request()) {
                 set_content_type($json);

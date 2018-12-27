@@ -52,9 +52,7 @@
                                     <th>Discount</th>
                                     <th>Paid</th>
                                     <th>Balance</th>
-                                    <?php if(isset($student_id) && !empty($student_id)): ?>
-                                        <th>Action</th>
-                                    <?php endif; ?>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -71,16 +69,14 @@
                                             <td><?php echo $fee['discount']; ?></td>
                                             <td><?php echo $fee['amount_paid']; ?></td>
                                             <td><?php echo $fee['amount']- $fee['amount_paid']; ?></td>
-                                            <?php if(isset($student_id) && !empty($student_id)): ?>
-                                                <td>
-                                                    <a class="fee-payment-btn btn btn-success btn-xs
-                                                       <?php echo $fee['amount']-$fee['amount_paid']==0?'disabled':''; ?>"
-                                                       data-href="<?php echo site_url('students/student_paid_fees/').$fee['id'] ?>"
-                                                       data-value="<?php echo $fee['id']; ?>"
-                                                       user-id="<?php echo $student_id; ?>">
-                                                       <i class="fa fa-dollar icon-margin" title="Pay"></i>Pay</a>
-                                                </td>
-                                            <?php endif; ?>
+                                            <td>
+                                                <a class="fee-payment-btn btn btn-success btn-xs
+                                                   <?php echo $fee['amount']-$fee['amount_paid']==0?'disabled':''; ?>"
+                                                   data-href="<?php echo site_url('students/student_paid_fees/').$fee['id'] ?>"
+                                                   data-value="<?php echo $fee['id']; ?>"
+                                                   user-id="<?php echo $student_id; ?>">
+                                                   <i class="fa fa-dollar icon-margin" title="Pay"></i>Pay</a>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

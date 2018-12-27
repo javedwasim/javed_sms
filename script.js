@@ -3717,13 +3717,12 @@ $(document.body).on('click', '.delete-fee-group', function(){
 });
 
 $(document.body).on('change', '#term', function(){
-    var term_id = $('#term').val();
     var subject_detail_id = $('#subject_detail_id').val();
     var base_url = $('#base').val();
     $.ajax({
         url: base_url+'subjects/get_term_scores',
         type: 'post',
-        data : { subject_detail_id : subject_detail_id, term_id:term_id },
+        data : $('#scoresheet-filter').serialize(),
         cache: false,
         success: function(response) {
             if(response.result_html != ''){
@@ -3746,8 +3745,14 @@ $(document.body).on('click', '#save_report_comment', function(){
         success: function(response) {
             if (response.success) {
                 toastr["success"](response.message);
-                $('#comment-field-1').empty();
-                $('#comment-field-1').append(response.result_html);
+                if(response.comment_by == 'principal'){
+                    $('#comment-field-1').empty();
+                    $('#comment-field-1').append(response.result_html);
+                }else{
+                    $('#comment-field-3').empty();
+                    $('#comment-field-3').append(response.result_html);
+                }
+
                 $('#report_comment_form')[0].reset();
                 $('#add_report_comment').modal('hide');
             } else {
@@ -4148,6 +4153,7 @@ $(document.body).on('click', '#save_elective_group', function(){
             if (response.success) {
                 $('#new_group').modal('hide');
                 $( ".modal-backdrop" ).remove();
+                $('#elective_subject_form')[0].reset();
                 toastr["success"](response.message);
             } else {
                 toastr["error"](response.message);
@@ -4251,4 +4257,74 @@ $(document.body).on('click', '#add_sbj_assessment', function () {
         }
     });
     return false;
+});
+
+$(document.body).on('submit', '#employee_privileg_form', function(e){
+    e.preventDefault();
+    $.ajax({
+        url: $(this).attr('data-action'),
+        type: "POST",
+        data:  new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend : function()
+        {
+            $("#err").fadeOut();
+        },
+        success: function(response)
+        {
+            if(response.success)
+            {
+                toastr["success"](response.message);
+            }
+            else
+            {
+                toastr["error"](response.message);
+            }
+        },
+        error: function(e)
+        {
+            toastr["error"]('seem to be an error');
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '#transfer_batch_btn', function(){
+    $.ajax({
+        url: $('#transfer_batch_form').attr('data-action'),
+        type: 'post',
+        data: $('#transfer_batch_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                toastr["success"](response.message);
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('change', '.grade_scale', function(){
+    var grade_scale_status = $('#grade_scale_status').val();
+    var grade_scale_type = $('#grade_scale_type').val();
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'grade_scale/grade_scales',
+        type: 'post',
+        data : { grade_scale_status : grade_scale_status, grade_scale_type:grade_scale_type },
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                $('#title').html('Grading Scales | ISMS');
+            }
+        }
+    });
 });

@@ -23,18 +23,16 @@
                     <img src="<?php echo base_url(); ?>assets/dist/img/avatar5.png"
                          class="user-image" alt="User Image">
                 <?php endif; ?>
-                <p>
-                    Welcome! Admin
-                </p>
+                <p style="color: #0c0c0c">Welcome! <?php echo $user_name; ?></p>
             </li>
             <!-- Menu Body -->
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
-                    <a href="<?php echo base_url('dashboard/profile'); ?>" class="btn btn-default btn-flat">Profile</a>
+                    <a href="<?php echo base_url('dashboard/profile'); ?>" class="btn btn-primary btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                    <a href="<?php echo base_url('dashboard/logout'); ?>" class="btn btn-default btn-flat">Sign
+                    <a href="<?php echo base_url('dashboard/logout'); ?>" class="btn btn-primary btn-flat">Sign
                         out</a>
                 </div>
             </li>

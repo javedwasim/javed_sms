@@ -320,6 +320,7 @@ class Subjects extends MY_Controller
                     'score_display_as'=>$data['score_display_as'],
                     'publish_score'=>isset($data['publish_score'])?$data['publish_score']:0,
                     'description'=>$data['description'],
+                    'term_id'=>$data['term_id'],
                 );
                 $result = $this->Subject_model->update_subject_assessments($update_fields,$id);
             }else{
@@ -409,7 +410,7 @@ class Subjects extends MY_Controller
     public function get_term_scores(){
         $data = $this->input->post(); //print_r($data);
         $id = $data['subject_detail_id'];
-        $term_id = $data['term_id'];
+        $term_id = $data['term'];
         $data['assessments']=$this->Subject_model->get_subject_assessments($id);
         $data['employees']=$this->Batches_model->get_all_employees();
         $data['assigned_employee']=$this->Batches_model->get_assigned_employees($id);

@@ -139,10 +139,11 @@
                             <div class="form-group row">
                                 <label for="course_set_id" class="col-sm-5 col-form-label">Class Set<span style="color: red">*</span></label>
                                 <div class="col-sm-7">
+                                    <?php $report = isset($report['course_set_id'])?$report['course_set_id']:''; ?>
                                     <select class="form-control" name="course_set_id" id="course_set_id">
                                         <option value="">Please Select</option>
                                         <?php foreach ($class_set as $set): ?>
-                                            <option value="<?php echo $set['id']; ?>"<?php echo $set['id'] == $report['course_set_id']?'selected':''; ?>><?php echo $set['session'].' '.$set['code'] ?></option>
+                                            <option value="<?php echo $set['id']; ?>"<?php echo $set['id'] == $report?'selected':''; ?>><?php echo $set['session'].' '.$set['code'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>

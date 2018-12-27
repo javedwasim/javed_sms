@@ -409,24 +409,6 @@
         }
     });
 
-    $(document.body).on('click', '#transfer_batch_btn', function(){
-        $.ajax({
-            url: $('#transfer_batch_form').attr('data-action'),
-            type: 'post',
-            data: $('#transfer_batch_form').serialize(),
-            cache: false,
-            success: function(response) {
-                if (response.success) {
-                    toastr["success"](response.message);
-                } else {
-                    toastr["error"](response.message);
-                }
-            }
-        });
-
-        return false;
-    });
-
     $(document.body).on('click', '.student_grade_link', function(){
         $('#student_id').val($(this).attr('data-href'));
         $( ".student_grade_link>li" ).addClass( "list-group-item-warning" );

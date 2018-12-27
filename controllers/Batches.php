@@ -161,6 +161,7 @@ class Batches extends MY_Controller
 
         $this->form_validation->set_rules('ids', 'select student', 'required|xss_clean');
         $this->form_validation->set_rules('last_day_in_batch', 'Last day in batch', 'required|xss_clean');
+        $this->form_validation->set_rules('transfer_type', 'Transfer Type', 'required|xss_clean');
         $this->form_validation->set_rules('reason_to_leave_batch', 'Reason to leave batch', 'required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             $json['error'] = true;

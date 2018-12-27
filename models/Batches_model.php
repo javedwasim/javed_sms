@@ -333,5 +333,33 @@ Class Batches_model extends CI_Model {
         }
 
     }
+
+    public function get_class_teacher_subject(){
+        $employee_id = $this->get_employee_id();
+        $query = "SELECT bas.employee_id,GROUP_CONCAT(sd.sbj_id) AS subject_id,
+                    GROUP_CONCAT(b.id) as batch_id
+                    FROM batches b 
+                    LEFT JOIN batch_assign_employee bas on bas.batch_id = b.id 
+                    LEFT JOIN (
+                        SELECT sd.*,GROUP_CONCAT(sd.subject_id) AS sbj_id FROM subjects_detail sd 
+                        GROUP BY sd.batch_id    
+                    )sd on sd.batch_id = b.id
+                    WHERE bas.employee_id = $employee_id 
+                    GROUP BY bas.employee_id
+                    ORDER BY b.session ASC LIMIT 1";
+        $result = $query = $this->db->query($query);
+        if($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_employee_id(){
+        $user = $this->session->userdata('userdata');
+        $result = $this->db->select('employee_id')->from('employees')->where('username',$user['name'])->limit(1)->get();
+        $employee = $result->row_array();
+        return $employee['employee_id'];
+    }
            
 }

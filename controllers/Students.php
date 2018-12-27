@@ -704,7 +704,7 @@ class Students extends MY_Controller
     public function student_paid_fees(){
         $id = $this->input->post('id');
         $student_id = $this->input->post('user_id');
-        $result['fee'] = $this->Student_model->get_student_fee($id,$student_id);
+        $result = $this->Student_model->get_student_fee($id,$student_id);
         $result['student_id'] = $student_id;
         $result['fee_management_id'] = $id;
         if ($result) {

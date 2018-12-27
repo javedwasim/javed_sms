@@ -36,16 +36,25 @@
                         </div>
                         <div class="container ">
                             <div class="row" style="margin-top: 25px">
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <label for="status">Status</label>
-                                    <select name="status" id="status" class="form-control"><option value="active">Active</option>
-                                        <option selected="selected" value="retire">Retire</option></select>
+                                    <select name="grade_scale_status" id="grade_scale_status" class="form-control grade_scale">
+                                        <option value="">Please Select</option>
+                                        <option value="active"
+                                            <?php echo isset($filter['grade_scale_status'])&&($filter['grade_scale_status']=='active')?'selected':''; ?>>Active</option>
+                                        <option value="retire"
+                                            <?php echo isset($filter['grade_scale_status'])&&($filter['grade_scale_status']=='retire')?'selected':''; ?>>Retire</option>
+                                    </select>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <label for="status">Type</label>
-                                    <select name="type" id="type" class="form-control"><option selected="selected" value="cognitive">Cognitive</option>
-                                        <option value="behavioural">Behavioural</option>
-                                        <option value="all">All</option></select>
+                                    <select name="grade_scale_type" id="grade_scale_type" class="form-control grade_scale">
+                                        <option value="">Please Select</option>
+                                        <option value="behavioural"
+                                            <?php echo isset($filter['grade_scale_type'])&&($filter['grade_scale_type']=='behavioural')?'selected':''; ?>>Behavioural</option>
+                                        <option value="cognitive"
+                                            <?php echo isset($filter['grade_scale_type'])&&($filter['grade_scale_type']=='retire')?'cognitive':''; ?>>Cognitive</option>
+                                    </select>
                                 </div>
 
                             </div>
