@@ -28,7 +28,6 @@ $(document).ready(function(){
     $("a.dropdown-toggle").trigger('click');
 
 });
-
 function get_students(func_call) {
     var base_url = $('#base').val();
 	$.ajax({
