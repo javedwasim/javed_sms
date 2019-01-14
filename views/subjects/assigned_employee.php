@@ -35,6 +35,7 @@
             <select id="role" name="role[]" class="form-control">
                 <option selected="">Please Select</option>
                 <option value="1">Class Teacher</option>
+                <option value="2">Subject Teacher</option>
             </select>
         </div>
         <div class="form-group col-md-4">

@@ -28,10 +28,7 @@ $(document).ready(function(){
     $("a.dropdown-toggle").trigger('click');
 
 });
-<<<<<<< HEAD
 
-=======
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
 function get_students(func_call) {
     var base_url = $('#base').val();
 	$.ajax({
@@ -1710,10 +1707,6 @@ $(document.body).on('click', '#update_scale_level', function(){
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.scale_html);
                 toastr["success"](response.message);
-<<<<<<< HEAD
-=======
-                $('.datatables').DataTable();
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                 $('#title').html('Grade Scales | ISMS');
                 $( ".modal-backdrop" ).remove();
                 $('#edit_scale_level').modal('hide');
@@ -1902,11 +1895,7 @@ $(document.body).on('click', '#assign_student_guardian', function(){
         data: $('#assign_guardian_form').serialize(),
         cache: false,
         success: function(response) {
-<<<<<<< HEAD
             if(response.success){
-=======
-            if(response.guardian_html != ''){
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                 $('#guardian_table').empty();
                 $('#guardian_table').append(response.guardian_html);
                 $('#assign_guardian').modal('hide');
@@ -4337,7 +4326,6 @@ $(document.body).on('change', '.grade_scale', function(){
             }
         }
     });
-<<<<<<< HEAD
 });
 
 $(document.body).on('click', '#admin_st_password', function () {
@@ -4441,6 +4429,23 @@ $(document.body).on('change', '.student_batch_selects', function(){
             }
         }
     });
-=======
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
+});
+
+$(document.body).on('click', '.btn-light', function(){
+    $.ajax({
+        url: $(this).attr('data-action'),
+        type: 'post',
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                $('#assign_employee_form')[0].reset();
+                $('.assign_employee').empty();
+                $('.assign_employee').append(response.subject_html);
+                $('#assign_employee_modal').modal('show');
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+    return false;
 });

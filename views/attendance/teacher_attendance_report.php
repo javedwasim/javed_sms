@@ -13,11 +13,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-<<<<<<< HEAD
                             <select class="form-control student_batch_selects" name="batch">
-=======
-                            <select class="form-control" name="batch">
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                 <option>Select Batch</option>
                                 <?php foreach ($batches as $batch):$session = $batch['session']; ?>
                                     <option value="<?php echo $batch['id']; ?>"<?php echo $batch_id == $batch['id'] ? 'selected' : '' ?>>
@@ -44,19 +40,12 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-<<<<<<< HEAD
                         <select class="form-control" name="year" id="attendance_years">
                             <option>Select Year</option>
                             <?php foreach ($years as $year): ?>
                                 <option value="<?php echo $year['a_year']; ?>"<?php echo isset($year)&&($year==$year['a_year'])?'selected':''; ?>><?php echo $year['a_year']; ?></option>
                             <?php endforeach; ?>
                             <option value="<?php echo date("Y"); ?>"<?php echo isset($year)&&($year==date("Y"))?'selected':''; ?>><?php echo date("Y"); ?></option>
-=======
-                        <select class="form-control" name="year">
-                            <option>Select Year</option>
-                            <option value="2018"<?php echo isset($year)&&($year==2018)?'selected':''; ?>>2018</option>
-                            <option value="2017"<?php echo isset($year)&&($year==2017)?'selected':''; ?>>2017</option>
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                         </select>
                     </div>
                     <div class="col-md-3">

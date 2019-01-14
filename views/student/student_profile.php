@@ -58,11 +58,7 @@
                                 </li>
 
                             </ul>
-<<<<<<< HEAD
                             <a href="javascript:void(0)" class="btn btn-primary btn-block print_student_profile" onclick="myFunction()">
-=======
-                            <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="myFunction()">
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                 <i class="fa fa-print"></i><b>Print</b></a>
                         </div>
                         <!-- /.card-body -->
@@ -188,21 +184,17 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Guardians</a></li>
                                 <?php if($userdata['name'] == 'admin'): ?>
-                                    <li class="nav-item">
+                                    <li class="nav-item" id="student_edit_li">
                                          <a class="nav-link" id="student_edit_btn" href="javascript:void(0)"
                                             data-href="<?php echo site_url('students/edit/') . $student['student_id']; ?>" >Edit</a>
                                     </li>
                                 <?php endif; ?>
-<<<<<<< HEAD
                                 <!-- guardian cannot change student password -->
                                 <?php if((($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)) && (isset($user)&&(empty($user)))): ?>
-=======
-                                <?php if(($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)): ?>
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                     <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
                                 <?php endif; ?>
                                 <?php if($userdata['name'] == 'admin'): ?>
-                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
+                                    <li class="nav-item" id="student_remove_li"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
                                 <?php endif; ?>
                             </ul>
                         </div><!-- /.card-header -->
@@ -540,11 +532,7 @@
                         <div class="form-group row">
                             <label for="relation" class="col-sm-2 col-form-label">Relation</label>
                             <div class="col-sm-10">
-<<<<<<< HEAD
                                 <input type="text" id="relation" name="relation" class="form-control validate" required>
-=======
-                                <input type="text" id="relation" name="relation" class="form-control validate">
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                             </div>
                         </div>
                         <div class="form-group row">
@@ -611,12 +599,12 @@
         return false;
     });
     function myFunction() {
-<<<<<<< HEAD
         $('.print_student_profile').hide();
+        $('#student_edit_li').hide();
+        $('#student_remove_li').hide();
         window.print();
         $('.print_student_profile').show();
-=======
-        window.print();
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
+        $('#student_edit_li').show();
+        $('#student_remove_li').show();
     }
 </script>

@@ -1,5 +1,5 @@
 <?php $userdata = $this->session->userdata('userdata') ?>
-<table id="guardian_table" class="table table-bordered table-striped datatables">
+<table id="guardian_table" class="table table-bordered table-striped datatables" style="border-collapse: collapse;">
     <thead>
     <tr>
         <th>Name</th>

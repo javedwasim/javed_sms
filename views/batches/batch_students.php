@@ -5,15 +5,10 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-<<<<<<< HEAD
                     <h1 class="m-0 text-dark">
                         <?php $session = $current_batch_info['session']; echo $current_batch_info['code'].'-'.$current_batch_info['arm']."($session) behavioural scoresheet"; ?>
                     </h1>
                  </div><!-- /.col -->
-=======
-                    <h1 class="m-0 text-dark"><?php echo isset($students[0])?$students[0]['code'] . '-' . $students[0]['arm'] . '(' . $students[0]['session'] . ')':''; ?></h1>
-                </div><!-- /.col -->
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">students</a></li>

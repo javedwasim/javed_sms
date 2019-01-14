@@ -394,24 +394,7 @@ $user_name = $user_data['name'];
 
             $('.assign_employee').append(fieldHTML); //Add field html
         });
-        $(document.body).on('click', '.btn-light', function(){
-            $.ajax({
-                url: $(this).attr('data-action'),
-                type: 'post',
-                cache: false,
-                success: function(response) {
-                    if (response.success) {
-                        $('#assign_employee_form')[0].reset();
-                        $('.assign_employee').empty();
-                        $('.assign_employee').append(response.subject_html);
-                        $('#assign_employee_modal').modal('show');
-                    } else {
-                        toastr["error"](response.message);
-                    }
-                }
-            });
-            return false;
-        });
+
         //Once remove button is clicked
         $('.assign_employee').on('click', '.remove_button', function(e){
             e.preventDefault();

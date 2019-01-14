@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 <?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
-=======
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -77,7 +74,6 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#overview" data-toggle="tab">Overview</a>
                                 </li>
-<<<<<<< HEAD
                                 <?php if($user_name=='admin'): ?>
                                     <li class="nav-item">
                                         <a class="nav-link" id="employee_edit_btn" href="javascript:void(0)"
@@ -87,16 +83,6 @@
                                     <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
                                 <?php endif; ?>
                                 <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
-=======
-                                <li class="nav-item">
-                                    <a class="nav-link" id="employee_edit_btn" href="javascript:void(0)"
-                                       data-href="<?php echo site_url('employee/edit/') . $Emp_profile['employee_id'] ?>">Edit</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link " href="#timeline"   data-toggle="tab">Privileges</a></li>
-                                <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a>
-                                </li>
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -113,12 +99,16 @@
 <!--                                                        class="float-right">--><?php //echo $Emp_profile['title']; ?><!--</a>-->
 <!--                                                </li>-->
                                                 <li class="list-group-item">
-                                                    <b>Last Name:</b> <a
+                                                    <b>First Name:</b> <a
+                                                            class="float-right"><?php echo $Emp_profile['first_name']; ?></a>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <b>Middle Name:</b> <a
                                                         class="float-right"><?php echo $Emp_profile['middle_name']; ?></a>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <b>First Name:</b> <a
-                                                        class="float-right"><?php echo $Emp_profile['first_name']; ?></a>
+                                                    <b>Last Name:</b> <a
+                                                            class="float-right"><?php echo $Emp_profile['surname']; ?></a>
                                                 </li>
                                                 <li class="list-group-item">
                                                     <b>Status:</b> <a
@@ -488,11 +478,7 @@
                     <form id="change_pwd" method="post" role="form"
                           data-action="<?php echo site_url('employee/change_pwd') ?>"
                           enctype="multipart/form-data">
-<<<<<<< HEAD
                         <input type="hidden" name="employee_id" value="<?php echo $Emp_profile['username']; ?>">
-=======
-                        <input type="hidden" name="employee_id" value="<?php echo $Emp_profile['employee_id']; ?>">
->>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                         <input type="hidden" name="email" value="<?php echo $Emp_profile['email']; ?>">
                         <div class="row">
                             <div class="col-md-12">
