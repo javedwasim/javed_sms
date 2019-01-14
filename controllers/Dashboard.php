@@ -29,6 +29,7 @@ class Dashboard extends CI_Controller {
             $gquery = $this->db->select('*')->from('guardians')->where('username',$user_name)->limit(1)->get();
             $equery = $this->db->select('*')->from('employees')->where('username',$user_name)->limit(1)->get();
             $e_result = $equery->row_array();
+            $g_result = $gquery->row_array();
             $role_q = $this->db->select('*')->from('employee_categories')->where('id',$e_result['category'])->limit(1)->get();
             $role = $role_q->row_array();
             if($query->num_rows()>0){
@@ -39,6 +40,7 @@ class Dashboard extends CI_Controller {
                 $record['student'] = $data;
                 $record['student_id'] = $student_id;
                 $record['screen'] = 'student_profile';
+                $this->session->set_userdata('profile_student_id', $student_id);
                 $record['photo'] = "assets/uploads/student_images/".$result['photo'];
                 $json['student_html'] = $this->load->view('student/index', $record);
             }elseif(isset($role) && ($role['role_id'] == 6)){
@@ -49,6 +51,7 @@ class Dashboard extends CI_Controller {
                 $data['fee_types'] = $this->Fee_model->get_fees();
                 $data['fee_status'] = $this->Fee_model->get_fee_status();
                 $data['filter'] = $filter;
+                $this->session->set_userdata('profile_employee_id', $role['employee_id']);
                 $data['photo'] = "assets/uploads/employee_images/".$e_result['photo'];
                 $json['result_html'] = $this->load->view('fee/index', $data);
 
@@ -62,6 +65,7 @@ class Dashboard extends CI_Controller {
                 $data['origins'] = $this->Student_model->get_all_origins();
                 $data['wards'] = $this->Student_model->get_guardian_wards($guardian_id);
                 $data['screen'] = 'guardian_profile';
+                $this->session->set_userdata('profile_employee_id', $g_result['guardian_id']);
                 $record['photo'] = "assets/uploads/student_images/".$result['photo'];
                 $this->load->view('student/index', $data);
             }elseif($equery->num_rows()>0){
@@ -70,6 +74,7 @@ class Dashboard extends CI_Controller {
                 $record['classes'] = $this->Batches_model->get_all_classes();
                 $record['rights'] = $this->session->userdata('other_rights');
                 $record['userdata'] = $this->session->userdata('userdata');
+                $this->session->set_userdata('profile_employee_id', $e_result['employee_id']);
                 $record['photo'] = "assets/uploads/employee_images/".$e_result['photo'];
                 $json['batch_html'] = $this->load->view('batches/index', $record);
             }else{

@@ -440,5 +440,30 @@ Class Attendance_model extends CI_Model {
             return array();
         }
     }
+
+    public function get_attendance_year(){
+        $query = "SELECT EXTRACT(YEAR FROM attendance_date) as a_year FROM attendance 
+                  WHERE 1 and EXTRACT(YEAR FROM attendance_date) != YEAR( CURDATE() ) 
+                  GROUP by EXTRACT(YEAR FROM attendance_date)";
+        $result = $query = $this->db->query($query);
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_batch_attendance_year($bach_id){
+         $query = "SELECT EXTRACT(YEAR FROM attendance_date) as a_year FROM attendance 
+                  WHERE 1 and EXTRACT(YEAR FROM attendance_date) != YEAR( CURDATE() ) 
+                  and batch_id = $bach_id
+                  GROUP by EXTRACT(YEAR FROM attendance_date)";
+        $result = $query = $this->db->query($query);
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+    }
            
 }

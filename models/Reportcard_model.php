@@ -168,6 +168,68 @@ Class Reportcard_model extends CI_Model {
         }
     }
 
+    public function get_report_summary($student_id,$term_id){
+        //find student batch
+        $result = $this->db->select('batch_no')->from('students')->where('student_id',$student_id)->limit(1)->get();
+        $student =$result->row_array();
+        $batch_id = $student['batch_no'];
+        //find student position in class.
+        $query = "SELECT ss.*, 
+                    SUM(case when sas.points >0 then sas.points else 0 end) as total_marks,
+                    SUM(case when ss.score >0 then ss.score else 0 end) as obtain_marks,
+                    concat(round(( SUM(case when ss.score >0 then ss.score else 0 end)/SUM(case when sas.points >0 then sas.points else 0 end) * 100 ),2),'%') AS percentage
+                    FROM student_score_sheet ss
+                    LEFT JOIN subjects_detail sd on sd.id = ss.subject_detail_id
+                    LEFT JOIN subject_assessments sas on sas.subject_detail_id = sd.id 
+                    and ss.assessment_term = sas.abbreviation
+                    WHERE ss.batch_id = $batch_id and ss.term_id = $term_id
+                    group by ss.student_id  
+                    ORDER BY percentage DESC";
+
+        $records = $query = $this->db->query($query);
+        $record_array = array();
+        foreach ($records->result_array() as $record){
+            $record_array[] = $record['student_id'];
+        }
+        $postion = array_search($student_id,$record_array);
+        $postion = $postion+1;
+        //find student percentage
+
+        $query = "SELECT ss.*, 
+                    SUM(case when sas.points >0 then sas.points else 0 end) as total_marks,
+                    SUM(case when ss.score >0 then ss.score else 0 end) as obtain_marks,
+                    concat(round(( SUM(case when ss.score >0 then ss.score else 0 end)/SUM(case when sas.points >0 then sas.points else 0 end) * 100 ),2),'%') AS percentage
+                    FROM student_score_sheet ss
+                    LEFT JOIN subjects_detail sd on sd.id = ss.subject_detail_id
+                    LEFT JOIN subject_assessments sas on sas.subject_detail_id = sd.id 
+                    and ss.assessment_term = sas.abbreviation
+                    WHERE ss.batch_id = $batch_id and ss.term_id = $term_id and ss.student_id = $student_id
+                    group by ss.student_id  
+                    ORDER BY percentage DESC";
+
+        $records = $query = $this->db->query($query);
+        $percentage = $records->row_array();
+        $percentage = $percentage['percentage'];
+
+        if($percentage>=90){
+            $grade = "A";
+        }elseif(($percentage>=80)&&($percentage<=89)){
+            $grade = "B";
+        }elseif(($percentage>=70)&&($percentage<=79)){
+            $grade = "C";
+        }elseif(($percentage>=60)&&($percentage<=69)){
+            $grade = "D";
+        }elseif(($percentage>=0)&&($percentage<=59)){
+            $grade = "D";
+        }
+
+        if ($result) {
+            return array('percentage'=>$percentage,'position'=>$postion,'roll_no'=>$student_id,'grade'=>$grade);
+        } else {
+            return array();
+        }
+    }
+
     public function get_bahaviour_score_sheet($id,$term_id) {
         $this->db->select('sg.*');
         $this->db->from('student_grades sg');

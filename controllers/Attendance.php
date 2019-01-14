@@ -107,6 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     	public function reports(){
             $data['batches'] = $this->Batches_model->get_all_batches();
+            $data['years'] = $this->Attendance_model->get_attendance_year();
             $data['batch_id'] = '';
             $data['students'] = array();
 	    	$json['reports_html'] = $this->load->view('attendance/reports', $data, true);
@@ -148,6 +149,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
             }
+        }
+
+        public function get_batch_attendance_year(){
+            $batch_id = $this->input->post('batch_id');
+            $c_year = date("Y");
+            $attendance = $this->Attendance_model->get_batch_attendance_year($batch_id);
+            $option = '';
+            foreach ($attendance as $value){
+                $a_year = $value['a_year'];
+                $option .= '<option value='.$a_year.'>'.$a_year."</option>\n";
+            }
+            $option .= '<option value="'.$c_year.'" >'.$c_year.'</option>';
+            $json['result_html'] = $option;
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+
         }
 
 	}

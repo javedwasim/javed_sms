@@ -1707,7 +1707,6 @@ $(document.body).on('click', '#update_scale_level', function(){
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.scale_html);
                 toastr["success"](response.message);
-                $('.datatables').DataTable();
                 $('#title').html('Grade Scales | ISMS');
                 $( ".modal-backdrop" ).remove();
                 $('#edit_scale_level').modal('hide');
@@ -1896,7 +1895,7 @@ $(document.body).on('click', '#assign_student_guardian', function(){
         data: $('#assign_guardian_form').serialize(),
         cache: false,
         success: function(response) {
-            if(response.guardian_html != ''){
+            if(response.success){
                 $('#guardian_table').empty();
                 $('#guardian_table').append(response.guardian_html);
                 $('#assign_guardian').modal('hide');
@@ -4324,6 +4323,109 @@ $(document.body).on('change', '.grade_scale', function(){
                 $('.content-wrapper').remove();
                 $('#content-wrapper').append(response.scale_html);
                 $('#title').html('Grading Scales | ISMS');
+            }
+        }
+    });
+});
+
+$(document.body).on('click', '#admin_st_password', function () {
+    $.ajax({
+        url: $('#change_pwd').attr('data-action'),
+        type: 'post',
+        data: $('#change_pwd').serialize(),
+        cache: false,
+        success: function (response) {
+            if (response.success) {
+                toastr["success"](response.message);
+                $('#adminChangePwd').modal('hide');
+            } else {
+                toastr["error"](response.message);
+            }
+
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.grade_scale_levels', function () {
+    $.ajax({
+        url: $(this).attr('data-action'),
+        type: 'get',
+        cache: false,
+        success: function (response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                $('#title').html('Grading Scales | ISMS');
+            }else{
+                toastr['error']('seem to be an error');
+            }
+
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '#grade_scale_back_btn', function(){
+    var func_call = $(this).attr('data-func-call');
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'grade_scale/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.scale_html != ''){
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.scale_html);
+                $('#title').html('Grading Scales | ISMS');
+            }
+        }
+    });
+    return false;
+});
+
+$(document.body).on('change', '.student_batch_select', function(){
+    var base_url = $('#base').val();
+    var batch_id = $('.student_batch_select').val();
+    if($(this).prop("checked") == true){
+        var flag = 'select';
+    }else{
+        var flag = 'deselect';
+    }
+    $.ajax({
+        url: base_url+'attendance/get_batch_attendance_year',
+        type: 'post',
+        data: {flag:flag,batch_id:batch_id},
+        cache: false,
+        success: function(response) {
+            if (response.result_html!='') {
+                $('#attendance_year').empty();
+                $('#attendance_year').append(response.result_html);
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+});
+
+$(document.body).on('change', '.student_batch_selects', function(){
+    var base_url = $('#base').val();
+    var batch_id = $('.student_batch_selects').val();
+    if($(this).prop("checked") == true){
+        var flag = 'select';
+    }else{
+        var flag = 'deselect';
+    }
+    $.ajax({
+        url: base_url+'attendance/get_batch_attendance_year',
+        type: 'post',
+        data: {flag:flag,batch_id:batch_id},
+        cache: false,
+        success: function(response) {
+            if (response.result_html!='') {
+                $('#attendance_years').empty();
+                $('#attendance_years').append(response.result_html);
+            } else {
+                toastr["error"](response.message);
             }
         }
     });

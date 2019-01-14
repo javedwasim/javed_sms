@@ -282,7 +282,8 @@ class Employee_model extends CI_Model {
     public function change_pwd($data) {
         $id = $data['employee_id'];
         $new_pwd = password_hash($data['new_pwd'], PASSWORD_BCRYPT);
-        $this->db->where('user_id', $id)->update('login', array('password' => $new_pwd));
+        $this->db->where('name', $id)->update('login', array('password' => $new_pwd));
+        //echo $this->db->last_query();
         return $this->db->affected_rows();
     }
 

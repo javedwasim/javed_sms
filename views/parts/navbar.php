@@ -1,4 +1,10 @@
-<?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
+<?php
+$user_data = $this->session->userdata('userdata');
+$user_name = $user_data['name'];
+$profile_employee_id = $this->session->userdata('profile_employee_id');
+$profile_student_id = $this->session->userdata('profile_student_id');
+$role = $user_data['role'];
+?>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
    <ul class="navbar-nav ml-auto">
@@ -29,11 +35,25 @@
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
-                    <a href="<?php echo base_url('dashboard/profile'); ?>" class="btn btn-primary btn-flat">Profile</a>
+                    <?php if($user_name == 'admin'): ?>
+                        <a href="<?php echo base_url('dashboard/profile'); ?>" data-toggle="modal" data-target="#adminChangePwd"
+                           class="btn btn-primary btn-flat" style="font-size: 13px">Change Pwd</a>
+                    <?php elseif(!empty($role)):?>
+                        <a href="javascript:void(0)"
+                           data-href="<?php echo site_url('employee/profile/') . $profile_employee_id; ?>"
+                           class="btn btn-primary btn-flat prof-link emp_profile">Profile</a>
+                    <?php elseif(!empty($profile_student_id)):?>
+                        <a href="javascript:void(0)"
+                           data-href="<?php echo site_url('students/profile/') . $profile_student_id; ?>"
+                           class="btn btn-primary btn-flat prof-link std_profile">Profile</a>
+                    <?php else:?>
+                        <a href="javascript:void(0)"
+                           data-href="<?php echo site_url('guardians/guardian_profile/') . $profile_employee_id; ?>"
+                           class="btn btn-primary btn-flat prof-link student-guardian">Profile</a>
+                    <?php endif; ?>
                 </div>
                 <div class="pull-right">
-                    <a href="<?php echo base_url('dashboard/logout'); ?>" class="btn btn-primary btn-flat">Sign
-                        out</a>
+                    <a href="<?php echo base_url('dashboard/logout'); ?>" class="btn btn-primary btn-flat">Sign out</a>
                 </div>
             </li>
         </ul>

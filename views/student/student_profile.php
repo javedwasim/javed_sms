@@ -58,7 +58,7 @@
                                 </li>
 
                             </ul>
-                            <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="myFunction()">
+                            <a href="javascript:void(0)" class="btn btn-primary btn-block print_student_profile" onclick="myFunction()">
                                 <i class="fa fa-print"></i><b>Print</b></a>
                         </div>
                         <!-- /.card-body -->
@@ -189,7 +189,8 @@
                                             data-href="<?php echo site_url('students/edit/') . $student['student_id']; ?>" >Edit</a>
                                     </li>
                                 <?php endif; ?>
-                                <?php if(($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)): ?>
+                                <!-- guardian cannot change student password -->
+                                <?php if((($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)) && (isset($user)&&(empty($user)))): ?>
                                     <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
                                 <?php endif; ?>
                                 <?php if($userdata['name'] == 'admin'): ?>
@@ -531,7 +532,7 @@
                         <div class="form-group row">
                             <label for="relation" class="col-sm-2 col-form-label">Relation</label>
                             <div class="col-sm-10">
-                                <input type="text" id="relation" name="relation" class="form-control validate">
+                                <input type="text" id="relation" name="relation" class="form-control validate" required>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -598,6 +599,8 @@
         return false;
     });
     function myFunction() {
+        $('.print_student_profile').hide();
         window.print();
+        $('.print_student_profile').show();
     }
 </script>

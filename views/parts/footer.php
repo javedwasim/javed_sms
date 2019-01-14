@@ -1,3 +1,5 @@
+<?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
+
 </div>
 <!-- /.content-wrapper -->
 
@@ -27,7 +29,7 @@
         <strong>Copyright&copy;2018 <a href="<?php echo base_url(); ?>">Integrated School Managment System</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 1.5
+            <b>Version</b> 1.6
         </div>
     </div>
 </footer>
@@ -144,6 +146,55 @@
     });
 
 </script>
+
+<div class="modal fade show" id="adminChangePwd" role="dialog" style="padding-right: 17px;">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit password: <?php echo $user_name; ?> </h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="change_pwd" method="post" role="form" enctype="multipart/form-data"
+                      data-action="<?php echo site_url('employee/change_pwd') ?>">
+                    <input type="hidden" name="employee_id" value="<?php echo $user_data['name']; ?>">
+                    <input type="hidden" name="email" value="<?php echo $user_data['email']; ?>">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Current password</label>
+                                <input type="password" class="form-control" name="current_pwd">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" class="form-control" name="new_pwd" required="" minlength="8">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Password confirmation</label>
+                                <input type="password" class="form-control" name="c_pwd" required="" minlength="8">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="admin_st_password" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

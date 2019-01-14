@@ -190,7 +190,9 @@ class Reportcard extends MY_Controller
         $student = $this->Student_model->get_student_by_id($student_id);
         $attendance = $this->Attendance_model->get_student_attendance_term_report($term_id,$student);
         $comment = $this->Reportcard_model->get_report_comment($student,$term_id);
+        $report_summary = $this->Reportcard_model->get_report_summary($student_id,$term_id);
         $record['class_teacher'] = $this->Reportcard_model->get_class_teacher($student);
+        $institution = $this->General_model->get_institution();
         //print_r($record['class_teacher']);
         if($result){
             $record['subjects'] = $result;
@@ -200,8 +202,8 @@ class Reportcard extends MY_Controller
             $record['term_id'] = $term_id;
             $record['attendance_record'] = $attendance;
             $record['comment'] = $comment;
-            //$json['result_html'] = $this->load->view('reports/student_subjects_report', $record);
-            //$json['student_info'] = $this->load->view('reports/student_info', $record);
+            $record['summary'] = $report_summary;
+            $record['institution'] = $institution;
             $this->load->view('reports/pdf_report', $record);
         }else{
             $json['error'] = true;

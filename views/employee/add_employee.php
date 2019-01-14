@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Last name</label>
+                                            <label>Middle name</label>
                                             <input type="text" class="form-control" name="middle_name"
                                                    value="<?php  if(isset($employee['middle_name'])) {echo $employee['middle_name'];}  elseif(isset($form_data['middle_name'])){ echo $form_data['middle_name']; } ?>" maxlength="100" />
                                         </div>

@@ -198,7 +198,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <table id="student-b-table" class="table table-bordered table-striped">
+                            <table id="student-b-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
                                     <th>Name</th>

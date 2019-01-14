@@ -38,7 +38,8 @@
                         <div class="card-body">  
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="<?php echo site_url('grade_scale/grades')?>" class="btn btn-info btn-rounded mb-4"><i class="fa fa-angle-double-left"></i>Grades</a>
+                                    <a href="javascript:void(0)" id="grade_scale_back_btn" data-func-call="grade_scales"
+                                       class="btn btn-info btn-rounded mb-4"><i class="fa fa-angle-double-left"></i>Grades</a>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="" class="btn btn-primary btn-rounded mb-4 pull-right" data-toggle="modal" data-target="#add_scale_level"><i class="fa fa-plus"></i>New Scale Level</a>

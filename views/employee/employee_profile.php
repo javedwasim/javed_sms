@@ -1,3 +1,4 @@
+<?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -73,14 +74,15 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#overview" data-toggle="tab">Overview</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="employee_edit_btn" href="javascript:void(0)"
-                                       data-href="<?php echo site_url('employee/edit/') . $Emp_profile['employee_id'] ?>">Edit</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link " href="#timeline"   data-toggle="tab">Privileges</a></li>
+                                <?php if($user_name=='admin'): ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="employee_edit_btn" href="javascript:void(0)"
+                                           data-href="<?php echo site_url('employee/edit/') . $Emp_profile['employee_id'] ?>">Edit</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link " href="#timeline"   data-toggle="tab">Privileges</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
+                                <?php endif; ?>
                                 <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a>
-                                </li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -472,7 +474,7 @@
                     <form id="change_pwd" method="post" role="form"
                           data-action="<?php echo site_url('employee/change_pwd') ?>"
                           enctype="multipart/form-data">
-                        <input type="hidden" name="employee_id" value="<?php echo $Emp_profile['employee_id']; ?>">
+                        <input type="hidden" name="employee_id" value="<?php echo $Emp_profile['username']; ?>">
                         <input type="hidden" name="email" value="<?php echo $Emp_profile['email']; ?>">
                         <div class="row">
                             <div class="col-md-12">

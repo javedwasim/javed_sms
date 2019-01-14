@@ -6,9 +6,9 @@
                 <tr><th colspan="6"><h3 style="text-align: center">Score Sheet</h3></th></tr>
                 <tr>
                     <th>Subjects</th>
-                    <th scope="col">Final</th>
-                    <th scope="col">2nd</th>
                     <th scope="col">1st</th>
+                    <th scope="col">2nd</th>
+                    <th scope="col">Final</th>
                     <th scope="col">Total</th>
                     <th scope="col">Subject Teachers</th>
                 </tr>
@@ -17,9 +17,9 @@
             <?php foreach ($subjects as $subject): $score = explode(',',$subject['st_score']); ?>
                 <tr>
                     <th scope="row"><?php echo $subject['sbj_name']; ?></th>
-                    <td><?php echo isset($score[0])&&!empty($score[0])?$score[0]:'EX'; ?></td>
-                    <td><?php echo isset($score[1])?$score[1]:'EX'; ?></td>
                     <td><?php echo isset($score[2])?$score[2]:'EX'; ?></td>
+                    <td><?php echo isset($score[1])?$score[1]:'EX'; ?></td>
+                    <td><?php echo isset($score[0])&&!empty($score[0])?$score[0]:'EX'; ?></td>
                     <td><?php echo isset($score[0])&&isset($score[1])&&isset($score[2])?$score[0]+$score[1]+$score[2]:'EX'; ?></td>
                     <td><?php echo $subject['subject_teacher']; ?></td>
                 </tr>
@@ -131,6 +131,7 @@
                     <tr><td>Present</td><td><?php echo $attendance_record['present'] ?></td></tr>
                     <tr><td>Absent</td><td><?php echo $attendance_record['absent'] ?></td></tr>
                     <tr><td>Late</td><td><?php echo $attendance_record['late'] ?></td></tr>
+                    <tr><th>Percentage</th><td><?php echo round($attendance_record['present']/($attendance_record['late']+$attendance_record['absent']+$attendance_record['present'])*100).'%'; ?></td></tr>
                 </tbody>
             </table>
         </div>
