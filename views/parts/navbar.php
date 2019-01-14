@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 $user_data = $this->session->userdata('userdata');
 $user_name = $user_data['name'];
@@ -5,6 +6,9 @@ $profile_employee_id = $this->session->userdata('profile_employee_id');
 $profile_student_id = $this->session->userdata('profile_student_id');
 $role = $user_data['role'];
 ?>
+=======
+<?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
    <ul class="navbar-nav ml-auto">
@@ -35,6 +39,7 @@ $role = $user_data['role'];
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
+<<<<<<< HEAD
                     <?php if($user_name == 'admin'): ?>
                         <a href="<?php echo base_url('dashboard/profile'); ?>" data-toggle="modal" data-target="#adminChangePwd"
                            class="btn btn-primary btn-flat" style="font-size: 13px">Change Pwd</a>
@@ -54,6 +59,13 @@ $role = $user_data['role'];
                 </div>
                 <div class="pull-right">
                     <a href="<?php echo base_url('dashboard/logout'); ?>" class="btn btn-primary btn-flat">Sign out</a>
+=======
+                    <a href="<?php echo base_url('dashboard/profile'); ?>" class="btn btn-primary btn-flat">Profile</a>
+                </div>
+                <div class="pull-right">
+                    <a href="<?php echo base_url('dashboard/logout'); ?>" class="btn btn-primary btn-flat">Sign
+                        out</a>
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                 </div>
             </li>
         </ul>

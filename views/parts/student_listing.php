@@ -198,7 +198,11 @@
                                 </div>
                             </div>
                             <hr>
+<<<<<<< HEAD
                             <table id="student-b-table" class="table table-bordered table-striped" width="100%">
+=======
+                            <table id="student-b-table" class="table table-bordered table-striped">
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                 <thead>
                                 <tr>
                                     <th>Name</th>

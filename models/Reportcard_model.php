@@ -168,6 +168,7 @@ Class Reportcard_model extends CI_Model {
         }
     }
 
+<<<<<<< HEAD
     public function get_report_summary($student_id,$term_id){
         //find student batch
         $result = $this->db->select('batch_no')->from('students')->where('student_id',$student_id)->limit(1)->get();
@@ -230,6 +231,8 @@ Class Reportcard_model extends CI_Model {
         }
     }
 
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
     public function get_bahaviour_score_sheet($id,$term_id) {
         $this->db->select('sg.*');
         $this->db->from('student_grades sg');

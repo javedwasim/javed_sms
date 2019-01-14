@@ -41,7 +41,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $json['error'] = true;
                 $json['message'] = "Seems to an error while adding class.";
             }
+<<<<<<< HEAD
             $json['scale_html'] = $this->load->view('grades/scale_levels', $data,true);
+=======
+            $this->load->view('parts/header');
+            $this->load->view('parts/topbar');
+            $this->load->view('parts/sidebar');
+            $json['scale_html'] = $this->load->view('grades/scale_levels', $data);
+            $this->load->view('parts/footer');
+
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
             if($this->input->is_ajax_request()) {
                 set_content_type($json);
             }

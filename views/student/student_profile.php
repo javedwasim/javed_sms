@@ -58,7 +58,11 @@
                                 </li>
 
                             </ul>
+<<<<<<< HEAD
                             <a href="javascript:void(0)" class="btn btn-primary btn-block print_student_profile" onclick="myFunction()">
+=======
+                            <a href="javascript:void(0)" class="btn btn-primary btn-block" onclick="myFunction()">
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                 <i class="fa fa-print"></i><b>Print</b></a>
                         </div>
                         <!-- /.card-body -->
@@ -189,8 +193,12 @@
                                             data-href="<?php echo site_url('students/edit/') . $student['student_id']; ?>" >Edit</a>
                                     </li>
                                 <?php endif; ?>
+<<<<<<< HEAD
                                 <!-- guardian cannot change student password -->
                                 <?php if((($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)) && (isset($user)&&(empty($user)))): ?>
+=======
+                                <?php if(($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)): ?>
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                     <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
                                 <?php endif; ?>
                                 <?php if($userdata['name'] == 'admin'): ?>
@@ -532,7 +540,11 @@
                         <div class="form-group row">
                             <label for="relation" class="col-sm-2 col-form-label">Relation</label>
                             <div class="col-sm-10">
+<<<<<<< HEAD
                                 <input type="text" id="relation" name="relation" class="form-control validate" required>
+=======
+                                <input type="text" id="relation" name="relation" class="form-control validate">
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                             </div>
                         </div>
                         <div class="form-group row">
@@ -599,8 +611,12 @@
         return false;
     });
     function myFunction() {
+<<<<<<< HEAD
         $('.print_student_profile').hide();
         window.print();
         $('.print_student_profile').show();
+=======
+        window.print();
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
     }
 </script>

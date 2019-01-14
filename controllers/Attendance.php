@@ -107,7 +107,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     	public function reports(){
             $data['batches'] = $this->Batches_model->get_all_batches();
+<<<<<<< HEAD
             $data['years'] = $this->Attendance_model->get_attendance_year();
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
             $data['batch_id'] = '';
             $data['students'] = array();
 	    	$json['reports_html'] = $this->load->view('attendance/reports', $data, true);
@@ -151,6 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
         }
 
+<<<<<<< HEAD
         public function get_batch_attendance_year(){
             $batch_id = $this->input->post('batch_id');
             $c_year = date("Y");
@@ -168,6 +172,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         }
 
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
 	}
 
 

@@ -34,7 +34,11 @@
                                             data-toggle="modal" data-target="#report_card_modal" id="batch_list">
                                             <i class="fa fa-plus"></i>Add Report Card Group</button>
                                     <?php elseif(isset($student['surname'])): ?>
+<<<<<<< HEAD
                                         <h3 class="card-title"><?php echo $student['first_name'].' '.$student['surname'].'('.$student['username'].')'; ?></h3>
+=======
+                                        <h3 class="card-title"><?php echo $student['surname'].' '.$student['first_name'].'('.$student['username'].')'; ?></h3>
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                     <?php endif; ?>
                                     <div id="std_subjects_report_container">
                                         <table id="batch" class="table table-bordered table-striped">

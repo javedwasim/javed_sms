@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 <?php $user_data = $this->session->userdata('userdata'); $user_name = $user_data['name']; ?>
 
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
 </div>
 <!-- /.content-wrapper -->
 
@@ -29,7 +32,11 @@
         <strong>Copyright&copy;2018 <a href="<?php echo base_url(); ?>">Integrated School Managment System</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
+<<<<<<< HEAD
             <b>Version</b> 1.6
+=======
+            <b>Version</b> 1.5
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
         </div>
     </div>
 </footer>
@@ -147,6 +154,7 @@
 
 </script>
 
+<<<<<<< HEAD
 <div class="modal fade show" id="adminChangePwd" role="dialog" style="padding-right: 17px;">
     <div class="modal-dialog">
         <!-- Modal content-->
@@ -196,5 +204,7 @@
     </div>
 </div>
 
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
 </body>
 </html>

@@ -82,8 +82,13 @@
                                 <tbody>
                                     <?php foreach ($scales as $scale){ ?>
                                         <tr>
+<<<<<<< HEAD
                                             <td><a class="grade_scale_levels link prof-link" href="javascript:void(0)"
                                                    data-action="<?php echo site_url('grade_scale/grade_scales_level/').$scale['id']; ?>"
+=======
+                                            <td><a class="grade_scale_levels link prof-link"
+                                                   href="<?php echo site_url('grade_scale/grade_scales_level/').$scale['id']; ?>"
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                                                    data-href="<?php echo $scale['id']; ?>"><?php echo $scale['name']; ?></a></td>
                                             <td><?php echo $scale['type']; ?></td>
                                             <td><?php echo $scale['description']; ?></td>

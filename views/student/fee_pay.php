@@ -130,15 +130,25 @@
                                 <label for="amount_paid" class="">Amount</label>
                                 <input type="text" class="form-control" id="amount_paid" name="amount_paid" value="">
                             </div>
+<<<<<<< HEAD
                             <div class="form-group" style="text-align: center">
                                 <button type="submit" id="payBtn" class="btn btn-primary">
                                     <i class="far fa-money-bill-alt"></i>Create invoice</button>
                             </div>
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
                         </div>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
 
+=======
+            <div class="form-group" style="text-align: center">
+                <button type="submit" id="payBtn" class="btn btn-primary">
+                    <i class="far fa-money-bill-alt"></i>Create invoice</button>
+            </div>
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
         </div>
     </div>
 </form>

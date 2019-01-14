@@ -440,6 +440,7 @@ Class Attendance_model extends CI_Model {
             return array();
         }
     }
+<<<<<<< HEAD
 
     public function get_attendance_year(){
         $query = "SELECT EXTRACT(YEAR FROM attendance_date) as a_year FROM attendance 
@@ -465,5 +466,7 @@ Class Attendance_model extends CI_Model {
             return array();
         }
     }
+=======
+>>>>>>> 5a94356c82c190f32621ca477f3e6d39d612397d
            
 }
