@@ -68,7 +68,7 @@ class Employee_model extends CI_Model {
         $this->db->insert('login_rights_group', array('menu_group_id' => $menu_group_id, 'other_rights_group_id' => $menu_group_id));
         $login_rights_group_id = $this->db->insert_id();
         //create user of employee.
-        $password = password_hash('e' . $employee_id.'12345', PASSWORD_BCRYPT);
+        $password = password_hash('e' . $employee_id.'123456', PASSWORD_BCRYPT);
         $user_data = array('name' => 'e' . $employee_id, 'created_by' => $created_by['login_id'],
             'email' => $data['email'], 'password' => $password, 'login_rights_group_id' => $login_rights_group_id);
         $this->db->insert('login', $user_data);

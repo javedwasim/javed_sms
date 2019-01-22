@@ -153,12 +153,12 @@
                                             <input type="text" class="form-control" maxlength="20" name="middle_name"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Last name</label>
-                                            <input type="text" class="form-control"  name="last_name" />
-                                        </div>
-                                    </div>
+<!--                                    <div class="col-md-4">-->
+<!--                                        <div class="form-group">-->
+<!--                                            <label>Last name</label>-->
+<!--                                            <input type="text" class="form-control"  name="last_name" />-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <?php if ($guardian_fields['mobile_phone']) { ?>
                                         <div class="col-md-4">
                                             <div class="form-group">

@@ -209,34 +209,34 @@
                                                   data-action="<?php echo site_url('guardians/update_guardian/').$guardian['guardian_id'] ?>"
                                                   enctype="multipart/form-data">
                                                 <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label>Title</label>
                                                             <input type="text" class="form-control" name="title"
                                                                    value="<?php echo isset($guardian['title']) ? $guardian['title'] : ''; ?>"/>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label>Surname</label>
                                                             <input type="text" class="form-control" name="surname"
                                                                    value="<?php echo isset($guardian['surname']) ? $guardian['surname'] : ''; ?>"/>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label>First name</label>
                                                             <input type="text" class="form-control"  name="first_name"
                                                                    value="<?php echo isset($guardian['first_name']) ? $guardian['first_name'] : ''; ?>"/>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Last name</label>
-                                                            <input type="text" class="form-control"  name="last_name"
-                                                                   value="<?php echo isset($guardian['last_name']) ? $guardian['last_name'] : ''; ?>"/>
-                                                        </div>
-                                                    </div>
+<!--                                                    <div class="col-md-3">-->
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label>Last name</label>-->
+<!--                                                            <input type="text" class="form-control"  name="last_name"-->
+<!--                                                                   value="--><?php //echo isset($guardian['last_name']) ? $guardian['last_name'] : ''; ?><!--"/>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-4">

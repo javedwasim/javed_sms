@@ -3890,6 +3890,24 @@ function get_student_subject_assessment(func_call) {
     });
 }
 
+
+function get_lga_origin(func_call) {
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'general_setting/'+func_call,
+        cache: false,
+        success: function(response) {
+            if(response.result_html != ''){
+                $('#content-wrapper').empty();
+                $('#content-wrapper').append(response.result_html);
+                $('#title').html('SMS | LGA Origins');
+            }
+        }
+    });
+}
+
+
+
 $(document.body).on('click', '#assessment_filter', function(){
     var base_url = $('#base').val();
     $.ajax({
@@ -4447,5 +4465,83 @@ $(document.body).on('click', '.btn-light', function(){
             }
         }
     });
+    return false;
+});
+
+$(document.body).on('click', '#change_st_password', function () {
+    $.ajax({
+        url: $('#change_pwd').attr('data-action'),
+        type: 'post',
+        data: $('#change_pwd').serialize(),
+        cache: false,
+        success: function (response) {
+            if (response.success) {
+                toastr["success"](response.message);
+                $('#myModal').modal('hide');
+            } else {
+                toastr["error"](response.message);
+            }
+
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '#save_origin', function(){
+    $.ajax({
+        url: $('#origin_form').attr('data-action'),
+        type: 'post',
+        data: $('#origin_form').serialize(),
+        cache: false,
+        success: function(response) {
+            if (response.success) {
+                toastr["success"](response.message);
+                $('#origin_form')[0].reset();
+                $('#origin_add').modal('hide');
+                $('.content-wrapper').remove();
+                $('#content-wrapper').append(response.result_html);
+            } else {
+                toastr["error"](response.message);
+            }
+        }
+    });
+
+    return false;
+});
+
+$(document.body).on('click', '.edit-origin', function(){
+    var origin_id = $(this).attr('data-value');
+    var base_url = $('#base').val();
+    $.ajax({
+        url: base_url+'general_setting/edit_origin/'+origin_id,
+        cache: false,
+        success: function(response) {
+            $('.edit-modal-body').empty();
+            $('.edit-modal-body').append(response.result_html);
+            $('#origin_add').modal('show');
+        }
+    });
+    return false;
+});
+
+$(document.body).on('click', '.delete-origin', function(){
+    if (confirm('Are you sure to delete this record?')) {
+        $.ajax({
+            url: $(this).attr('data-href'),
+            cache: false,
+            success: function(response) {
+                if (response.success) {
+                    $('.content-wrapper').remove();
+                    $('#content-wrapper').append(response.result_html);
+                    toastr["error"](response.message);
+                } else {
+                    toastr["error"](response.message);
+                }
+            }
+        });
+    } else {
+        return false;
+    }
+
     return false;
 });

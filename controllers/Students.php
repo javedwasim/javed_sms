@@ -584,7 +584,7 @@ class Students extends MY_Controller
     public function get_origin($state_id)
     {
         $origins = $this->Student_model->get_state_origins($state_id);
-        $options = "";
+        $options = "<option value=''></option>";
         foreach ($origins as $origin) {
             $id = $origin['id'];
             $name = $origin['name'];
@@ -807,6 +807,25 @@ class Students extends MY_Controller
         $result['student_id'] = $student['student_id'];
 
         $this->load->view('student/unpaid_fee', $result);
+    }
+
+    public function create_fee_invoice($fee_id){
+        $this->load->library('Pdf');
+        $student = $this->Student_model->logged_user_info();
+        $student_id = $student['student_id'];
+        $data['result'] = $this->Student_model->get_student_fee($fee_id,$student_id);
+        $data['student'] = $this->Student_model->get_student_by_id($student_id);
+        $data['institution'] = $this->General_model->get_institution();
+
+        if ($data['result']) {
+            $json['success'] = true;
+            $json['result_html'] = $this->load->view('reports/fee_invoice', $data);
+        } else {
+            $json['error'] = true;
+        }
+        if ($this->input->is_ajax_request()) {
+            set_content_type($json);
+        }
     }
 
 }

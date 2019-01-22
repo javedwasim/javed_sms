@@ -136,7 +136,7 @@ Class Student_model extends CI_Model {
         //create student demographic
         $this->db->insert('demographics',array('student_id'=>$student_id,'batch_id'=>$student_data['batch_no']));
 	    //create user of employee.
-        $password = password_hash('s' . $student_id.'12345', PASSWORD_BCRYPT);
+        $password = password_hash('s' . $student_id.'123456', PASSWORD_BCRYPT);
         $user_data = array('name' => 's' . $student_id, 'created_by' => $created_by['login_id'],
             'email' => $student_data['email'], 'password' => $password, 'login_rights_group_id' => $login_rights_group_id);
         $this->db->insert('login', $user_data);
@@ -178,8 +178,7 @@ Class Student_model extends CI_Model {
 						->limit(1)
 						->get();
 
-        //echo $this->db->last_query(); die();
-		if ($result) {
+       if ($result) {
 			return $result->row_array();
 		} else {
 			return array();
@@ -269,7 +268,7 @@ Class Student_model extends CI_Model {
         $login_rights_group_id = $this->db->insert_id();
 
         //create user of guardian.
-        $password = password_hash('g' . $guardian_id.'12345', PASSWORD_BCRYPT);
+        $password = password_hash('g' . $guardian_id.'123456', PASSWORD_BCRYPT);
         $user_data = array('name' => 'g' . $guardian_id, 'created_by' => $created_by['login_id'],
                     'email' => $guardian_data['email'], 'password' => $password,
                     'login_rights_group_id' => $login_rights_group_id);
@@ -713,12 +712,12 @@ Class Student_model extends CI_Model {
             $student_ids = $query->row_array();
             $student_ids = $student_ids['st_id'];
 
-            $stdQry  = $this->db->select('std.student_id,std.first_name')
+            $stdQry  = $this->db->select('std.student_id,std.first_name,username,surname')
                         ->from('students std')
                         ->where("std.student_id IN ($student_ids)")
                         ->get();
             $student_list  = $stdQry->result_array();
-
+            $student_id = $student_ids;
         }
         $result = $result = $this->db->select('fm.*, ft.name as fee_name,b.arm,b.session, c.code,SUM(sf.amount) as amount_paid')
                             ->from('fee_management fm')
@@ -727,7 +726,7 @@ Class Student_model extends CI_Model {
                             ->join('classes c', 'c.id=b.course_id', 'left')
                             ->join('student_fee sf', 'sf.fee_management_id = fm.id', 'left')
                             ->where('fm.id',$id)
-                            ->where('sf.student_id',$student_id)
+                            ->where(" sf.student_id IN ($student_id) ")
                             ->limit(1)
                             ->get();
 

@@ -467,4 +467,61 @@ Class General_model extends CI_Model {
         }
     }
 
+    public function get_lga_origin(){
+        $result = $this->db->select('cities.*,states.name as state_name')
+            ->from('cities')
+            ->join('states','states.id=cities.state_id','left')
+            ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function get_states(){
+        $result = $this->db->select('*')
+            ->from('states')
+            ->get();
+        if ($result) {
+            return $result->result_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function add_state_origin($data) {
+        unset($data['city_id']);
+        $this->db->insert('cities', $data);
+        return $this->db->insert_id();
+    }
+
+    public function get_origin_by_id($id){
+        $result = $this->db->select('cities.*,states.name as state_name')
+            ->from('cities')
+            ->join('states','states.id=cities.state_id','left')
+            ->where('cities.id',$id)
+            ->limit(1)
+            ->get();
+        if ($result) {
+            return $result->row_array();
+        } else {
+            return array();
+        }
+
+    }
+
+    public function update_state_origin($data) {
+        $id = $data['city_id'];
+        $this->db->where('id', $id)->update('cities', array('name'=>$data['name'],'state_id'=>$data['state_id']));
+        return $this->db->affected_rows();
+    }
+
+    public function delete_origin($id) {
+        $this->db->where('id', $id)->delete('cities');
+        return $this->db->affected_rows();
+    }
+
 }

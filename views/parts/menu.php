@@ -201,6 +201,11 @@
        get_student_subject_assessment($(this).attr('data-func-call'));
    });
 
+   ///////////////// classes ////////////////////////////
+   $('#list_itmes_lga_origin').click(function(){
+       get_lga_origin($(this).attr('data-func-call'));
+   });
+
    $(document).ready(function()
    {
 

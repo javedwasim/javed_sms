@@ -76,6 +76,9 @@
                                                    data-value="<?php echo $fee['id']; ?>"
                                                    user-id="<?php echo $student_id; ?>">
                                                    <i class="fa fa-dollar icon-margin" title="Pay"></i>Pay</a>
+                                                <a class="btn btn-info btn-xs"    target="_blank"
+                                                   href="<?php echo site_url('students/create_fee_invoice/').$fee['id'] ?>">
+                                                   <i class="fa fa-file-invoice icon-margin" title="Pay"></i>Pdf</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

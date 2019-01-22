@@ -14,12 +14,39 @@
                 </tr>
             </thead>
             <tbody>
-            <?php foreach ($subjects as $subject): $score = explode(',',$subject['st_score']); ?>
+            <?php foreach ($subjects as $subject):?>
+                <?php $score = explode(',',$subject['st_score']); ?>
+                <?php
+
+                    $score_length = count($score);
+                    $nscore = array();
+                    if($score_length<3){
+                        if($score_length == 1){
+                            $nscore[2] = $score[0];
+                            $nscore[1] = 0;
+                            $nscore[0] = 0;
+                        }elseif($score_length == 2){
+                            $nscore[2] = $score[1];
+                            $nscore[1] = $score[0];
+                            $nscore[0] = 0;
+                        }
+                    }else{
+                        $nscore[2] = $score[2];
+                        $nscore[1] = $score[1];
+                        $nscore[0] = $score[0];
+                    }
+                ?>
                 <tr>
                     <th scope="row"><?php echo $subject['sbj_name']; ?></th>
-                    <td><?php echo isset($score[2])?$score[2]:'EX'; ?></td>
-                    <td><?php echo isset($score[1])?$score[1]:'EX'; ?></td>
-                    <td><?php echo isset($score[0])&&!empty($score[0])?$score[0]:'EX'; ?></td>
+                    <td>
+                        <?php echo isset($nscore[2])?$nscore[2]:'EX'; ?>
+                    </td>
+                    <td>
+                        <?php echo isset($nscore[1])?$nscore[1]:'EX'; ?>
+                    </td>
+                    <td>
+                        <?php echo isset($nscore[0])&&!empty($nscore[0])?$nscore[0]:'EX'; ?>
+                    </td>
                     <td><?php echo isset($score[0])&&isset($score[1])&&isset($score[2])?$score[0]+$score[1]+$score[2]:'EX'; ?></td>
                     <td><?php echo $subject['subject_teacher']; ?></td>
                 </tr>

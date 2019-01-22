@@ -15,6 +15,7 @@
             <select id="role" name="role[]" class="form-control">
                 <option selected="">Please Select</option>
                 <option value="1"<?php echo ($e['role_id']==1)?"selected":''; ?>>Class Teacher</option>
+                <option value="2"<?php echo ($e['role_id']==2)?"selected":''; ?>>Subject Teacher</option>
             </select>
         </div>
         <div class="form-group col-md-4">

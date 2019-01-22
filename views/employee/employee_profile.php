@@ -526,24 +526,7 @@
             $('.datatables').DataTable();
         });
 
-        $(document.body).on('click', '#change_password', function () {
-            $.ajax({
-                url: $('#change_pwd').attr('data-action'),
-                type: 'post',
-                data: $('#change_pwd').serialize(),
-                cache: false,
-                success: function (response) {
-                    if (response.success) {
-                        toastr["success"](response.message);
-                        $('#myModal').modal('hide');
-                    } else {
-                        toastr["error"](response.message);
-                    }
 
-                }
-            });
-            return false;
-        });
         $(document.body).on('click', '#archive_btn', function () {
             $.ajax({
                 url: $('#student_archive_form').attr('data-action'),

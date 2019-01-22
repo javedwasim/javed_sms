@@ -396,6 +396,74 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         }
 
+        public function lga_origin(){
+            $data['origins'] = $this->General_model->get_lga_origin();
+            $data['states'] = $this->General_model->get_states();
+            $json['result_html'] = $this->load->view('settings/lga', $data, true);
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+        }
+
+        public function add_origin(){
+            $this->load->library('form_validation');
+            $this->load->helper('security');
+            $this->form_validation->set_rules('name', 'Class name', 'required|xss_clean');
+            $this->form_validation->set_rules('state_id', 'State name', 'required|xss_clean');
+
+            if ($this->form_validation->run() == FALSE) {
+                $json['error'] = true;
+                $json['message'] = validation_errors();
+            } else {
+                $fdata = $this->input->post();
+                if(isset($fdata['city_id']) && (!empty($fdata['city_id']))){
+                    $result = $this->General_model->update_state_origin($fdata);
+                }else{
+                    $result = $this->General_model->add_state_origin($fdata);
+                }
+                if ($result) {
+                    $json['success'] = true;
+                    $json['message'] = "Lga origin successfully added.";
+                } else {
+                    $json['error'] = true;
+                    $json['message'] = "Seems to an error.";
+                }
+                $data['origins'] = $this->General_model->get_lga_origin();
+                $data['states'] = $this->General_model->get_states();
+                $json['result_html'] = $this->load->view('settings/lga', $data, true);
+            }
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+
+        }
+
+        public function edit_origin($id){
+            $data['origin'] = $this->General_model->get_origin_by_id($id);
+            $data['states'] = $this->General_model->get_states();
+            $json['result_html'] = $this->load->view('settings/edit_lga', $data,true);
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+        }
+
+        public function delete_origin($id) {
+            $result = $this->General_model->delete_origin($id);
+            if ($result) {
+                $data['origins'] = $this->General_model->get_lga_origin();
+                $data['states'] = $this->General_model->get_states();
+                $json['result_html'] = $this->load->view('settings/lga', $data, true);
+                $json['success'] = true;
+                $json['message'] = "Origin successfully deleted.";
+            } else {
+                $json['success'] = true;
+                $json['message'] = "Seems to an error.";
+            }
+            if($this->input->is_ajax_request()) {
+                set_content_type($json);
+            }
+        }
+
 }
 
 ?>

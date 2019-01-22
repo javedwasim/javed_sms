@@ -51,7 +51,10 @@ class Dashboard extends CI_Controller {
                 $data['fee_types'] = $this->Fee_model->get_fees();
                 $data['fee_status'] = $this->Fee_model->get_fee_status();
                 $data['filter'] = $filter;
-                $this->session->set_userdata('profile_employee_id', $role['employee_id']);
+                if(isset($e_result['employee_id'])){
+                    $this->session->set_userdata('profile_employee_id', $e_result['employee_id']);
+                }
+
                 $data['photo'] = "assets/uploads/employee_images/".$e_result['photo'];
                 $json['result_html'] = $this->load->view('fee/index', $data);
 

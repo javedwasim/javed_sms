@@ -250,9 +250,9 @@ $left_column .= '<!-- EXAMPLE OF CSS STYLE -->
         <tr><th colspan="6"><h3 style="text-align: center">Score Sheet</h3></th></tr>
         <tr>
             <th>Subjects</th>
-            <th scope="col">Final</th>
-            <th scope="col">2nd</th>
             <th scope="col">1st</th>
+            <th scope="col">2nd</th>
+            <th scope="col">Final</th>
             <th scope="col">Total</th>
             <th scope="col">Teachers</th>
         </tr>
@@ -268,9 +268,9 @@ foreach ($subjects as $subject):
     $teacher = $subject['subject_teacher'];
     $left_column .= '<tr>
                 <td>' . $subjects . '</td>
-                <td>' . $final . '</td>
-                <td>' . $second . '</td>
                 <td>' . $first . '</td>
+                <td>' . $second . '</td>
+                <td>' . $final . '</td>
                 <td>' . $total . '</td>
                 <td>' . $teacher . '</td>
             </tr>';
@@ -584,8 +584,6 @@ $next_term_start.='<table style="width: 100%">
                 </table>';
 
 $pdf->writeHTMLCell(180, '', '', 240, $next_term_start, 0, 1, 1, true, 'J', true);
-
-
 
 $signature='<table border="0" width="100%">
             <tbody>      

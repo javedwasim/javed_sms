@@ -379,6 +379,7 @@ Class Subject_model extends CI_Model {
         $assments = $this->db->select('*')->from('subject_assessments')
                     ->where('subject_detail_id',$data['subject_detail_id'])
                     ->get();
+
         $assments = $assments->result_array();
         $query = $this->db->select('*')->from('student_score_sheet')
                     ->where('student_id',$data['student_id'])
@@ -388,7 +389,7 @@ Class Subject_model extends CI_Model {
                     ->where('term_id',$data['term_id'])
                     ->limit(1)
                     ->get();
-
+         //echo $this->db->last_query();
          if($query->num_rows() == 0){
            foreach ($assments as $assment){
                if($assment['id'] == "$assessment_id"){
@@ -397,13 +398,14 @@ Class Subject_model extends CI_Model {
                    $data['assessment_term'] = $assment['abbreviation'];
                    $data['term_id'] = $assment['term_id'];
                    $this->db->insert('student_score_sheet', $data);
-               }else{
-                   $data['score'] = 0;
-                   $data['asses_id'] = $assment['id'];
-                   $data['assessment_term'] = $assment['abbreviation'];
-                   $data['term_id'] = $assment['term_id'];
-                   $this->db->insert('student_score_sheet', $data);
                }
+//               else{
+//                   $data['score'] = 0;
+//                   $data['asses_id'] = $assment['id'];
+//                   $data['assessment_term'] = $assment['abbreviation'];
+//                   $data['term_id'] = $assment['term_id'];
+//                   $this->db->insert('student_score_sheet', $data);
+//               }
            }
            return $this->db->insert_id();
        }else{

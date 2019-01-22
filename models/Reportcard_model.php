@@ -142,8 +142,8 @@ Class Reportcard_model extends CI_Model {
                     FROM subjects_detail sd
                     LEFT JOIN (
                         SELECT st.*,ss.subject_detail_id,
-                        GROUP_CONCAT(assessment_term ORDER BY ss.subject_detail_id) as assessment_term,
-                        GROUP_CONCAT(score ORDER BY ss.subject_detail_id) as st_score,ss.term_id                        
+                        GROUP_CONCAT(assessment_term ORDER BY ss.id DESC) as assessment_term,
+                        GROUP_CONCAT(score ORDER BY ss.id DESC) as st_score,ss.term_id                        
                         FROM students st
                         LEFT JOIN student_score_sheet ss on ss.student_id = st.student_id and st.batch_no = ss.batch_id   
                         WHERE ss.student_id = $student_id AND ss.term_id = $term_id

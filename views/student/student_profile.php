@@ -190,8 +190,8 @@
                                     </li>
                                 <?php endif; ?>
                                 <!-- guardian cannot change student password -->
-                                <?php if((($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id)) && (isset($user)&&(empty($user)))): ?>
-                                    <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
+                                <?php if((($userdata['name'] == 'admin') || !empty($user['student_id']) || isset($student_id))): ?>
+                                        <li class="nav-item"><a class="nav-link" style="cursor: pointer;" data-toggle="modal"  data-target="#myModal">Change Password</a></li>
                                 <?php endif; ?>
                                 <?php if($userdata['name'] == 'admin'): ?>
                                     <li class="nav-item" id="student_remove_li"><a class="nav-link" href="#settings" data-toggle="tab">Remove</a></li>
@@ -563,24 +563,7 @@
         $('.datatables').DataTable();
     });
 
-    $(document.body).on('click', '#change_st_password', function () {
-        $.ajax({
-            url: $('#change_pwd').attr('data-action'),
-            type: 'post',
-            data: $('#change_pwd').serialize(),
-            cache: false,
-            success: function (response) {
-                if (response.success) {
-                    toastr["success"](response.message);
-                    $('#myModal').modal('hide');
-                } else {
-                    toastr["error"](response.message);
-                }
 
-            }
-        });
-        return false;
-    });
     $(document.body).on('click', '#archive_btn', function () {
         $.ajax({
             url: $('#student_archive_form').attr('data-action'),
